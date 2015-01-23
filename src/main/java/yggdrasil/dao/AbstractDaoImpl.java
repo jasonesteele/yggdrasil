@@ -1,0 +1,63 @@
+package yggdrasil.dao;
+
+import java.io.Serializable;
+
+import javax.annotation.Resource;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+/**
+ * Base implementation for abstract base data access objects.
+ *
+ * @author jason
+ */
+@Transactional
+public abstract class AbstractDaoImpl<T, PK extends Serializable> implements AbstractDao<T, PK> {
+  // TODO - add exceptions?
+
+  /** Hibernate session factory. */
+  @Resource
+  private SessionFactory sessionFactory;
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public T create(final T entity) {
+    return (T) getSession().save(entity);
+  }
+
+  @Override
+  public void delete(final PK key) {
+    final T entity = get(key);
+    if (null == entity) {
+      throw new EntityNotFoundException("no such " + getEntityClass().getSimpleName()
+          + " with primary key " + key);
+    }
+    getSession().delete(entity);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public T get(final PK key) {
+    return (T) getSession().get(getEntityClass(), key);
+  }
+
+  abstract protected Class<T> getEntityClass();
+
+  /**
+   * Gets the current hibernate session.
+   *
+   * @return session
+   */
+  protected Session getSession() {
+    return sessionFactory.getCurrentSession();
+  }
+
+  @Override
+  public void update(final T entity) {
+    getSession().update(entity);
+  }
+
+}
