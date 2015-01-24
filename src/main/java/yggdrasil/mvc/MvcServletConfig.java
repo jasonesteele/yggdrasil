@@ -34,6 +34,7 @@ public class MvcServletConfig extends WebMvcConfigurerAdapter {
   public void addViewControllers(final ViewControllerRegistry registry) {
     registry.addViewController("/index.htm").setViewName("home");
     registry.addViewController("/login").setViewName("login");
+    registry.addViewController("/admin/user_mgmt").setViewName("admin/user_mgmt");
   }
 
   @Override
