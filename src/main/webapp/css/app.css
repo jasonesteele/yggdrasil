@@ -1,0 +1,13 @@
+/* standard navbar */
+@media (min-width: 768px) {
+  .navbar-icon-text {
+    display: none;
+  }
+}
+
+/* mobile navbar */
+@media (max-width: 767px) {
+  .navbar-icon-text {
+    display: visible;
+  }
+}

@@ -1,7 +1,12 @@
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
+apply plugin: 'js'
+apply plugin: 'css'
 
+// ---------------------------------------------------------------
+// Project Properties and Versions
+// ---------------------------------------------------------------
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = '0.1'
@@ -24,6 +29,23 @@ repositories {
     }    
 }
 
+// ---------------------------------------------------------------
+// War Plugin
+// ---------------------------------------------------------------
+war {
+    it.dependsOn gzipCss
+    exclude "css"
+    from( "${buildDir}/all-${version}.css", {
+        into 'css'
+    })
+    from( "${buildDir}/all.css", {
+        into 'css'
+    })
+}
+
+// ---------------------------------------------------------------
+// Build Configurations and Classpaths
+// ---------------------------------------------------------------
 configurations {
     all*.exclude module : 'commons-logging' 
     integrationCompile { extendsFrom testCompile }
@@ -41,6 +63,9 @@ task integration(type: Test) {
     classpath = sourceSets.integration.runtimeClasspath
 }
 
+// ---------------------------------------------------------------
+// Eclipse Configuration
+// ---------------------------------------------------------------
 eclipse {
     classpath {
         plusConfigurations += [configurations.integrationCompile, configurations.provided]
@@ -57,6 +82,56 @@ eclipse {
     }
 }
 
+
+// ---------------------------------------------------------------
+// Gradle CSS Plugin
+// ---------------------------------------------------------------
+css.source {
+    dev {
+        css {
+            srcDir "src/main/webapp/css"
+            include "*.css"
+            exclude "*.min.css"
+        }
+    }
+}
+
+combineCss {
+    source = css.source.dev.css.files
+    dest = "${buildDir}/all.css"
+}
+
+minifyCss {
+    source = combineCss
+    dest = "${buildDir}/all-min.css"
+    yuicompressor { // Optional
+        lineBreakPos = -1
+    }
+}
+
+gzipCss {
+    source = minifyCss
+    dest = "${buildDir}/all-${version}.css"
+}
+
+// ---------------------------------------------------------------
+// Build Script Plugins
+// ---------------------------------------------------------------
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.eriwen:gradle-css-plugin:1.11.+'
+        classpath 'com.eriwen:gradle-js-plugin:1.12.+'
+    }
+}
+
+// ---------------------------------------------------------------
+// Java Dependencies
+// ---------------------------------------------------------------
 dependencies {
     compile "org.springframework:spring-context:$project.ext.springVersion"
     compile "org.springframework:spring-webmvc:$project.ext.springVersion"
