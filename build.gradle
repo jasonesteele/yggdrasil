@@ -1,8 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'js'
-apply plugin: 'css'
 
 // ---------------------------------------------------------------
 // Project Properties and Versions
@@ -27,20 +25,6 @@ repositories {
         url = "http://repository.jboss.org/nexus/content/groups/public-jboss/"
         url = "http://download.java.net/maven/2/"
     }    
-}
-
-// ---------------------------------------------------------------
-// War Plugin
-// ---------------------------------------------------------------
-war {
-    it.dependsOn gzipCss
-    exclude "css"
-    from( "${buildDir}/all-${version}.css", {
-        into 'css'
-    })
-    from( "${buildDir}/all.css", {
-        into 'css'
-    })
 }
 
 // ---------------------------------------------------------------
@@ -79,53 +63,6 @@ eclipse {
                 node.appendNode( 'classpathentry', [ kind: 'con', path: 'org.eclipse.jst.j2ee.internal.web.container', exported: 'true'])
             }
         }
-    }
-}
-
-
-// ---------------------------------------------------------------
-// Gradle CSS Plugin
-// ---------------------------------------------------------------
-css.source {
-    dev {
-        css {
-            srcDir "src/main/webapp/css"
-            include "*.css"
-            exclude "*.min.css"
-        }
-    }
-}
-
-combineCss {
-    source = css.source.dev.css.files
-    dest = "${buildDir}/all.css"
-}
-
-minifyCss {
-    source = combineCss
-    dest = "${buildDir}/all-min.css"
-    yuicompressor { // Optional
-        lineBreakPos = -1
-    }
-}
-
-gzipCss {
-    source = minifyCss
-    dest = "${buildDir}/all-${version}.css"
-}
-
-// ---------------------------------------------------------------
-// Build Script Plugins
-// ---------------------------------------------------------------
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.eriwen:gradle-css-plugin:1.11.+'
-        classpath 'com.eriwen:gradle-js-plugin:1.12.+'
     }
 }
 
