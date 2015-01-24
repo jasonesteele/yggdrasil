@@ -20,17 +20,19 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 public class MvcServletConfig extends WebMvcConfigurerAdapter {
   @Override
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(2592000);
-    registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/")
+    registry.addResourceHandler("/css/**").addResourceLocations("/WEB-INF/static/css/")
         .setCachePeriod(2592000);
-    registry.addResourceHandler("/images/**").addResourceLocations("/images/")
+    registry.addResourceHandler("/images/**").addResourceLocations("/WEB-INF/static/images/")
         .setCachePeriod(2592000);
-    registry.addResourceHandler("/js/**").addResourceLocations("/js/").setCachePeriod(2592000);
+    registry.addResourceHandler("/js/**").addResourceLocations("/WEB-INF/static/js/")
+        .setCachePeriod(2592000);
+    registry.addResourceHandler("/fonts/**").addResourceLocations("/WEB-INF/static/fonts/")
+        .setCachePeriod(2592000);
   }
 
   @Override
   public void addViewControllers(final ViewControllerRegistry registry) {
-    registry.addViewController("/index.htm").setViewName("index");
+    registry.addViewController("/index.htm").setViewName("home");
     registry.addViewController("/login").setViewName("login");
   }
 
