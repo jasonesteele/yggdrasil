@@ -1,6 +1,7 @@
 package yggdrasil.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
@@ -24,8 +25,8 @@ public abstract class AbstractDaoImpl<T, PK extends Serializable> implements Abs
 
   @SuppressWarnings("unchecked")
   @Override
-  public T create(final T entity) {
-    return (T) getSession().save(entity);
+  public PK create(final T entity) {
+    return (PK) getSession().save(entity);
   }
 
   @Override
@@ -44,6 +45,14 @@ public abstract class AbstractDaoImpl<T, PK extends Serializable> implements Abs
     return (T) getSession().get(getEntityClass(), key);
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<T> getAll() {
+    final Session session = getSession();
+
+    return session.createCriteria(getEntityClass()).list();
+  }
+
   abstract protected Class<T> getEntityClass();
 
   /**
@@ -59,5 +68,4 @@ public abstract class AbstractDaoImpl<T, PK extends Serializable> implements Abs
   public void update(final T entity) {
     getSession().update(entity);
   }
-
 }

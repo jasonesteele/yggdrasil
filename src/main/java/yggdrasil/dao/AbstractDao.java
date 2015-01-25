@@ -1,6 +1,7 @@
 package yggdrasil.dao;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -23,7 +24,7 @@ public interface AbstractDao<T, PK extends Serializable> {
    *          values to use in creating entity
    * @return entity object with any modifications made by the persistence layer
    */
-  T create(T entity);
+  PK create(T entity);
 
   /**
    * Deletes an entity.
@@ -41,6 +42,13 @@ public interface AbstractDao<T, PK extends Serializable> {
    * @return entity object
    */
   T get(PK key);
+
+  /**
+   * Gets all entity objects of this type.
+   *
+   * @return list of entity objects
+   */
+  List<T> getAll();
 
   /**
    * Updates an entity object.
