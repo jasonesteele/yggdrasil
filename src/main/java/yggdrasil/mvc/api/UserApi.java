@@ -24,7 +24,7 @@ import yggdrasil.mvc.resources.UserResource;
 @RestController
 @RequestMapping("api/user")
 @Transactional
-public class UserController {
+public class UserApi {
   @Resource
   private UserDao userDao;
 
