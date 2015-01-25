@@ -7,7 +7,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import yggdrasil.mvc.MvcServletConfig;
-import yggdrasil.mvc.ThymeleafConfig;
 
 /**
  * Initializer for the main web application.
@@ -23,7 +22,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
   @Override
   protected Class<?>[] getServletConfigClasses() {
-    return new Class<?>[] { MvcServletConfig.class, ThymeleafConfig.class };
+    return new Class<?>[] { MvcServletConfig.class };
   }
 
   @Override
