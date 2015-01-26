@@ -70,7 +70,6 @@
               <span class="navbar-icon-text">Logout</span>
             </a>
             <form id="logout" th:action="@{/logout}" method="post">
-              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             </form>
           </li>
         </ul>
