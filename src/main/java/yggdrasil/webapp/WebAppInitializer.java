@@ -1,5 +1,6 @@
 package yggdrasil.webapp;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
@@ -7,6 +8,7 @@ import javax.servlet.ServletRegistration.Dynamic;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import yggdrasil.mvc.CORSFilter;
 import yggdrasil.mvc.MvcServletConfig;
 
 /**
@@ -29,6 +31,11 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
   @Override
   protected Class<?>[] getServletConfigClasses() {
     return new Class<?>[] { MvcServletConfig.class };
+  }
+
+  @Override
+  protected Filter[] getServletFilters() {
+    return new Filter[] { new CORSFilter() };
   }
 
   @Override

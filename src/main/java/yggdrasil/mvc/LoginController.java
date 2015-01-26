@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.mangofactory.swagger.annotations.ApiIgnore;
+
 /**
  * MVC controller for the login page. Already authenticated users are redirected
  * to the home page.
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller("loginController")
 @RequestMapping("/login")
+@ApiIgnore
 public class LoginController {
   @Resource
   private Environment env;

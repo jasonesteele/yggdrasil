@@ -23,6 +23,8 @@ import yggdrasil.model.User;
 import yggdrasil.mvc.resources.UserListResource;
 import yggdrasil.mvc.resources.UserResource;
 
+import com.wordnik.swagger.annotations.Api;
+
 /**
  * REST controller for user information.
  *
@@ -30,6 +32,7 @@ import yggdrasil.mvc.resources.UserResource;
  */
 @RestController
 @RequestMapping(value = "admin/api/user")
+@Api(value = "User Accounts", description = "Administrative management of user accounts")
 @Transactional
 public class AccountApi {
   // TODO - exception handling

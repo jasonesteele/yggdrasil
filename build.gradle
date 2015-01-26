@@ -90,6 +90,7 @@ dependencies {
     compile "org.thymeleaf:thymeleaf-spring4:$project.ext.thymeleafVersion"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.1.RELEASE"
     compile "com.fasterxml.jackson.core:jackson-databind:$project.ext.jacksonVersion"
+    compile "com.mangofactory:swagger-springmvc:0.9.4"
 
     compile "com.h2database:h2:1.4.184"
 
@@ -97,10 +98,10 @@ dependencies {
     provided "org.slf4j:jul-to-slf4j:1.7.10"
     provided "org.slf4j:jcl-over-slf4j:1.7.10"
     provided "ch.qos.logback:logback-classic:1.1.2"
-    provided 'javax:javaee-web-api:7.0'
+    provided "javax:javaee-web-api:7.0"
 
-    testCompile ('junit:junit:4.+') {
-       exclude group: 'org.hamcrest'
+    testCompile ("junit:junit:4.+") {
+       exclude group: "org.hamcrest"
     }
     testCompile "org.hamcrest:hamcrest-library:1.3"
     

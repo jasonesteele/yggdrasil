@@ -11,12 +11,15 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.mangofactory.swagger.plugin.EnableSwagger;
+
 /**
  * Configuration for Spring MVC dispatcher servlet.
  *
  * @author jason
  */
 @EnableWebMvc
+@EnableSwagger
 @Configuration
 @ComponentScan
 public class MvcServletConfig extends WebMvcConfigurerAdapter {

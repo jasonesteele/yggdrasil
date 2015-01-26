@@ -1,5 +1,9 @@
-define(['jquery', 'underscore', 'backbone', 'bootstrap', 'datatables'], 
+define(['jquery', 'underscore', 'backbone'], 
 		function($, _, backbone) {
+	var initialize = function() {
+	}
+	
 	return {
+		initialize : initialize
 	}
 });
