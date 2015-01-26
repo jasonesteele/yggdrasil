@@ -40,10 +40,6 @@ public class AccountApi {
   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public UserResource addUser(@RequestBody(required = true) final UserResource userResource) {
     final User user = new User();
-    if (null != userResource.getId()) {
-      throw new IllegalArgumentException("id not allowed on insert");
-    }
-
     if (null != userResource.getUsername()) {
       user.setUsername(userResource.getUsername());
     }
@@ -58,6 +54,16 @@ public class AccountApi {
     user.setPassword(UUID.randomUUID().toString());
 
     return new UserResource(userDao.get(userDao.create(user)));
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+  public ResponseEntity<String> deleteUser(@PathVariable("id") final String id) {
+    final long userId = Long.valueOf(id);
+    if (userId == getCurrentUser().getId()) {
+      throw new IllegalArgumentException("can't delete current user");
+    }
+    userDao.delete(userId);
+    return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
   }
 
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,10 +91,6 @@ public class AccountApi {
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> updateUser(@PathVariable("id") final String id,
       @RequestBody(required = true) final UserResource userResource) {
-    if (null != userResource.getId()) {
-      throw new IllegalArgumentException("id not allowed on edit");
-    }
-
     final User user = userDao.get(Long.valueOf(id));
     if (null != userResource.getUsername()) {
       user.setUsername(userResource.getUsername());

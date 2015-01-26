@@ -2,6 +2,7 @@ package yggdrasil.webapp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -15,6 +16,11 @@ import yggdrasil.mvc.MvcServletConfig;
  */
 @Order(10)
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+  @Override
+  protected void customizeRegistration(final Dynamic registration) {
+    registration.setInitParameter("dispatchOptionsRequest", "true");
+  }
+
   @Override
   protected Class<?>[] getRootConfigClasses() {
     return new Class<?>[] { RootConfig.class };
