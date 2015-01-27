@@ -43,11 +43,11 @@ import com.wordnik.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping(value = "admin/api/account")
-@Api(value = "admin-accounts", description = "Administration of user accounts")
+@Api(value = "admin-account", description = "Administration of user accounts")
 @Transactional
 public class AccountApi {
-  // TODO - add validation and exception mapping
-  // TODO - add exception mapping for constraint violations
+  // TODO - add hibernate validation and exception mapping
+  // TODO - add exception mapping for database constraint violations
 
   @Resource
   private UserDao userDao;
@@ -56,7 +56,7 @@ public class AccountApi {
   @ApiResponses({
       @ApiResponse(code = 200, message = "Default success method.  Not returned by this method.", response = Void.class),
       @ApiResponse(code = 201, message = "User was added succesfully.  The Location header contains the URI of the newly created user.", response = UserResource.class) })
-  @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/new", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Void> addUser(
       @RequestBody(required = true) final UserResource userResource,
       final HttpServletRequest request) {
