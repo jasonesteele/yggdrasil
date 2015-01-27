@@ -2,19 +2,27 @@ package yggdrasil.mvc.resources;
 
 import yggdrasil.model.User;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  * User resource accessed by the REST API.
  *
  * @author jason
  */
+@ApiModel(value = "User", description = "User resource representation")
 public class UserResource {
   /** Unique internal user id. */
+  @ApiModelProperty(value = "Primary key for user")
   private Long id;
   /** Unique login name for user. */
+  @ApiModelProperty(value = "User's login name")
   private String username;
   /** E-mail address for user. */
+  @ApiModelProperty(value = "User's e-mail address")
   private String email;
   /** True if user account is enabled. */
+  @ApiModelProperty(value = "User account is enabled?")
   private Boolean isEnabled;
 
   /**
@@ -25,7 +33,7 @@ public class UserResource {
 
   /**
    * Creates the resource from the current values of a domain object.
-   * 
+   *
    * @param user
    *          domain user object
    */

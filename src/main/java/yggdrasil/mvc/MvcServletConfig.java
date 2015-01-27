@@ -1,5 +1,8 @@
 package yggdrasil.mvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.context.annotation.Bean;
@@ -7,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,6 +22,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;
+import com.mangofactory.swagger.models.dto.ResponseMessage;
 import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 
@@ -81,6 +87,23 @@ public class MvcServletConfig extends WebMvcConfigurerAdapter {
         .apiInfo(apiInfo()).includePatterns("/api/*", "/admin/api/.*");
 
     swaggerPlugin.apiVersion(env.getProperty("swagger.apiVersion", "0.0"));
+
+    final List<ResponseMessage> globalPostResponses = new ArrayList<ResponseMessage>();
+    globalPostResponses.add(new ResponseMessage(HttpStatus.OK.value(), "Request was successful.",
+        null));
+    globalPostResponses.add(new ResponseMessage(HttpStatus.UNAUTHORIZED.value(),
+        "Authorization is required to access the resource.", null));
+    globalPostResponses.add(new ResponseMessage(HttpStatus.FORBIDDEN.value(),
+        "Access to the resource is forbidden.  The caller has insufficient privilege.", null));
+
+    final List<ResponseMessage> globalResponses = new ArrayList<ResponseMessage>(
+        globalPostResponses);
+    globalResponses.add(new ResponseMessage(HttpStatus.NOT_FOUND.value(),
+        "The requested resource was not found.", null));
+
+    swaggerPlugin.globalResponseMessage(RequestMethod.POST, globalPostResponses);
+    swaggerPlugin.globalResponseMessage(RequestMethod.PUT, globalResponses);
+    swaggerPlugin.globalResponseMessage(RequestMethod.GET, globalResponses);
 
     return swaggerPlugin;
   }

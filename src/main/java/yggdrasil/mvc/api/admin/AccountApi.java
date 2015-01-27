@@ -3,8 +3,10 @@ package yggdrasil.mvc.api.admin;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
@@ -24,6 +27,9 @@ import yggdrasil.mvc.resources.UserListResource;
 import yggdrasil.mvc.resources.UserResource;
 
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
  * REST controller for user information.
@@ -31,7 +37,7 @@ import com.wordnik.swagger.annotations.Api;
  * @author jason
  */
 @RestController
-@RequestMapping(value = "admin/api/user")
+@RequestMapping(value = "admin/api/account")
 @Api(value = "User Accounts", description = "Administrative management of user accounts")
 @Transactional
 public class AccountApi {
@@ -40,8 +46,14 @@ public class AccountApi {
   @Resource
   private UserDao userDao;
 
+  @ApiOperation(value = "Create a new user", notes = "Adds a new user with a random password.  id is ignored, if specified.")
+  @ApiResponses({
+      @ApiResponse(code = 200, message = "Default success method.  Not returned by this method.", response = Void.class),
+      @ApiResponse(code = 201, message = "User was added.  Return value contains primary key", response = UserResource.class) })
   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public UserResource addUser(@RequestBody(required = true) final UserResource userResource) {
+  public ResponseEntity<UserResource> addUser(
+      @RequestBody(required = true) final UserResource userResource,
+      final HttpServletRequest request) {
     final User user = new User();
     if (null != userResource.getUsername()) {
       user.setUsername(userResource.getUsername());
@@ -56,7 +68,15 @@ public class AccountApi {
     // Set random password
     user.setPassword(UUID.randomUUID().toString());
 
-    return new UserResource(userDao.get(userDao.create(user)));
+    final UserResource returnResource = new UserResource(userDao.get(userDao.create(user)));
+
+    final HttpHeaders headers = new HttpHeaders();
+    headers.add(
+        HttpHeaders.LOCATION,
+        ServletUriComponentsBuilder.fromContextPath(request)
+            .path("/admin/api/account/" + returnResource.getId()).toUriString());
+
+    return new ResponseEntity<UserResource>(returnResource, headers, HttpStatus.CREATED);
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

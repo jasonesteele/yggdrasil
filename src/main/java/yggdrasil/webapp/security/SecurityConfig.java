@@ -42,22 +42,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
-    if (Boolean.valueOf(env.getProperty("security.disable_api_auth", "false"))) {
-      // @formatter:off
-      http
-        .authorizeRequests()
-          .antMatchers("/api/**").anonymous()
-          .antMatchers("/admin/api/**").anonymous()
-          .antMatchers("/**/api-docs/**").anonymous();
-      // @formatter:off
-    }
-
     // @formatter:off
     http
       .authorizeRequests()
         .antMatchers("/admin/**").hasRole("ADMIN")
         .anyRequest().authenticated();
     // @formatter:off
+
+    if (Boolean.valueOf(env.getProperty("security.disable_api_auth", "false"))) {
+      // @formatter:off
+      http
+        .authorizeRequests()
+          .antMatchers("/api/**").anonymous()
+          .antMatchers("/admin/api/**").anonymous();
+      // @formatter:off
+    }
 
     // @formatter:on
     http.formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/").and().logout()

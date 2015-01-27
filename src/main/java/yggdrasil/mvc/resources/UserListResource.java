@@ -6,13 +6,18 @@ import java.util.List;
 
 import yggdrasil.model.User;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  * A collection of users.
  *
  * @author jason
  */
+@ApiModel(value = "User List", description = "A list of User resource representations")
 public class UserListResource {
   /** List of user resources. */
+  @ApiModelProperty(value = "List of users")
   private List<UserResource> users = new ArrayList<UserResource>();
 
   /**
