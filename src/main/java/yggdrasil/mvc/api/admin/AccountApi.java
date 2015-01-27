@@ -46,8 +46,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "User Accounts", description = "Administrative management of user accounts")
 @Transactional
 public class AccountApi {
-  // TODO - exception handling
-  // TODO - add validation
+  // TODO - add validation and exception mapping
+  // TODO - add exception mapping for constraint violations
 
   @Resource
   private UserDao userDao;
@@ -93,7 +93,7 @@ public class AccountApi {
   public ResponseEntity<String> deleteUser(
       @ApiParam("Primary key for user to delete.") @PathVariable("id") final String id) {
     final long userId = Long.valueOf(id);
-    if (userId == getCurrentUser().getId()) {
+    if (userId == getAuthenticatedUser().getId()) {
       return new ResponseEntity<String>("Can not delete current user",
           HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -101,25 +101,43 @@ public class AccountApi {
     return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
   }
 
+  @ApiOperation(value = "Retrieve all users", notes = "Retrieves a list of all user accounts configured in the system.")
+  @ApiResponses(@ApiResponse(code = 200, message = "List of all user accounts was returned."))
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public UserListResource getAllUsers() {
     return new UserListResource(userDao.getAll());
   }
 
-  @RequestMapping(value = "current", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserResource getCurrentUser() {
+  public User getAuthenticatedUser() {
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication instanceof AnonymousAuthenticationToken) {
       return null;
     } else {
       final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      final User user = userDao.findByName(userDetails.getUsername());
-      return new UserResource(user);
+      return userDao.findByName(userDetails.getUsername());
     }
   }
 
+  @ApiOperation(value = "Retrieve the current user", notes = "Retrieve the currently logged in user.")
+  @ApiResponses(@ApiResponse(code = 200, message = "Current user was successfully returned."))
+  @RequestMapping(value = "current", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UserResource> getCurrentUser(final HttpServletRequest request) {
+    final User user = getAuthenticatedUser();
+
+    final HttpHeaders headers = new HttpHeaders();
+    headers.add(
+        HttpHeaders.LOCATION,
+        ServletUriComponentsBuilder.fromContextPath(request)
+            .path("/admin/api/account/" + user.getId()).toUriString());
+
+    return new ResponseEntity<UserResource>(new UserResource(user), headers, HttpStatus.OK);
+  }
+
+  @ApiOperation(value = "Retrieve a user", notes = "Retrieves account information for a user.")
+  @ApiResponses(@ApiResponse(code = 200, message = "User account was succesfully returned."))
   @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserResource getUser(@PathVariable("id") final String id) {
+  public UserResource getUser(
+      @ApiParam("Primary key for user to update.") @PathVariable("id") final String id) {
     return new UserResource(userDao.get(Long.valueOf(id)));
   }
 
@@ -130,8 +148,13 @@ public class AccountApi {
     return enfe.getMessage();
   }
 
+  @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")
+  @ApiResponses({
+      @ApiResponse(code = 200, message = "Default success method.  Not returned by this method."),
+      @ApiResponse(code = 204, message = "User was updated succesfully.") })
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> updateUser(@PathVariable("id") final String id,
+  public ResponseEntity<String> updateUser(
+      @ApiParam("Primary key for user to update.") @PathVariable("id") final String id,
       @RequestBody(required = true) final UserResource userResource) {
     final User user = userDao.get(Long.valueOf(id));
     if (null != userResource.getUsername()) {
@@ -141,7 +164,7 @@ public class AccountApi {
       user.setEmail(userResource.getEmail());
     }
     if (null != userResource.getIsEnabled()) {
-      if (getCurrentUser().getId().equals(user.getId())) {
+      if (getAuthenticatedUser().getId().equals(user.getId())) {
         throw new IllegalArgumentException("can't enable or disable current user");
       }
       user.setEnabled(userResource.getIsEnabled());
