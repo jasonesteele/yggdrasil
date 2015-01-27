@@ -102,6 +102,7 @@ public class MvcServletConfig extends WebMvcConfigurerAdapter {
         "The requested resource was not found.", null));
 
     swaggerPlugin.globalResponseMessage(RequestMethod.POST, globalPostResponses);
+    swaggerPlugin.globalResponseMessage(RequestMethod.DELETE, globalPostResponses);
     swaggerPlugin.globalResponseMessage(RequestMethod.PUT, globalResponses);
     swaggerPlugin.globalResponseMessage(RequestMethod.GET, globalResponses);
 
