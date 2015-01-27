@@ -46,12 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // @formatter:off
       http
         .authorizeRequests()
-          .antMatchers("/api/**").anonymous()
-          .antMatchers("/admin/api/**").anonymous()
-          .antMatchers("/api-docs/**").anonymous()
+          .antMatchers("/api/**").permitAll()
+          .antMatchers("/admin/api/**").permitAll()
+          .antMatchers("/api-docs/**").permitAll()
           .antMatchers("/admin/**").hasRole("ADMIN")
           .anyRequest().authenticated();
-    // @formatter:off
+      // @formatter:off
     } else {
       // @formatter:off
       http

@@ -1,5 +1,5 @@
 require = {
-	  baseUrl: contextPath + '/js',
+	  baseUrl: contextPath + 'js',
 	  shim : {
 	    "bootstrap" : { "deps" :['jquery'] },
 	  },

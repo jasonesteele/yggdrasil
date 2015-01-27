@@ -22,6 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 @SuppressWarnings("serial")
 @Entity
 public class Permission implements GrantedAuthority {
+  private static final String AUTH_PREFIX = "PERM_";
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -58,7 +60,7 @@ public class Permission implements GrantedAuthority {
 
   @Override
   public String getAuthority() {
-    return "PERM_" + name;
+    return AUTH_PREFIX + name;
   }
 
   public Long getId() {
@@ -77,6 +79,7 @@ public class Permission implements GrantedAuthority {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((AUTH_PREFIX == null) ? 0 : AUTH_PREFIX.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
@@ -95,6 +98,6 @@ public class Permission implements GrantedAuthority {
 
   @Override
   public String toString() {
-    return name;
+    return getAuthority();
   }
 }

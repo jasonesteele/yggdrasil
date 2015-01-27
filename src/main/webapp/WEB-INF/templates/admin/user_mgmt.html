@@ -5,7 +5,9 @@
 </head>
 <body>
   <script>
-    require(['app/admin/user_mgmt'], function () {});
+    require(['app/admin/user_mgmt'], function (user_mgmt) {
+    	user_mgmt.initialize();
+    });
   </script>
 
   <nav th:replace="fragments/page :: navbar"></nav>

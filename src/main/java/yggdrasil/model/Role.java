@@ -21,6 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 @SuppressWarnings("serial")
 @Entity
 public class Role implements GrantedAuthority {
+  private static final String AUTH_PREFIX = "ROLE_";
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -82,6 +84,7 @@ public class Role implements GrantedAuthority {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((AUTH_PREFIX == null) ? 0 : AUTH_PREFIX.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
@@ -104,6 +107,6 @@ public class Role implements GrantedAuthority {
 
   @Override
   public String toString() {
-    return name;
+    return getAuthority();
   }
 }
