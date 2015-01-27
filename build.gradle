@@ -91,6 +91,7 @@ dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.1.RELEASE"
     compile "com.fasterxml.jackson.core:jackson-databind:$project.ext.jacksonVersion"
     compile "com.mangofactory:swagger-springmvc:0.9.4"
+    compile 'net.sourceforge.nekohtml:nekohtml:1.9.21'
 
     compile "com.h2database:h2:1.4.184"
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-<head th:replace="fragments/page :: head (title='JMud - Admin - User Management')">
+<head th:replace="fragments/page :: head (title='Yggdrasil - Admin - User Management')">
 </head>
 <body>
   <script>
@@ -10,6 +10,26 @@
     });
   </script>
 
+  <script id="userRowTemplate" type="text/template">
+    <td><%=id%></td>
+    <td><%=email%></td>
+    <td><%=username%></td>
+    <td><%=isEnabled%></td>
+  </script>
+
   <nav th:replace="fragments/page :: navbar"></nav>
+
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>E-Mail</th>
+        <th>Username</th>
+        <th>Enabled?</th>
+      </tr>
+    </thead>
+    <tbody id="userList">
+    </tbody>
+  </table>
 </body>
 </html>
