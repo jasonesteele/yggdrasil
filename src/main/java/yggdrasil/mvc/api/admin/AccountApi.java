@@ -43,7 +43,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
  */
 @RestController
 @RequestMapping(value = "admin/api/account")
-@Api(value = "User Accounts", description = "Administrative management of user accounts")
+@Api(value = "admin-accounts", description = "Administrative management of user accounts")
 @Transactional
 public class AccountApi {
   // TODO - add validation and exception mapping
