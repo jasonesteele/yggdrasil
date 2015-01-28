@@ -5,7 +5,8 @@ define(['jquery', 'underscore', 'backbone', 'bootstrap'],
 	});
 
 	var UserList = backbone.Collection.extend({
-		model: User
+		model: User,
+		url: contextPath + "admin/api/account"
 	});
 
 	var UserView = Backbone.View.extend({
@@ -45,17 +46,6 @@ define(['jquery', 'underscore', 'backbone', 'bootstrap'],
 	var userList = new UserListView();
 
 	var initialize = function() {
-		$.getJSON(contextPath + "admin/api/account")
-		.done(function(data) {
-			$.each(data.users, function(i, user) {
-				users.add(user);
-			});
-			userList.render();
-		}).fail(function() {
-			// TODO - this needs better error handling
-			console.log("failure");
-		});
-		
 		userList.initialize();
 	}
 
