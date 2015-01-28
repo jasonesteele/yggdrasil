@@ -18,6 +18,10 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'],
 			orderSeparator: ''
 		}),
 	},{
+		name: "isEnabled",
+		label: "Enabled",
+		cell: "boolean",
+	},{
 		name: "username",
 		label: "Username",
 		cell: "string",
@@ -25,10 +29,6 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'],
 		name: "email",
 		label: "E-Mail",
 		cell: "string",
-	},{
-		name: "isEnabled",
-		label: "Enabled?",
-		cell: "boolean",
 	}];
 	
 	var grid = new Backgrid.Grid({
