@@ -1,52 +1,44 @@
-define(['jquery', 'underscore', 'backbone', 'bootstrap'], 
-		function($, _, backbone) {
+define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'], 
+		function($, _, backbone, backgrid) {
 	// Type definitions
-	var User = backbone.Model.extend({
-	});
+	var User = backbone.Model.extend({});
 
 	var UserList = backbone.Collection.extend({
 		model: User,
 		url: contextPath + "admin/api/account"
 	});
-
-	var UserView = Backbone.View.extend({
-		tagName: "<tr>",
-		template: $("#userRowTemplate").html(),
-		render: function() {
-			var tmpl = _.template(this.template);
-			this.$el.html(tmpl(this.model.toJSON()));
-			return this;
-		}
-	});
-
-	var UserListView = Backbone.View.extend({
-		el: $("#userList"),
-
-		initialize: function() {
-			this.collection = users;
-			this.render();
-		},
-
-		render: function() {
-			var that = this;
-			_.each(this.collection.models, function(item) {
-				that.renderUser(item);
-			}, this);
-		},
-
-		renderUser: function(item) {
-			var itemView = new UserView({
-				model: item
-			});
-			this.$el.append(itemView.render().el);
-		}
-	});
-
+	
 	var users = new UserList();
-	var userList = new UserListView();
+
+	var columns = [{
+		name: "id",
+		label: "ID",
+		editable: false,
+		cell: backgrid.IntegerCell.extend({
+			orderSeparator: ''
+		}),
+	},{
+		name: "username",
+		label: "Username",
+		cell: "string",
+	},{
+		name: "email",
+		label: "E-Mail",
+		cell: "string",
+	},{
+		name: "isEnabled",
+		label: "Enabled?",
+		cell: "boolean",
+	}];
+	
+	var grid = new Backgrid.Grid({
+	  columns: columns,
+	  collection: users
+	});
 
 	var initialize = function() {
-		userList.initialize();
+		$("#userList").append(grid.render().el);
+		users.fetch({reset: true});	
 	}
 
 	return {

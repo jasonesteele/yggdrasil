@@ -1,5 +1,7 @@
 package yggdrasil.mvc.api.admin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -27,7 +29,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
-import yggdrasil.mvc.resources.UserListResource;
 import yggdrasil.mvc.resources.UserResource;
 
 import com.wordnik.swagger.annotations.Api;
@@ -104,8 +105,12 @@ public class AccountApi {
   @ApiOperation(value = "Retrieve all users", notes = "Retrieves a list of all user accounts configured in the system.")
   @ApiResponses(@ApiResponse(code = 200, message = "List of all user accounts was returned."))
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserListResource getAllUsers() {
-    return new UserListResource(userDao.getAll());
+  public List<UserResource> getAllUsers() {
+    final List<UserResource> userList = new ArrayList<UserResource>();
+    for (User user : userDao.getAll()) {
+      userList.add(new UserResource(user));
+    }
+    return userList;
   }
 
   public User getAuthenticatedUser() {
