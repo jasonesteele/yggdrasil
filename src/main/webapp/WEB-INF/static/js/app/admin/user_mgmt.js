@@ -1,7 +1,20 @@
 define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'], 
 		function($, _, backbone, backgrid) {
 	// Type definitions
-	var User = backbone.Model.extend({});
+	var User = backbone.Model.extend({
+		initialize: function() {
+			var obj = this
+			
+			this.bind('change', function(model) {
+				model.save().fail(function(jqXHR, textStatus, errorThrown) {
+					console.log("error saving " + model);
+					// TODO - pop up a notification
+					model.fetch();
+					// TODO - this is hokey - the fetch() causes another save
+				});
+			});
+		}
+	});
 
 	var UserList = backbone.Collection.extend({
 		model: User,
@@ -38,7 +51,7 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'],
 
 	var initialize = function() {
 		$("#userList").append(grid.render().el);
-		users.fetch({reset: true});	
+		users.fetch({reset: true});
 	}
 
 	return {

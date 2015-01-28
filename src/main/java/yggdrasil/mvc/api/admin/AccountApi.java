@@ -150,7 +150,16 @@ public class AccountApi {
   @ResponseBody
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
   public String handleException(final EntityNotFoundException enfe) {
+    // TODO - turn this into a JSON error resource?
     return enfe.getMessage();
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseBody
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public String handleException(final IllegalArgumentException iae) {
+    // TODO - turn this into a JSON error resource?
+    return iae.getMessage();
   }
 
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")
@@ -170,9 +179,12 @@ public class AccountApi {
     }
     if (null != userResource.getIsEnabled()) {
       if (getAuthenticatedUser().getId().equals(user.getId())) {
-        throw new IllegalArgumentException("can't enable or disable current user");
+        if (user.isEnabled() != userResource.getIsEnabled()) {
+          throw new IllegalArgumentException("can't enable or disable current user");
+        }
+      } else {
+        user.setEnabled(userResource.getIsEnabled());
       }
-      user.setEnabled(userResource.getIsEnabled());
     }
 
     userDao.update(user);
