@@ -1,17 +1,24 @@
-define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'], 
-		function($, _, backbone, backgrid) {
+define(['jquery', 'underscore', 'backbone', 'backgrid', 'notify', 'bootstrap'], 
+		function($, _, backbone, backgrid, notify) {
+
+	$.notify.defaults({globalPosition: 'bottom right'});
+	
 	// Type definitions
 	var User = backbone.Model.extend({
 		initialize: function() {
+			
 			var obj = this
 			
-			this.bind('change', function(model) {
-				model.save().fail(function(jqXHR, textStatus, errorThrown) {
-					console.log("error saving " + model);
-					// TODO - pop up a notification
-					model.fetch();
-					// TODO - this is hokey - the fetch() causes another save
-				});
+			this.bind('backgrid:edited', function(model, column, command) {
+		    model.save();
+		  });
+			
+			this.bind('error', function(model, resp, options) {
+		    $.notify(
+		    		"Error: HTTP Status " + resp.status + " - " + resp.responseText, 
+		    		'error');
+		    // Reload model from server
+				model.fetch();
 			});
 		}
 	});
@@ -46,7 +53,8 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap'],
 	
 	var grid = new Backgrid.Grid({
 	  columns: columns,
-	  collection: users
+	  collection: users,
+	  emptyText: "no users loaded"
 	});
 
 	var initialize = function() {

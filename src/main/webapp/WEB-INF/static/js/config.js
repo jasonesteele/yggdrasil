@@ -7,6 +7,7 @@ require = {
         deps: ['jquery', 'backbone', 'underscore'],
         exports: 'Backgrid',
       },
+      notify: { "deps" :['jquery'] },
 	  },
 	  
 	  paths: {
@@ -16,5 +17,6 @@ require = {
 	  	underscore: 'lib/underscore',
 	  	backbone: 'lib/backbone',
 	  	backgrid: 'lib/backgrid',
+	  	notify: 'lib/notify',
 	  }
 	};
