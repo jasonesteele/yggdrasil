@@ -14,8 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 
 /**
  * Application configuration for web security.
@@ -42,40 +40,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
-    if (Boolean.valueOf(env.getProperty("security.disable_api_auth", "false"))) {
-      // @formatter:off
-      http
-        .authorizeRequests()
-          .antMatchers("/api/**").permitAll()
-          .antMatchers("/admin/api/**").permitAll()
-          .antMatchers("/api-docs/**").permitAll()
-          .antMatchers("/admin/**").hasRole("ADMIN")
-          .anyRequest().authenticated();
-      // @formatter:off
-    } else {
-      // @formatter:off
-      http
-        .authorizeRequests()
-          .antMatchers("/admin/**").hasRole("ADMIN")
-          .anyRequest().authenticated();
-      // @formatter:off
-    }
-
+    // @formatter:off
+    http
+      .authorizeRequests()
+        .antMatchers("/admin/**").hasRole("ADMIN")
+        .anyRequest().authenticated()
+      .and()
+        .formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/").and().logout()
+        .permitAll()
+      .and()
+        .csrf();
     // @formatter:on
-    http.formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/").and().logout()
-        .permitAll();
-    // @formatter:on
-
-    if (Boolean.valueOf(env.getProperty("security.disable_csrf", "false"))) {
-      /*
-       * Still generate the tokens (to avoid template errors), but don't require
-       * them to be set.
-       */
-      http.csrf().requireCsrfProtectionMatcher(
-          new NegatedRequestMatcher(new AntPathRequestMatcher("/**")));
-    } else {
-      http.csrf();
-    }
   }
 
   @Override

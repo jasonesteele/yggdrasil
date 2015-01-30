@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
+import yggdrasil.mvc.api.ApiError;
 import yggdrasil.mvc.resources.UserResource;
 
 import com.wordnik.swagger.annotations.Api;
@@ -149,17 +150,15 @@ public class AccountApi {
   @ExceptionHandler(EntityNotFoundException.class)
   @ResponseBody
   @ResponseStatus(value = HttpStatus.NOT_FOUND)
-  public String handleException(final EntityNotFoundException enfe) {
-    // TODO - turn this into a JSON error resource?
-    return enfe.getMessage();
+  public ApiError handleException(final EntityNotFoundException enfe) {
+    return new ApiError(enfe.getMessage());
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
   @ResponseBody
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public String handleException(final IllegalArgumentException iae) {
-    // TODO - turn this into a JSON error resource?
-    return iae.getMessage();
+  public ApiError handleException(final IllegalArgumentException iae) {
+    return new ApiError(iae.getMessage());
   }
 
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")

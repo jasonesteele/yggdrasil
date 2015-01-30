@@ -1,7 +1,6 @@
-define(['jquery', 'underscore', 'backbone', 'backgrid', 'notify', 'bootstrap'], 
+define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap', 
+        'app/lib/ajax-crsf', 'app/lib/notify'], 
 		function($, _, backbone, backgrid, notify) {
-
-	$.notify.defaults({globalPosition: 'bottom right'});
 	
 	// Type definitions
 	var User = backbone.Model.extend({
@@ -14,10 +13,11 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'notify', 'bootstrap'],
 		  });
 			
 			this.bind('error', function(model, resp, options) {
+				var message = resp.responseJSON && resp.responseJSON.message ? 
+						resp.responseJSON.message : resp.statusText;
 		    $.notify(
-		    		"Error: HTTP Status " + resp.status + " - " + resp.responseText, 
+		    		"Error: HTTP Status " + resp.status + " - " + message,
 		    		'error');
-		    // Reload model from server
 				model.fetch();
 			});
 		}
@@ -54,7 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'notify', 'bootstrap'],
 	var grid = new Backgrid.Grid({
 	  columns: columns,
 	  collection: users,
-	  emptyText: "no users loaded"
+	  emptyText: "no users loaded"  // TODO - style this?
 	});
 
 	var initialize = function() {
