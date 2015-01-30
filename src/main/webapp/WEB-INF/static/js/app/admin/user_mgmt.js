@@ -13,10 +13,14 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap',
 		  });
 			
 			this.bind('error', function(model, resp, options) {
-				var message = resp.responseJSON && resp.responseJSON.message ? 
-						resp.responseJSON.message : resp.statusText;
+				var message;
+				if (resp.responseJSON && resp.responseJSON.message) {
+					message = resp.responseJSON.message;
+				} else {
+					message = "HTTP Status " + resp.status + ": " + message;
+				}
 		    $.notify(
-		    		"Error: HTTP Status " + resp.status + " - " + message,
+		    		"Error: " + message,
 		    		'error');
 				model.fetch();
 			});
