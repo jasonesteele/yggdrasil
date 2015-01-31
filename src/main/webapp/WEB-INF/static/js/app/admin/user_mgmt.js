@@ -5,31 +5,36 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap',
 	// Type definitions
 	var User = backbone.Model.extend({
 		initialize: function() {
-			
 			var obj = this
 			
 			this.bind('backgrid:edited', function(model, column, command) {
-		    model.save();
+		    model.save().error(function(xhr, textStatus, message) {
+					var message;
+					if (xhr.responseJSON && xhr.responseJSON.message) {
+						message = xhr.responseJSON.message;
+					} else {
+						message = "HTTP Status " + xhr.status + ": " + message;
+					}
+			    $.notify("Error: " + message, 'error');
+
+			    model.fetch();
+		    })
 		  });
 			
 			this.bind('error', function(model, resp, options) {
-				var message;
-				if (resp.responseJSON && resp.responseJSON.message) {
-					message = resp.responseJSON.message;
-				} else {
-					message = "HTTP Status " + resp.status + ": " + message;
+				if (resp.status == 403) {
+					setTimeout(function() {
+						window.location.replace(contextPath);
+					}, 2000);
 				}
-		    $.notify(
-		    		"Error: " + message,
-		    		'error');
-				model.fetch();
 			});
+			
 		}
 	});
 
 	var UserList = backbone.Collection.extend({
 		model: User,
-		url: contextPath + "admin/api/account"
+		url: contextPath + "api/admin/account"
 	});
 	
 	var users = new UserList();

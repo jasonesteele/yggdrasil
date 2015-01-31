@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,9 +45,10 @@ import com.wordnik.swagger.annotations.ApiResponses;
  * @author jason
  */
 @RestController
-@RequestMapping(value = "admin/api/account")
-@Api(value = "admin-account", description = "Administration of user accounts")
 @Transactional
+@Api(value = "admin-account", description = "Administration of user accounts")
+@RequestMapping(value = "api/admin/account")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AccountApi {
   // TODO - add hibernate validation and exception mapping
   // TODO - add exception mapping for database constraint violations

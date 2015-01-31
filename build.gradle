@@ -77,6 +77,8 @@ dependencies {
     compile "org.springframework:spring-context:$project.ext.springVersion"
     compile "org.springframework:spring-webmvc:$project.ext.springVersion"
     compile "org.springframework:spring-orm:$project.ext.springVersion"
+    compile "org.springframework:spring-aop:$project.ext.springVersion"
+    compile "cglib:cglib:3.1"
     compile "org.springframework.security:spring-security-web:$project.ext.springSecurityVersion"
     compile "org.springframework.security:spring-security-config:$project.ext.springSecurityVersion"
     compile "org.yaml:snakeyaml:1.14"
@@ -91,7 +93,7 @@ dependencies {
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity3:2.1.1.RELEASE"
     compile "com.fasterxml.jackson.core:jackson-databind:$project.ext.jacksonVersion"
     compile "com.mangofactory:swagger-springmvc:0.9.4"
-    compile 'net.sourceforge.nekohtml:nekohtml:1.9.21'
+    compile "net.sourceforge.nekohtml:nekohtml:1.9.21"
 
     compile "com.h2database:h2:1.4.184"
 

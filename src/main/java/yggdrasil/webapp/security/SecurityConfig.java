@@ -2,10 +2,13 @@ package yggdrasil.webapp.security;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,44 +24,61 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @author jason
  */
 @Configuration
-@EnableWebMvcSecurity
 @ComponentScan
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
+  @EnableWebMvcSecurity
+  @Configuration
+  @Order(1)
+  public static class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+      // @formatter:off
+      http
+        .antMatcher("/api/**")
+          .authorizeRequests()
+            .anyRequest().authenticated();
+      // @formatter:on
+    }
+  }
+
+  @EnableWebMvcSecurity
+  @Configuration
+  @Order(2)
+  public static class AppSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    @Bean(name = "authenticationManager")
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+      return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+      // @formatter:off
+      http
+        .authorizeRequests()
+          .anyRequest().authenticated()
+        .and()
+          .formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/")
+        .and()
+          .logout().permitAll()
+        .and()
+          .csrf();
+      // @formatter:on
+    }
+
+    @Override
+    public void configure(final WebSecurity web) throws Exception {
+      // @formatter:off
+      web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**");
+      // @formatter:on
+    }
+  }
+
   @Resource
   private Environment env;
 
   @Resource
   private UserDetailsService userDetailsService;
-
-  @Override
-  protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-    // @formatter:off
-    auth
-      .authenticationProvider(daoAuthenticationProvider());
-    // @formatter:on
-  }
-
-  @Override
-  protected void configure(final HttpSecurity http) throws Exception {
-    // @formatter:off
-    http
-      .authorizeRequests()
-        .antMatchers("/admin/**").hasRole("ADMIN")
-        .anyRequest().authenticated()
-      .and()
-        .formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/").and().logout()
-        .permitAll()
-      .and()
-        .csrf();
-    // @formatter:on
-  }
-
-  @Override
-  public void configure(final WebSecurity web) throws Exception {
-    // @formatter:off
-    web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**");
-    // @formatter:on
-  }
 
   @Bean
   public DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -66,5 +86,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     provider.setUserDetailsService(userDetailsService);
     provider.setPasswordEncoder(new BCryptPasswordEncoder());
     return provider;
+  }
+
+  @Autowired
+  public void registerGlobal(final AuthenticationManagerBuilder auth) throws Exception {
+    auth.authenticationProvider(daoAuthenticationProvider());
   }
 }

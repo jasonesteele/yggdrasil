@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -35,6 +36,7 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 @EnableSwagger
 @Configuration
 @ComponentScan
+@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 @PropertySource("classpath:swagger.properties")
 public class MvcServletConfig extends WebMvcConfigurerAdapter {
   @Resource
@@ -58,7 +60,6 @@ public class MvcServletConfig extends WebMvcConfigurerAdapter {
   @Override
   public void addViewControllers(final ViewControllerRegistry registry) {
     registry.addViewController("/index.htm").setViewName("home");
-    registry.addViewController("/admin/user_mgmt").setViewName("admin/user_mgmt");
   }
 
   @Bean
