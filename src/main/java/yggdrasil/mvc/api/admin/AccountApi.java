@@ -31,6 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
 import yggdrasil.mvc.api.ApiError;
+import yggdrasil.mvc.api.InvalidOperationException;
 import yggdrasil.mvc.resources.UserResource;
 
 import com.wordnik.swagger.annotations.Api;
@@ -98,8 +99,7 @@ public class AccountApi {
       @ApiParam("Primary key for user to delete.") @PathVariable("id") final String id) {
     final long userId = Long.valueOf(id);
     if (userId == getAuthenticatedUser().getId()) {
-      return new ResponseEntity<String>("Can not delete current user",
-          HttpStatus.METHOD_NOT_ALLOWED);
+      throw new InvalidOperationException("can not delete current user");
     }
     userDao.delete(userId);
     return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
@@ -163,6 +163,13 @@ public class AccountApi {
     return new ApiError(iae.getMessage());
   }
 
+  @ExceptionHandler(InvalidOperationException.class)
+  @ResponseBody
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  public ApiError handleException(final InvalidOperationException ioe) {
+    return new ApiError(ioe.getMessage());
+  }
+
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")
   @ApiResponses({
       @ApiResponse(code = 200, message = "Default success method.  Not returned by this method."),
@@ -181,7 +188,7 @@ public class AccountApi {
     if (null != userResource.getIsEnabled()) {
       if (getAuthenticatedUser().getId().equals(user.getId())) {
         if (user.isEnabled() != userResource.getIsEnabled()) {
-          throw new IllegalArgumentException("can't enable or disable current user");
+          throw new IllegalArgumentException("can not enable or disable current user");
         }
       } else {
         user.setEnabled(userResource.getIsEnabled());

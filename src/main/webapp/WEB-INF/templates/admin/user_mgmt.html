@@ -10,14 +10,13 @@
     });
   </script>
 
-  <script id="userRowTemplate" type="text/template">
-    <td><%=id%></td>
-    <td><%=email%></td>
-    <td><%=username%></td>
-    <td><%=isEnabled%></td>
-  </script>
-
   <nav th:replace="fragments/page :: navbar"></nav>
+
+  <script id="deleteButton" type="text/template">
+    <a class="rowControl" href="#" title="Delete user">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </a>
+  </script>
 
   <div id="userList"></div>
 </body>

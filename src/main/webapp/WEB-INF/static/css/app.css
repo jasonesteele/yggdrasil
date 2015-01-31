@@ -37,3 +37,25 @@
   text-align: left;
   width: auto;
 }
+
+#userList tr td:nth-of-type(5),
+#userList tr th:nth-of-type(5) {
+  text-align: center;
+  width: 40px;
+}
+
+#userList .highlight {
+  background-color: whiteSmoke;
+}
+
+#userList .focus {
+  background-color: aliceBlue;
+}
+
+#userList .rowControl {
+  display: none;
+}
+
+#userList .highlight .rowControl {
+  display: inline;
+}
