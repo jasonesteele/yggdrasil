@@ -24,7 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap',
 			this.bind('error', function(model, resp, options) {
 				if (resp.status == 403) {
 					setTimeout(function() {
-						window.location.replace(contextPath);
+						window.location.reload();
 					}, 2000);
 				}
 			});
