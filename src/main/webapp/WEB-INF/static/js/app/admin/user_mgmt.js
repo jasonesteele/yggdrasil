@@ -85,8 +85,9 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap',
 		label: "E-Mail",
 		cell: "string",
 	},{
-		name: "delete",
+		name: "controls",
 		label: "",
+		sortable: false,
 		editable: false,
 		cell: DeleteCell,
 	}];
@@ -121,6 +122,12 @@ define(['jquery', 'underscore', 'backbone', 'backgrid', 'bootstrap',
 
 	var initialize = function() {
 		$("#userList").append(grid.render().el);
+
+		var addButton = _.template($("#addButton").html());
+		$("th.controls").append(addButton).click(function() {
+			$('#addUserModal').modal();
+		});
+
 		users.fetch({reset: true});
 	}
 

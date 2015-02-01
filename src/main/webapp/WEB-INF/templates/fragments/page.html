@@ -59,11 +59,15 @@
             </ul>
           </li>
         </ul>
-        
+
         <!-- Right side navbar items -->
         <ul class="nav navbar-nav navbar-right">
-          <li data-placement="bottom">
-            <a href="#" title="Logout" onclick="document.getElementById('logout').submit();">
+          <li class="hidden-xs">
+            <span class="navbar-text" 
+              sec:authentication="principal.username">User</span>
+          </li>
+          <li>
+            <a href="#" title="Logout" onclick="document.getElementById('logout').submit();"> 
               <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               <span class="navbar-icon-text">Logout</span>
             </a>
@@ -71,10 +75,6 @@
             </form>
           </li>
         </ul>
-        
-        <p class="navbar-right navbar-text hidden-xs">
-          <span sec:authentication="principal.username">User</span>
-        </p>
       </div>
       <!-- /.navbar-collapse -->
     </div>
