@@ -31,6 +31,7 @@ public class User implements UserDetails {
 
   @Column(nullable = false, unique = true)
   @Email
+  @NotBlank
   private String email;
 
   @Column(nullable = false, unique = true)
@@ -41,7 +42,7 @@ public class User implements UserDetails {
   private String password;
 
   @Column
-  private boolean enabled;
+  private boolean enabled = true;
 
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<Role> roles;

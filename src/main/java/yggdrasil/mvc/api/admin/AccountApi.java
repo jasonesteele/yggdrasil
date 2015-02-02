@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,8 +53,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @RequestMapping(value = "api/admin/account")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AccountApi {
-  // TODO - add hibernate validation and exception mapping
-  // TODO - add exception mapping for database constraint violations
+  // TODO - need much better error handling and reporting
+  // TODO - need client side validation
 
   @Resource
   private UserDao userDao;
@@ -61,8 +63,8 @@ public class AccountApi {
   @ApiResponses({
       @ApiResponse(code = 200, message = "Default success method.  Not returned by this method.", response = Void.class),
       @ApiResponse(code = 201, message = "User was added succesfully.  The Location header contains the URI of the newly created user.", response = UserResource.class) })
-  @RequestMapping(value = "/new", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> addUser(
+  @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Long> addUser(
       @RequestBody(required = true) final UserResource userResource,
       final HttpServletRequest request) {
     final User user = new User();
@@ -86,7 +88,7 @@ public class AccountApi {
         ServletUriComponentsBuilder.fromContextPath(request).path("/admin/api/account/" + newId)
             .toUriString());
 
-    return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    return new ResponseEntity<Long>(newId, headers, HttpStatus.CREATED);
   }
 
   @ApiOperation(value = "Delete a user", notes = "Deletes a user.  The currently logged in user can not be deleted.")
@@ -151,23 +153,32 @@ public class AccountApi {
 
   @ExceptionHandler(EntityNotFoundException.class)
   @ResponseBody
-  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public ApiError handleException(final EntityNotFoundException enfe) {
     return new ApiError(enfe.getMessage());
   }
 
-  @ExceptionHandler(IllegalArgumentException.class)
+  @ExceptionHandler(Exception.class)
   @ResponseBody
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ApiError handleException(final IllegalArgumentException iae) {
-    return new ApiError(iae.getMessage());
+  public ApiError handleException(final Exception e) {
+    return new ApiError(e.getMessage());
   }
 
-  @ExceptionHandler(InvalidOperationException.class)
+  @ExceptionHandler(ConstraintViolationException.class)
   @ResponseBody
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ApiError handleException(final InvalidOperationException ioe) {
-    return new ApiError(ioe.getMessage());
+  public ApiError handlerException(final ConstraintViolationException cve) {
+    final StringBuilder sb = new StringBuilder();
+    String delim = "";
+    for (ConstraintViolation<?> violation : cve.getConstraintViolations()) {
+      sb.append(delim).append(
+          violation.getPropertyPath() + "=[" + violation.getInvalidValue() + "]: "
+              + violation.getMessage());
+      delim = "\n";
+    }
+
+    return new ApiError("data constraint violation", sb.toString());
   }
 
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")
