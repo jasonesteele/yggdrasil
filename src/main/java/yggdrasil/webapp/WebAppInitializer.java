@@ -8,7 +8,6 @@ import javax.servlet.ServletRegistration.Dynamic;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import yggdrasil.mvc.CORSFilter;
 import yggdrasil.mvc.MvcServletConfig;
 
 /**
