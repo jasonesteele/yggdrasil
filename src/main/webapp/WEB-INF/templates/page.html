@@ -7,8 +7,13 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="_csrf" th:content="${_csrf.token}" th:if="${_crsf != null}" />
-  <meta name="_csrf_header" th:content="${_csrf.headerName}" th:if="${_crsf != null}" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+  
+  <meta name="_lastSecurityError"
+    th:content="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
+    th:if="${param.error != null && session['SPRING_SECURITY_LAST_EXCEPTION'] != null}"/>
+  <meta name="_logout" content="true" th:if="${param.logout}"/>
   
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,10 +22,8 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     
-  <script th:inline="javascript">
-    /*<![CDATA[*/
-      var contextPath = /*[[@{/}]]*/ '/';
-    /*]]>*/
+  <script th:inline='javascript'>
+    var _contextPath = /*[[@{/}]]*/ '/';         
   </script>
   <script th:src="@{/js/config.js}"></script>
   <script th:src="@{/js/require.js}"></script>
@@ -29,7 +32,7 @@
   <script th:inline="javascript">
     /*<![CDATA[*/
       var pageModule = /*[[${#httpServletRequest.requestURI}]]*/ '';
-      pageModule = pageModule.substring(contextPath.length);
+      pageModule = pageModule.substring(_contextPath.length);
       if (pageModule.length == 0) {
       	pageModule = "page/index";
       }

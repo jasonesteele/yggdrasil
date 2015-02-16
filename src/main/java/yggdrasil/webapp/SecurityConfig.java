@@ -28,22 +28,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig {
   @EnableWebMvcSecurity
   @Configuration
-  @Order(1)
+  @Order(2)
   public static class ApiSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
       // @formatter:off
       http
-        .antMatcher("/api/**")
-          .authorizeRequests()
-            .anyRequest().authenticated();
+       .antMatcher("/api/**")
+        .authorizeRequests()
+        .anyRequest().authenticated();
       // @formatter:on
     }
   }
 
   @EnableWebMvcSecurity
   @Configuration
-  @Order(2)
+  @Order(10)
   public static class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean(name = "authenticationManager")
@@ -56,14 +56,11 @@ public class SecurityConfig {
       // @formatter:off
       http
         .authorizeRequests()
-          // .anyRequest().authenticated()
-          .anyRequest().permitAll()
+          .anyRequest().authenticated()
         .and()
-          .formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/")
+          .formLogin().loginPage("/page/login").permitAll().defaultSuccessUrl("/")
         .and()
-          .logout().permitAll()
-        .and()
-          .csrf();
+          .logout().permitAll();
       // @formatter:on
     }
 
@@ -71,6 +68,21 @@ public class SecurityConfig {
     public void configure(final WebSecurity web) throws Exception {
       // @formatter:off
       web.ignoring().antMatchers("/css/**", "/js/**", "/images/**", "/fonts/**");
+      // @formatter:on
+    }
+  }
+
+  @EnableWebMvcSecurity
+  @Configuration
+  @Order(1)
+  public static class PublicApiSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
+      // @formatter:off
+      http
+       .antMatcher("/api/public/**")
+        .authorizeRequests()
+        .anyRequest().permitAll();
       // @formatter:on
     }
   }

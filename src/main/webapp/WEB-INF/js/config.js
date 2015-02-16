@@ -2,7 +2,9 @@
  * require.js configuration 
  */
 require = {
-  baseUrl : contextPath + 'js',
+	// TODO - set this up for dev/prod cache busting
+//	urlArgs: "v=" +  (new Date()).getTime(),
+	baseUrl : _contextPath + 'js',
 
   shim : {
     bootstrap : {

@@ -1,4 +1,4 @@
-define(['jquery', 'bootstrap', 'domReady!'], 
+define(['jquery'], 
 	function($) {
 		var headers = {}
 		headers[$('meta[name="_csrf_header"]').attr('content')] =

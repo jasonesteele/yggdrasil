@@ -12,9 +12,9 @@ define(['jquery',
         'hbs!template/jserror'], 
 function($, body, jserror) {
 	var initialize = function(err) {
-		body.clear();
-		body.initialize({title: 'Javascript Error'});
-		body.contents(jserror(err));
+		body.clear()
+			.initialize({title: 'Javascript Error'})
+			.html(jserror(err));
 	}
 
 	return {

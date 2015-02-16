@@ -1,13 +1,15 @@
 /**
- * General manipulation of the visible contents of a page.
+ * General manipulation of the application container, including
+ * <head>, navigation bar and general styling.
  */
 define(['jquery',
         'gui/navbar',
         'gui/title',
         'bootstrap',
         'css!style/bootstrap',
-        'css!style/bootstrap-theme'],
-function($, Navbar, title) {
+        'css!style/bootstrap-theme',
+        'css!style/app'],
+function($, navbar, title) {
 	var navbar;
 	
 	/**
@@ -15,6 +17,7 @@ function($, Navbar, title) {
 	 */
 	var clear = function() {
 		$('contents').empty();
+		return this;
 	}
 	
 	/**
@@ -23,22 +26,23 @@ function($, Navbar, title) {
 	var initialize = function(options) {
 		title(options.title);
 		$(function() {
-			$('nav').remove();
-			navbar = new Navbar();
-			$('body').prepend(navbar.template());
+			navbar.initialize($('body'))
+				.brand({ label: "Yggrasil" });
 		});
+		return this;
 	}
 	
 	/**
 	 * Sets the HTML contents for the page.
 	 */
-	var contents = function(contents) {
+	var html = function(contents) {
 		$('#contents').html(contents);
+		return this;
 	}
 	
 	return {
 		clear: clear,
-		contents: contents,
+		html: html,
 		initialize: initialize,
 		navbar: navbar,
 	}

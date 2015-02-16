@@ -79,7 +79,7 @@ public class MvcServletConfig extends WebMvcConfigurerAdapter {
   @Bean
   public SwaggerSpringMvcPlugin swaggerPlugin() {
     final SwaggerSpringMvcPlugin swaggerPlugin = new SwaggerSpringMvcPlugin(springSwaggerConfig)
-        .apiInfo(apiInfo()).includePatterns("/api/*", "/admin/api/.*");
+        .apiInfo(apiInfo()).includePatterns("/api/*");
 
     swaggerPlugin.apiVersion(env.getProperty("swagger.apiVersion", "0.0"));
 
