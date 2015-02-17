@@ -5,6 +5,7 @@
 define(['jquery',
         'gui/navbar',
         'gui/title',
+        'util/formCsrf',
         'bootstrap',
         'css!style/bootstrap',
         'css!style/bootstrap-theme',

@@ -17,9 +17,7 @@ function($, body, contextPath, logoutButton, menuItem) {
 		$(function() {
 			var itemEl = $($.parseHTML(menuItem()));
 			itemEl.append(logoutButton({action: contextPath("logout")}));
-			
-			itemEl.find("form").append('<input type="hidden" name="_csrf" value="' 
-					+ $('meta[name="_csrf"]').attr('content') + '"/>');
+			itemEl.find("form").csrf();
 			itemEl.find("a").on("click", function(e) {
 				itemEl.find("form").submit();
 				e.preventDefault();

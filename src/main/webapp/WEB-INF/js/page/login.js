@@ -4,12 +4,9 @@
 define(['jquery', 
         'gui/body',
         'util/contextPath',
-        'util/formCsrf',
         'hbs!template/frontPage',
-        'hbs!template/loginForm',
-        'hbs!template/loginError',
-        'hbs!template/loggedOut'], 
-function($, body, contextPath, formCsrf, frontPage, loginForm, loginError, loggedOut) {
+        'hbs!template/loginForm'], 
+function($, body, contextPath, frontPage, loginForm) {
 	var form = $($.parseHTML(loginForm()));
 	var usernameInput = form.find("input[name*='username']");
 	var passwordInput = form.find("input[name*='password']");
@@ -45,21 +42,25 @@ function($, body, contextPath, formCsrf, frontPage, loginForm, loginError, logge
 			usernameInput.focus();
 			
 			$('meta[name="_lastSecurityError"]').each(function(idx, value) {
-				var alertDiv = $.parseHTML(loginError({
-					header: 'Login Error!',
-					message: $(value).attr('content')
-				}));
-				$(alertDiv).find('a').on('click', function(e) {
-					// TODO pop up the account recovery dialog
-					console.log("clicked");
-					e.preventDefault();
+				require(['hbs!template/loginError'], function(loginError) {
+					var alertDiv = $.parseHTML(loginError({
+						header: 'Login Error!',
+						message: $(value).attr('content')
+					}));
+					$(alertDiv).find('a').on('click', function(e) {
+						// TODO pop up the account recovery dialog
+						console.log("clicked");
+						e.preventDefault();
+					});
+					$('#contents').prepend(alertDiv);
 				});
-				$('#contents').prepend(alertDiv);
 			});
 			
 			
 			if (window.location.href.indexOf('?logout') == window.location.href.length - 7) {
-				$('#contents').prepend(loggedOut());
+				require(['hbs!template/loggedOut'], function(loggedOut) {
+					$('#contents').prepend(loggedOut());
+				});
 			}
 		});
 	}
