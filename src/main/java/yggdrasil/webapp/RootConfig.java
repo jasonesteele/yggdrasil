@@ -1,9 +1,11 @@
 package yggdrasil.webapp;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import yggdrasil.dao.DaoConfig;
 
@@ -17,4 +19,10 @@ import yggdrasil.dao.DaoConfig;
 @Import(DaoConfig.class)
 @ComponentScan
 public class RootConfig {
+  @Bean
+  public ResourceBundleMessageSource messageSource() {
+    final ResourceBundleMessageSource messages = new ResourceBundleMessageSource();
+    messages.setBasenames("i18n/app");
+    return messages;
+  }
 }

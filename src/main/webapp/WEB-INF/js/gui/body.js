@@ -1,50 +1,40 @@
 /**
- * General manipulation of the application container, including
- * <head>, navigation bar and general styling.
+ * Common scaffolding for application pages.
  */
 define(['jquery',
+        'underscore',
+        'settings',
         'gui/navbar',
-        'gui/title',
-        'util/formCsrf',
         'bootstrap',
-        'css!style/bootstrap',
-        'css!style/bootstrap-theme',
-        'css!style/app'],
-function($, navbar, title) {
-	var navbar;
-	
-	/**
-	 * Clears the contents of the page body.
-	 */
-	var clear = function() {
-		$('contents').empty();
-		return this;
-	}
-	
-	/**
-	 * Initializes the skeleton for a page.
-	 */
+        'css!style/bootstrap.css',
+        'css!style/bootstrap-theme.css',
+        'css!style/app.css',
+], function($, _, settings, navbar) {
+	var _options = {
+			title: 'Page',
+			contents: null,
+			onShow: function() {},
+	};
+	var _el;
+	var _navbar;
 	var initialize = function(options) {
-		title(options.title);
+		if (options) {
+			$.extend(true, _options, options);
+		}
+		_navbar = navbar.initialize(_options.navbar);
+		document.title = settings.appName + ' - ' + _options.title;
 		$(function() {
-			navbar.initialize($('body'))
-				.brand({ label: "Yggrasil" });
+			_el = $('#contents');
+			_el.empty();
+			_el.append(_navbar.el);
+			_el.append(_.isFunction(_options.contents) ? _options.contents() : _options.contents);
+		  $('[data-toggle="tooltip"]').tooltip();
+		  _el.fadeIn(500);
+		  _options.onShow(_el);
 		});
 		return this;
-	}
-	
-	/**
-	 * Sets the HTML contents for the page.
-	 */
-	var html = function(contents) {
-		$('#contents').html(contents);
-		return this;
-	}
-	
+	};
 	return {
-		clear: clear,
-		html: html,
 		initialize: initialize,
-		navbar: navbar,
-	}
+	};
 });

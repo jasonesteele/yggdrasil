@@ -14,7 +14,7 @@ import com.mangofactory.swagger.annotations.ApiIgnore;
 @Controller("pageController")
 @ApiIgnore
 public class PageController {
-  @RequestMapping(value = { "/index.htm", "/login", "/page/**" }, produces = "text/html")
+  @RequestMapping(value = { "/index.htm", "/page/**" }, produces = "text/html")
   public ModelAndView getPage() {
     final ModelAndView mav = new ModelAndView("page");
     return mav;

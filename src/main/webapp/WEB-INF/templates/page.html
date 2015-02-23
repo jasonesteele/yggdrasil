@@ -2,14 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head>
-  <title>Ygdrassil - Page</title>
-
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-  
+  <meta name="_csrf" th:content="${_csrf.token}" th:if="${_csrf != null}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" th:if="${_csrf != null}"/>
   <meta name="_lastSecurityError"
     th:content="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"
     th:if="${param.error != null && session['SPRING_SECURITY_LAST_EXCEPTION'] != null}"/>
@@ -23,7 +20,7 @@
     <![endif]-->
     
   <script th:inline='javascript'>
-    var _contextPath = /*[[@{/}]]*/ '/';         
+    window._contextPath = /*[[@{/}]]*/ '/';         
   </script>
   <script th:src="@{/js/config.js}"></script>
   <script th:src="@{/js/require.js}"></script>
@@ -32,30 +29,24 @@
   <script th:inline="javascript">
     /*<![CDATA[*/
       var pageModule = /*[[${#httpServletRequest.requestURI}]]*/ '';
-      pageModule = pageModule.substring(_contextPath.length);
+      pageModule = pageModule.substring(window._contextPath.length);
       if (pageModule.length == 0) {
       	pageModule = "page/index";
       }
+      
       require([ pageModule ], function (page) {
-      	$(function() { page.initialize();	});
+      	page.initialize({contextPath: window._contextPath});
       }, function(err) {
-        console.log("error loading page " + pageModule);
+        console.log("error loading " + pageModule);
         console.log(err);
-      	require(['page/error'], function(page) {
-          $(function() { page.initialize(err); });
-      	}, function(err2) {
-          console.log("error loading error page page/error");
-          console.log(err2);
-      	  window.alert('Fatal Javascript Error\n\n' 
-      	  		+ 'An unrecoverable error has occurred initializing the\n'
-      	      + 'javascript for a page and the normal error page could\n'
-      	      + 'not be shown.\n\n'
-      	      + err2.message);
-      	});
+        window.alert('Fatal Javascript Error\n\n' 
+        	  + 'An unrecoverable error has occurred initializing the\n'
+        	  + 'javascript for a page:\n\n'
+        	  + err.message);
       });
     /*]]>*/
   </script>
-  <div id="contents">
+  <div id="contents" style="display:none;">
   </div>
 </body>
 </html>

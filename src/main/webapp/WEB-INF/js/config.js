@@ -4,7 +4,7 @@
 require = {
 	// TODO - set this up for dev/prod cache busting
 //	urlArgs: "v=" +  (new Date()).getTime(),
-	baseUrl : _contextPath + 'js',
+	baseUrl : window._contextPath + 'js',
 
   shim : {
     bootstrap : {
@@ -29,6 +29,7 @@ require = {
     notify : 'lib/notify',
     hbs : 'lib/require-handlebars-plugin/hbs',
     css : 'lib/require-css/css',
+    domReady : 'lib/domReady',
   },
   
   hbs: { // optional

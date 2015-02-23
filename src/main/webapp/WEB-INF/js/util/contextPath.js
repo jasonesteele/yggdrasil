@@ -1,5 +1,5 @@
 define(['jquery'], function ($) {
-	var contextPath = _contextPath;
+	var contextPath = window._contextPath;
 	if (!contextPath) contextPath = "/";
 	
 	function getFullPath(path) {

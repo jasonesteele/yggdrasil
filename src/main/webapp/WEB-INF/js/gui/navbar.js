@@ -1,34 +1,46 @@
 /**
- * Navigation bar, menus and breadcrumbs.
+ * Navigation bar.
  */
-define(['jquery', 'util/contextPath', 'hbs!template/navbar'],
-function($, contextPath, navbarTemplate) {
-	var _brand = {
-			label: "Brand",
-			action: "",
+define(['jquery',
+        'underscore',
+        'util/contextPath',
+        'hbs!templates/navbar/navbar',
+        'hbs!templates/navbar/menu',
+], function($, _, contextPath, content, menu) {
+	var _options = {
+		home: {
+			action: contextPath(),
+			tooltip: 'Home',
+			label: '<span class="glyphicon glyphicon-home"></span>',
+		},
+	};
+	var _menuItem = {
+		content: 'Menu',
+		'class': 'navbar-nav',
 	}
-	
-	/**
-	 * Set the brand label and/or action.
-	 */
-	var brand = function(brand) {
-		if (brand) {
-			$.extend(_brand, brand);
-			$('.navbar-brand')
-				.attr('href', contextPath(_brand.action))
-				.html(_brand.label);
-			}
-		return this;
-	}
+	var _el;
+	var _menu;
 
-	var initialize = function() {
-		$('nav').remove();
-		$('body').prepend(navbarTemplate(_brand));
+	var initialize = function(options) {
+		if (options) {
+			$.extend(true, _options, options);
+		}
+
+		_el = $(content({
+			home : _options.home,
+		}));
+		_menu = _el.find('#navCollapseMenu');
+
+		var _items = _.isFunction(options.items) ? options.items() : options.items;
+		_.each(_items, function(item) {
+			_menu.append(menu($.extend({}, _menuItem, item)))
+		});
+
 		return this;
-	}
+	};
 
 	return {
 		initialize: initialize,
-		brand: brand,
+		el: function() { return _el },
 	};
 });
