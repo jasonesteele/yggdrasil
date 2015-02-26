@@ -82,7 +82,7 @@ define(['jquery',
 									minlength: $.validator.format("Password must be at least {0} characters"),
 								},
 								createConfirmPassword: { 
-									required: "Confirm password is required",
+									required: "Re-enter password",
 									equalTo: "Passwords must match",
 								},
 							},
