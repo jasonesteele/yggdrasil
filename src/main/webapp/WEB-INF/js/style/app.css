@@ -12,6 +12,19 @@
   }
 }
 
+.form .error {
+  color: #ff0000;
+  font-weight: normal;
+}
+
+.form-control-header label {
+  float: left;
+}
+
+.form-control-header .error {
+  float: right;
+}
+
 .alert-container {
   text-align: center;
 }

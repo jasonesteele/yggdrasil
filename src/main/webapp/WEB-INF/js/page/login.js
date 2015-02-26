@@ -7,6 +7,7 @@ define(['jquery',
         'hbs!templates/frontPage',
         'hbs!templates/loginForm',
         'util/csrf',
+        'util/validation',
 ], function($, body, contextPath, contents, loginForm) {
 	/**
 	 * Set up javascript hooks for login form.
@@ -42,10 +43,63 @@ define(['jquery',
 				modal.show({
 					content: message(),
 					onShow: function(modal) {
-						modal.find('#createUsername').focus();
-						modal.find('form').csrf();
+						var form = modal.find('form');
+						form.csrf();
+						form.validate({
+							rules: {
+								createUsername: {
+									required: true,
+									minlength: 3,
+									regex: '^[a-zA-Z0-9]+$',
+									// TODO - add check for username already in use
+								},
+								createEmail: {
+									required: true,
+									email: true,
+									// TODO - add check for email already in use
+								},
+								createPassword: { 
+									required: true,
+									minlength: 8,
+								},
+								createConfirmPassword: {
+									required: true,
+									equalTo: '#createPassword',
+								},
+							},
+							messages: {
+								createUsername: { 
+									required: "Username is required",
+									minlength: $.validator.format("Username must be at least {0} characters"),
+									regex: "Username must contain only letters and digits",
+								},
+								createEmail: {
+									required: "E-mail address is required",
+									email: "Enter a valid e-mail address",
+								},
+								createPassword: {
+									required: "Password is required",
+									minlength: $.validator.format("Password must be at least {0} characters"),
+								},
+								createConfirmPassword: { 
+									required: "Confirm password is required",
+									equalTo: "Passwords must match",
+								},
+							},
+							errorPlacement: function(error, element) {
+								$(element).prev('.form-control-header').find('.error').html(error);
+							},
+						});
 
 						var submitButton = modal.find('#createAccountButton');
+
+						form.on('submit', function(e) {
+							console.log("form submit");
+							e.preventDefault();
+						});
+
+						modal.find('#createUsername').focus();
+
 						modal.find('input').on('keypress', function(e) {
 							var code = (e.keyCode ? e.keyCode : e.which);
 							if (code == 13) {
@@ -64,9 +118,8 @@ define(['jquery',
 							console.log("create account: username=" + username + ",email="
 									+ email + ",password=" + password + ",confirmPassword="
 									+ confirmPassword);
-
-							e.preventDefault();
 						});
+						
 					},
 				});
 			});
@@ -94,7 +147,7 @@ define(['jquery',
 
 				// TODO add jquery validation
 
-				// Display error modal if required
+				// Display error modal if required="required"
 				if (window.location.href.indexOf('?error') >= 0) {
 					require(['gui/modal',
 					         'hbs!templates/loginErrorMessage',

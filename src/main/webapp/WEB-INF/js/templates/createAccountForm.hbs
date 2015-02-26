@@ -1,6 +1,6 @@
 <div class="modal fade">
   <div class="modal-dialog modal-lg">
-    <form method="post" action="{{createUrl}}" class="form">
+    <form method="post" action="#" class="form">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -8,24 +8,36 @@
         </div>
         <div class="modal-body">
           <div class="form-group required">
-            <label class="control-label" for="createUsername">Username</label>
-            <input class="form-control" id="createUsername" name="username" type="text">
+            <div class="form-control-header">
+              <label class="control-label" for="createUsername">Username</label>
+              <div class="error"></div>
+            </div>
+            <input class="form-control" id="createUsername" name="createUsername" type="text">
           </div> 
           <div class="form-group required">
-            <label class="control-label" for="createEmail">E-mail Address</label>
-            <input id="createEmail" name="email" type="text" class="form-control"> 
+            <div class="form-control-header">
+              <label class="control-label" for="createEmail">E-mail Address</label>
+              <div class="error"></div>
+            </div>
+            <input id="createEmail" name="createEmail" type="text" class="form-control"> 
           </div> 
           <div class="form-group required">
-            <label class="control-label" for="createPassword">Password</label>
-            <input id="createPassword" name="password" type="password" class="form-control">
+            <div class="form-control-header">
+              <label class="control-label" for="createPassword">Password</label>
+              <div class="error"></div>
+            </div>
+            <input id="createPassword" name="createPassword" type="password" class="form-control">
           </div> 
           <div class="form-group required">
-            <label class="control-label" for="createConfirmPassword">Password (confirm)</label>
-            <input id="createConfirmPassword" name="confirmPassword" type="password" class="form-control">
+            <div class="form-control-header">
+              <label class="control-label" for="createConfirmPassword">Password (confirm)</label>
+              <div class="error"></div>
+            </div>
+            <input id="createConfirmPassword" name="createConfirmPassword" type="password" class="form-control">
           </div>
         </div>
         <div class="modal-footer">
-         <button type="button" id="createAccountButton" class="btn btn-primary" disabled>Create</button>
+         <button type="submit" id="createAccountButton" class="btn btn-primary">Create</button>
         </div>
       </div><!-- /.modal-content -->
     </form>

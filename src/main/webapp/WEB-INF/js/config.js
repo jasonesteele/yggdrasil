@@ -22,6 +22,8 @@ require = {
   paths : {
     // 3rd party libraries
     jquery : 'lib/jquery-2.1.3',
+    'jquery.validate' : 'lib/jquery-validation/jquery.validate',
+    'additional-methods' : 'lib/jquery-validation/additional-methods',
     bootstrap : 'lib/bootstrap',
     underscore : 'lib/underscore',
     backbone : 'lib/backbone',
