@@ -159,11 +159,7 @@ define(['jquery',
 
 				// Display logout message modal if required
 				if (window.location.href.indexOf('?logout') >= 0) {
-					require(['gui/modal',
-					         'hbs!templates/logoutMessage',
-					], function(modal, message) {
-						modal.show({content: message()});
-					});
+					$.notify('You have been logged out', 'info');
 				}
 			},
 		});
