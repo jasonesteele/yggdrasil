@@ -31,10 +31,12 @@ define(['jquery',
 		}));
 		_menu = _el.find('#navCollapseMenu');
 
-		var _items = _.isFunction(options.items) ? options.items() : options.items;
-		_.each(_items, function(item) {
-			_menu.append(menu($.extend({}, _menuItem, item)))
-		});
+		if (_options.items) {
+			var _items = _.isFunction(options.items) ? options.items() : options.items;
+			_.each(_items, function(item) {
+				_menu.append(menu($.extend({}, _menuItem, item)))
+			});
+		}
 
 		return this;
 	};
