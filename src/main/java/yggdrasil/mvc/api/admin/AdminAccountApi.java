@@ -1,4 +1,4 @@
-package yggdrasil.mvc.api;
+package yggdrasil.mvc.api.admin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 
 /**
- * REST controller for user information.
+ * REST controller for administration of user accounts.
  *
  * @author jason
  */
@@ -52,10 +52,8 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @Api(value = "admin-account", description = "Administration of user accounts")
 @RequestMapping(value = "api/admin/account")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
-public class AccountApi {
+public class AdminAccountApi {
   // TODO - need much better error handling and reporting
-  // TODO - need client side validation
-
   @Resource
   private UserDao userDao;
 

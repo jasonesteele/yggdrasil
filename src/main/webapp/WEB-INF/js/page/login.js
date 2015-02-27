@@ -8,6 +8,7 @@ define(['jquery',
         'hbs!templates/loginForm',
         'util/csrf',
         'util/validation',
+        'util/notify',
 ], function($, body, contextPath, contents, loginForm) {
 	/**
 	 * Set up javascript hooks for login form.
@@ -89,14 +90,28 @@ define(['jquery',
 							errorPlacement: function(error, element) {
 								$(element).prev('.form-control-header').find('.error').html(error);
 							},
+							submitHandler: function() {
+								$.ajax({
+									type: "POST",
+									url: contextPath("/api/public/newAccount"),
+									contentType: "application/json; charset=utf-8",
+									dataType: "json",
+									data: JSON.stringify({
+										username: modal.find('input[name*="createUsername"]').val(),
+										email: modal.find('input[name*="createEmail"]').val(),
+										password: modal.find('input[name*="createPassword"]').val(),
+									}),
+								}).done(function(data) {
+									console.log('success');
+									window.location.href = contextPath();
+								}).fail(function(msg) {
+									console.log('failure');
+									$.notify("Error creating account: " + msg.statusText);
+								});
+							},
 						});
 
 						var submitButton = modal.find('#createAccountButton');
-
-						form.on('submit', function(e) {
-							console.log("form submit");
-							e.preventDefault();
-						});
 
 						modal.find('#createUsername').focus();
 
@@ -109,17 +124,6 @@ define(['jquery',
 								e.preventDefault();
 							}
 						});
-
-						modal.find('button').on('click', function(e) {
-							var username = modal.find('input[name*="username"]').val();
-							var email = modal.find('input[name*="email"]').val();
-							var password = modal.find('input[name*="password"]').val();
-							var confirmPassword = modal.find('input[name*="confirmPassword"]').val();
-							console.log("create account: username=" + username + ",email="
-									+ email + ",password=" + password + ",confirmPassword="
-									+ confirmPassword);
-						});
-						
 					},
 				});
 			});
@@ -144,8 +148,6 @@ define(['jquery',
 			onShow: function(body) {
 				// Hook up login form
 				initializeLoginForm(body);
-
-				// TODO add jquery validation
 
 				// Display error modal if required="required"
 				if (window.location.href.indexOf('?error') >= 0) {

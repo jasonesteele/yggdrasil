@@ -33,10 +33,7 @@ public class SecurityConfig {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
       // @formatter:off
-      http
-       .antMatcher("/api/**")
-        .authorizeRequests()
-        .anyRequest().authenticated();
+      http.antMatcher("/api/**");
       // @formatter:on
     }
   }

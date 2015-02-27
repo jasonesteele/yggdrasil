@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import yggdrasil.dao.DaoConfig;
 
@@ -18,6 +19,7 @@ import yggdrasil.dao.DaoConfig;
 @PropertySource("classpath:application.properties")
 @Import(DaoConfig.class)
 @ComponentScan
+@EnableTransactionManagement
 public class RootConfig {
   @Bean
   public ResourceBundleMessageSource messageSource() {

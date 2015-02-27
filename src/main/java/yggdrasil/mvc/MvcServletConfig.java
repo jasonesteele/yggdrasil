@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -36,6 +37,7 @@ import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 @Configuration
 @ComponentScan
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
+@EnableTransactionManagement
 @PropertySource("classpath:swagger.properties")
 public class MvcServletConfig extends WebMvcConfigurerAdapter {
   @Resource

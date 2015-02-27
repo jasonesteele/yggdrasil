@@ -3,6 +3,7 @@ package yggdrasil.model;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,7 +46,7 @@ public class User implements UserDetails {
   private boolean enabled = true;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  private Set<Role> roles;
+  private Set<Role> roles = new TreeSet<Role>();
 
   /**
    * Default constructor.
