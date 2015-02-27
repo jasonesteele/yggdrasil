@@ -5,8 +5,7 @@ define(['jquery',
         'underscore',
         'util/contextPath',
         'hbs!templates/navbar/navbar',
-        'hbs!templates/navbar/menu',
-], function($, _, contextPath, content, menu) {
+], function($, _, contextPath, content) {
 	var _options = {
 		home: {
 			action: contextPath(),
@@ -16,7 +15,6 @@ define(['jquery',
 	};
 	var _menuItem = {
 		content: 'Menu',
-		'class': 'navbar-nav',
 	}
 	var _el;
 	var _menu;
@@ -34,7 +32,7 @@ define(['jquery',
 		if (_options.items) {
 			var _items = _.isFunction(options.items) ? options.items() : options.items;
 			_.each(_items, function(item) {
-				_menu.append(menu($.extend({}, _menuItem, item)))
+				_menu.append(item)
 			});
 		}
 

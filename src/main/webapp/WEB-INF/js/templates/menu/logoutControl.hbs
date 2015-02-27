@@ -1,0 +1,11 @@
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a href="#" title="Logout" class="navbar-link" onclick="document.getElementById('logoutForm').submit();"> 
+  <span class="glyphicon glyphicon-off" aria-hidden="true"></span> 
+  <span class="navbar-icon-text">Logout</span>
+</a>
+<form id="logoutForm" action="{{{action}}}" method="post">
+  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+</form>
+</li>
+</ul>

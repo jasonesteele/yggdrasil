@@ -4,12 +4,11 @@
 define(['jquery', 
         'gui/body',
         'util/contextPath',
-        'hbs!templates/frontPage',
-        'hbs!templates/loginForm',
+        'hbs!templates/menu/loginForm',
         'util/csrf',
         'util/validation',
         'util/notify',
-], function($, body, contextPath, contents, loginForm) {
+], function($, body, contextPath, loginForm) {
 	/**
 	 * Set up javascript hooks for login form.
 	 */
@@ -136,14 +135,9 @@ define(['jquery',
 	var initialize = function() {
 		body.initialize({
 			title: 'Login',
-			contents: contents,
+			contents: "<h1>Front Page</h1>",
 			navbar: {
-				items: [
-				  {
-				  	'class': 'navbar-form navbar-right',
-				  	content: loginForm(),
-				  }
-				],
+				items: [ loginForm() ],
 			},
 			onShow: function(body) {
 				// Hook up login form
