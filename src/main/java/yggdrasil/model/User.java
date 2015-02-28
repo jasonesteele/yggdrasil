@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -44,6 +45,9 @@ public class User implements UserDetails {
 
   @Column
   private boolean enabled = true;
+
+  @Column
+  private boolean emailVerified;
 
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<Role> roles = new TreeSet<Role>();
@@ -82,6 +86,10 @@ public class User implements UserDetails {
     authorities.addAll(getPermissions());
     for (Role role : getRoles()) {
       authorities.add(role);
+    }
+    if (!isEmailVerified()) {
+      authorities.clear();
+      authorities.add(new SimpleGrantedAuthority("ROLE_VERIFY_EMAILS"));
     }
     return authorities;
   }
@@ -139,6 +147,10 @@ public class User implements UserDetails {
     return true;
   }
 
+  public boolean isEmailVerified() {
+    return emailVerified;
+  }
+
   @Override
   public boolean isEnabled() {
     return enabled;
@@ -146,6 +158,10 @@ public class User implements UserDetails {
 
   public void setEmail(final String email) {
     this.email = email;
+  }
+
+  public void setEmailVerified(final boolean emailVerified) {
+    this.emailVerified = emailVerified;
   }
 
   public void setEnabled(final boolean enabled) {

@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +46,9 @@ public class NewAccountApi {
   @Resource
   private UserDao userDao;
 
+  @Resource
+  private PasswordEncoder encoder;
+
   @ApiOperation(value = "Create a new user account", notes = "Adds a new user.")
   @ApiResponses({
       @ApiResponse(code = 200, message = "Default success method.  Not returned by this method.", response = Void.class),
@@ -54,9 +57,6 @@ public class NewAccountApi {
   public ResponseEntity<Long> createNewUser(
       @RequestBody(required = true) final NewUserResource userResource,
       final HttpServletRequest request) {
-    // TODO: this should be injected into both UserDaoImpl and this API
-    final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
     final User newUser = new User();
     newUser.setUsername(userResource.getUsername());
     newUser.setEmail(userResource.getEmail());

@@ -101,10 +101,8 @@ define(['jquery',
 										password: modal.find('input[name*="createPassword"]').val(),
 									}),
 								}).done(function(data) {
-									console.log('success');
 									window.location.href = contextPath();
 								}).fail(function(msg) {
-									console.log('failure');
 									$.notify("Error creating account: " + msg.statusText);
 								});
 							},
