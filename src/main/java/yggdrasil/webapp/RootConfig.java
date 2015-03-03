@@ -9,6 +9,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import yggdrasil.dao.DaoConfig;
+import yggdrasil.mail.EmailConfig;
 
 /**
  * Root configuration for application.
@@ -17,7 +18,7 @@ import yggdrasil.dao.DaoConfig;
  */
 @Configuration
 @PropertySource("classpath:application.properties")
-@Import(DaoConfig.class)
+@Import({ DaoConfig.class, EmailConfig.class })
 @ComponentScan
 @EnableTransactionManagement
 public class RootConfig {
