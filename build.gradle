@@ -93,9 +93,6 @@ dependencies {
     compile "com.mangofactory:swagger-springmvc:0.9.4"
     compile "net.sourceforge.nekohtml:nekohtml:1.9.21"
     compile "com.fasterxml.jackson.core:jackson-databind:$project.ext.jacksonVersion"
-    compile "cglib:cglib:3.1"
-    compile "javax.mail:javax.mail-api:1.5.2"
-    compile "com.sun.mail:javax.mail:1.5.2";
 
     compile "com.h2database:h2:1.4.184"
 
