@@ -3,10 +3,6 @@ package yggdrasil.mvc.controller;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -20,10 +16,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 @Configuration
 @PropertySource("classpath:thymeleaf.properties")
-public class ThymeleafConfig {
-  /** Class logger. */
-  private static Logger log = LoggerFactory.getLogger(ThymeleafConfig.class);
-
+public class ThymeleafServletConfig {
   @Bean
   public Set<IDialect> dialects() {
     final Set<IDialect> sets = new HashSet<IDialect>();
@@ -32,35 +25,20 @@ public class ThymeleafConfig {
   }
 
   @Bean
-  public TemplateResolver htmlTemplateResolver() {
-    ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+  public SpringTemplateEngine templateEngine() {
+    final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.addTemplateResolver(templateResolver());
+    templateEngine.setAdditionalDialects(dialects());
+    return templateEngine;
+  }
+
+  @Bean
+  public TemplateResolver templateResolver() {
+    final ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
     templateResolver.setPrefix("/WEB-INF/templates/");
     templateResolver.setSuffix(".html");
     templateResolver.setTemplateMode("LEGACYHTML5");
     return templateResolver;
-  }
-
-  @PostConstruct
-  public void init() {
-    log.info("thymeleaf config loaded");
-  }
-
-  @Bean
-  public TemplateResolver mailTemplateResolver() {
-    ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-    templateResolver.setPrefix("/WEB-INF/mail/");
-    templateResolver.setSuffix(".html");
-    templateResolver.setTemplateMode("LEGACYHTML5");
-    return templateResolver;
-  }
-
-  @Bean
-  public SpringTemplateEngine templateEngine() {
-    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-    templateEngine.addTemplateResolver(mailTemplateResolver());
-    templateEngine.addTemplateResolver(htmlTemplateResolver());
-    templateEngine.setAdditionalDialects(dialects());
-    return templateEngine;
   }
 
   @Bean

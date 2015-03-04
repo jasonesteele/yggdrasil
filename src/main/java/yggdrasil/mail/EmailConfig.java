@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan
 @EnableTransactionManagement
-@PropertySource("email.properties")
+@PropertySource("classpath:email.properties")
 public class EmailConfig {
   /**
    * Development and unit testing e-mail configuration for just logging e-mail.
