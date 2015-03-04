@@ -4,8 +4,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,9 +38,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @RequestMapping(value = "api/public/newAccount", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 @PreAuthorize("permitAll()")
 public class NewAccountApi {
-  /** Class logger. */
-  private static final Logger log = LoggerFactory.getLogger(NewAccountApi.class);
-
   @Resource
   private UserDao userDao;
 

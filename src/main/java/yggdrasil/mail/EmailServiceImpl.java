@@ -29,12 +29,12 @@ public class EmailServiceImpl implements EmailService {
    */
   private String getSenderEmail() {
     final StringBuilder sb = new StringBuilder();
-    if (env.containsProperty("mail.smtp.sender.name")) {
-      sb.append(env.getProperty("mail.smtp.sender.name"));
+    if (env.containsProperty("mail.sender.name")) {
+      sb.append(env.getProperty("mail.sender.name"));
       sb.append(" <");
     }
-    sb.append(env.getProperty("mail.smtp.sender.email"));
-    if (env.containsProperty("mail.smtp.sender.name")) {
+    sb.append(env.getProperty("mail.sender.email"));
+    if (env.containsProperty("mail.sender.name")) {
       sb.append(">");
     }
     return sb.toString();
