@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  * @author jason
  */
 @Component
-@PropertySource("classpath:email.properties")
 public class EmailServiceImpl implements EmailService {
   @Resource
   private Environment env;
