@@ -31,26 +31,36 @@ public class ThymeleafConfig {
     return sets;
   }
 
+  @Bean
+  public TemplateResolver htmlTemplateResolver() {
+    ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setSuffix(".html");
+    templateResolver.setTemplateMode("LEGACYHTML5");
+    return templateResolver;
+  }
+
   @PostConstruct
   public void init() {
     log.info("thymeleaf config loaded");
   }
 
   @Bean
-  public SpringTemplateEngine templateEngine() {
-    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-    templateEngine.setTemplateResolver(templateResolver());
-    templateEngine.setAdditionalDialects(dialects());
-    return templateEngine;
-  }
-
-  @Bean
-  public TemplateResolver templateResolver() {
+  public TemplateResolver mailTemplateResolver() {
     ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setPrefix("/WEB-INF/mail/");
     templateResolver.setSuffix(".html");
     templateResolver.setTemplateMode("LEGACYHTML5");
     return templateResolver;
+  }
+
+  @Bean
+  public SpringTemplateEngine templateEngine() {
+    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    templateEngine.addTemplateResolver(mailTemplateResolver());
+    templateEngine.addTemplateResolver(htmlTemplateResolver());
+    templateEngine.setAdditionalDialects(dialects());
+    return templateEngine;
   }
 
   @Bean

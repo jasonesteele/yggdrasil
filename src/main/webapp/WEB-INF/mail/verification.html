@@ -11,15 +11,15 @@ body {
 }
 </style>
 <body>
-  <h1>
+  <h2>
     Welcome to <span th:text="#{appName}">Yggdrasil</span>, <span
       th:text="#{username}">User</span>!
-  </h1>
+  </h2>
   <p>To complete verification of your account, click on the
     following link or paste it into your browser:</p>
-  <ul>
-    <li><a href="javascript:void(0)" th:href="#{verificationUrl}" th:text="#{verificationUrl}">http://localhost</a>
-  </ul>
+  <p>
+    <a href="javascript:void(0)" th:href="#{verificationUrl}" th:text="#{verificationUrl}">http://localhost</a>
+  </p>
   <p>
     If you did not create an account or request verification, you can simply
     ignore this message. 
