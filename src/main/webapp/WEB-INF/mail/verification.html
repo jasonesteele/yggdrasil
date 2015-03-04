@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Verification E-mail Template</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"></head>
+<style>
+body {
+  padding: 0 20px;
+}
+</style>
+<body>
+  <h1>
+    Welcome to <span th:text="#{appName}">Yggdrasil</span>, <span
+      th:text="#{username}">User</span>!
+  </h1>
+  <p>To complete verification of your account, click on the
+    following link or paste it into your browser:</p>
+  <ul>
+    <li><a href="javascript:void(0)" th:href="#{verificationUrl}" th:text="#{verificationUrl}">http://localhost</a>
+  </ul>
+  <p>
+    If you did not create an account or request verification, you can simply
+    ignore this message. 
+  </p>
+</body>
+</html>
