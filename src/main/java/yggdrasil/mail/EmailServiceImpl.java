@@ -22,12 +22,30 @@ public class EmailServiceImpl implements EmailService {
   @Resource
   private JavaMailSender sender;
 
+  /**
+   * Determines the sender e-mail address to attach to system emails.
+   *
+   * @return system email address
+   */
+  private String getSenderEmail() {
+    final StringBuilder sb = new StringBuilder();
+    if (env.containsProperty("mail.smtp.sender.name")) {
+      sb.append(env.getProperty("mail.smtp.sender.name"));
+      sb.append(" <");
+    }
+    sb.append(env.getProperty("mail.smtp.sender.email"));
+    if (env.containsProperty("mail.smtp.sender.name")) {
+      sb.append(">");
+    }
+    return sb.toString();
+  }
+
   @Override
   public void sendEmail(final String to, final String subject, final String body)
       throws MessagingException {
     final MimeMessage mimeMessage = sender.createMimeMessage();
     final MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-    message.setFrom(env.getProperty("mail.smtp.sender"));
+    message.setFrom(getSenderEmail());
     message.setTo(to);
     message.setSubject(subject);
     message.setText(body, true);
