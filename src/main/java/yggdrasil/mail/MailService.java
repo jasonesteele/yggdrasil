@@ -9,7 +9,7 @@ import javax.mail.MessagingException;
  */
 public interface MailService {
   /**
-   * Send an e-mail to a user.
+   * Send an e-mail with HTML content to a user.
    *
    * @param to
    *          primary recipient for e-mail
