@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan
 @EnableTransactionManagement
 @PropertySource("classpath:email.properties")
-public class EmailConfig {
+public class MailConfig {
   /**
    * Development and unit testing e-mail configuration for just logging e-mail.
    */

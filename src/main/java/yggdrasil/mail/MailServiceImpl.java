@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author jason
  */
 @Component
-public class EmailServiceImpl implements EmailService {
+public class MailServiceImpl implements MailService {
   @Resource
   private Environment env;
 

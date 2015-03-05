@@ -16,10 +16,10 @@ import org.thymeleaf.context.Context;
  * @author jason
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { EmailConfig.class, ThymeleafMailConfig.class })
+@ContextConfiguration(classes = { MailConfig.class, ThymeleafMailConfig.class })
 public class EmailServiceTest {
   @Resource
-  private EmailService service;
+  private MailService service;
 
   @Resource
   private TemplateEngine templateEngine;

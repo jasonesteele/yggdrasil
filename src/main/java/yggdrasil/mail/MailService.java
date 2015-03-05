@@ -7,7 +7,7 @@ import javax.mail.MessagingException;
  *
  * @author jason
  */
-public interface EmailService {
+public interface MailService {
   /**
    * Send an e-mail to a user.
    *
