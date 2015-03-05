@@ -28,12 +28,9 @@ public class EmailConfig {
   @Configuration
   @Profile("!prod")
   public static class DevEmailConfig {
-    @Resource
-    private Environment env;
-
     @Bean
     public JavaMailSender mailSender() {
-      return new LogOnlyMailSender();
+      return new StubMailSender();
     }
   }
 

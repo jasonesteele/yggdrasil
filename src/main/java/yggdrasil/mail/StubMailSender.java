@@ -26,7 +26,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
  *
  * @author jason
  */
-public class LogOnlyMailSender implements JavaMailSender {
+public class StubMailSender implements JavaMailSender {
   /** Class logger. */
   private static final Logger emailLog = LoggerFactory.getLogger("email");
   private Session session;
