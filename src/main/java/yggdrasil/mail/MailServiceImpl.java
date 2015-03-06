@@ -1,5 +1,8 @@
 package yggdrasil.mail;
 
+import java.util.Locale;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -8,6 +11,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 /**
  * Implemtation for e-mail service.
@@ -18,6 +23,9 @@ import org.springframework.stereotype.Component;
 public class MailServiceImpl implements MailService {
   @Resource
   private Environment env;
+
+  @Resource
+  private TemplateEngine templateEngine;
 
   @Resource
   private JavaMailSender sender;
@@ -50,5 +58,12 @@ public class MailServiceImpl implements MailService {
     message.setSubject(subject);
     message.setText(body, true);
     sender.send(mimeMessage);
+  }
+
+  @Override
+  public void sendEmailTemplate(final String to, final String subject, final String template,
+      final Map<String, ?> params) throws MessagingException {
+    final Context context = new Context(Locale.getDefault(), params);
+    sendEmail(to, subject, templateEngine.process(template, context));
   }
 }
