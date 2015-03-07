@@ -92,7 +92,7 @@ define(['jquery',
 							submitHandler: function() {
 								$.ajax({
 									type: "POST",
-									url: contextPath("/api/public/newAccount"),
+									url: contextPath("/api/public/account"),
 									contentType: "application/json; charset=utf-8",
 									dataType: "json",
 									data: JSON.stringify({
