@@ -39,8 +39,5 @@ public class VerificationTest {
     log.info("created account verification " + key);
     final AccountVerification verification = verificationDao.get(key);
     log.info("retrieved account verification " + verification);
-    verification.setDisabled(true);
-    verificationDao.update(verification);
-    log.info("disabled account verification " + verification);
   }
 }

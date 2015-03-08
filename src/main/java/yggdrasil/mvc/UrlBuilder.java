@@ -29,6 +29,7 @@ public class UrlBuilder {
       base.append(":");
       base.append(request.getServerPort());
     }
+    base.append(request.getContextPath());
     base.append("/");
     return this;
   }

@@ -54,6 +54,8 @@ public class SecurityConfig {
       // @formatter:off
       http
         .authorizeRequests()
+          .antMatchers("/page/error/**").permitAll()
+          .antMatchers("/v/**").permitAll()
           .anyRequest().authenticated()
         .and()
           .formLogin().loginPage("/page/login").permitAll().defaultSuccessUrl("/")

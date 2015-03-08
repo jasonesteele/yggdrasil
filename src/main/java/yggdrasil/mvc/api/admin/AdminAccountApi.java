@@ -34,7 +34,7 @@ import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
 import yggdrasil.mvc.api.dto.ApiError;
 import yggdrasil.mvc.api.dto.UserResource;
-import yggdrasil.mvc.api.exception.InvalidOperationException;
+import yggdrasil.mvc.exception.InvalidOperationException;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

@@ -23,9 +23,6 @@ public class AccountVerification {
   @Column(nullable = false)
   private Date invalidAfterTime;
 
-  @Column
-  private boolean isDisabled;
-
   @Override
   public boolean equals(final Object obj) {
     if (this == obj) {
@@ -68,12 +65,8 @@ public class AccountVerification {
     return result;
   }
 
-  public boolean isDisabled() {
-    return isDisabled;
-  }
-
-  public void setDisabled(final boolean isDisabled) {
-    this.isDisabled = isDisabled;
+  public boolean isExpired() {
+    return invalidAfterTime.before(new Date());
   }
 
   public void setId(final String id) {
@@ -93,8 +86,8 @@ public class AccountVerification {
     final StringBuilder sb = new StringBuilder();
     sb.append(id);
     final Date now = new Date();
-    if (isDisabled || invalidAfterTime.before(now)) {
-      sb.append(" [disabled]");
+    if (isExpired()) {
+      sb.append(" [expired]");
     } else {
       sb.append(" [valid for ");
       final long diffMs = invalidAfterTime.getTime() - now.getTime();

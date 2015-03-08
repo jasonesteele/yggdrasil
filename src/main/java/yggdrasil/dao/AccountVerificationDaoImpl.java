@@ -24,9 +24,7 @@ public class AccountVerificationDaoImpl extends AbstractDaoImpl<AccountVerificat
 
   @Override
   public void clearVerifications(final Long userId) {
-    getSession()
-        .createQuery(
-            "update AccountVerification av set av.isDisabled = false where av.user.id = :id")
+    getSession().createQuery("delete from AccountVerification av where av.user.id = :id")
         .setLong("id", userId).executeUpdate();
   }
 

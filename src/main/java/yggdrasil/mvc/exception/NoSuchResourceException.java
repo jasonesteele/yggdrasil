@@ -1,19 +1,18 @@
-package yggdrasil.mvc.api.exception;
+package yggdrasil.mvc.exception;
 
 /**
- * This exception is thrown when an operation is invalid for a particular
- * resource.
+ * This exception is thrown when a non-existent resource was requested.
  *
  * @author jason
  */
 @SuppressWarnings("serial")
-public class InvalidOperationException extends RuntimeException {
+public class NoSuchResourceException extends RuntimeException {
   /**
    * Constructs a new runtime exception with {@code null} as its detail message.
    * The cause is not initialized, and may subsequently be initialized by a call
    * to {@link #initCause}.
    */
-  public InvalidOperationException() {
+  public NoSuchResourceException() {
     super();
   }
 
@@ -26,7 +25,7 @@ public class InvalidOperationException extends RuntimeException {
    *          the detail message. The detail message is saved for later
    *          retrieval by the {@link #getMessage()} method.
    */
-  public InvalidOperationException(final String message) {
+  public NoSuchResourceException(final String message) {
     super(message);
   }
 
@@ -46,7 +45,7 @@ public class InvalidOperationException extends RuntimeException {
    *          and indicates that the cause is nonexistent or unknown.)
    * @since 1.4
    */
-  public InvalidOperationException(final String message, final Throwable cause) {
+  public NoSuchResourceException(final String message, final Throwable cause) {
     super(message, cause);
   }
 
@@ -63,7 +62,7 @@ public class InvalidOperationException extends RuntimeException {
    *          and indicates that the cause is nonexistent or unknown.)
    * @since 1.4
    */
-  public InvalidOperationException(final Throwable cause) {
+  public NoSuchResourceException(final Throwable cause) {
     super(cause);
   }
 }
