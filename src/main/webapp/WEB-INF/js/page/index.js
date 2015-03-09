@@ -11,12 +11,6 @@ define(['jquery',
 		body.initialize({
 			title: 'Home',
 			contents: "<h1>Home Page</h1>",
-			navbar: {
-				items: [ logoutControl({ action : contextPath("/logout") }) ],
-			},
-			onShow: function(body) {
-				$("#logoutForm").csrf();
-			},
 		});
 	};
 	

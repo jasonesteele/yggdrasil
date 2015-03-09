@@ -5,6 +5,7 @@ define(['jquery',
         'underscore',
         'util/contextPath',
         'hbs!templates/navbar/navbar',
+        'util/csrf',
 ], function($, _, contextPath, content) {
 	var _options = {
 		home: {
@@ -20,8 +21,16 @@ define(['jquery',
 	var _menu;
 	
 	var initializeNav = function(session) {
-		console.log("initializing navbar for session");
-		console.log(session);
+		// TODO - query available navigation from server
+		
+		require(['hbs!templates/menu/logoutControl'], function(logoutControl) {
+			var _logoutForm = $(logoutControl({ action : contextPath("/logout") }));
+			_menu.append(_logoutForm);
+			$(function() {
+				_logoutForm.find('form').csrf();
+			});
+		});
+
 	}
 
 	var initialize = function(options) {
