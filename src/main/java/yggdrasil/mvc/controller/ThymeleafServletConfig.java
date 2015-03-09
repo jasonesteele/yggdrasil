@@ -35,7 +35,7 @@ public class ThymeleafServletConfig {
   @Bean
   public TemplateResolver templateResolver() {
     final ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
-    templateResolver.setPrefix("/WEB-INF/templates/");
+    templateResolver.setPrefix("/WEB-INF/html/");
     templateResolver.setSuffix(".html");
     templateResolver.setTemplateMode("LEGACYHTML5");
     return templateResolver;
