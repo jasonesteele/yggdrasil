@@ -48,7 +48,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @RestController
 @Transactional
 @Api(value = "account", description = "Supports creation of new user accounts, verification and password reset requests")
-@RequestMapping(value = "api/public/account", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/public/account")
 @PreAuthorize("permitAll()")
 public class AccountApi {
   @Resource
@@ -70,7 +70,7 @@ public class AccountApi {
   @ApiResponses({
       @ApiResponse(code = 200, message = "Default success method.  Not returned by this method.", response = Void.class),
       @ApiResponse(code = 201, message = "User was added succesfully.  The Location header contains the URI of the newly created user.", response = UserResource.class) })
-  @RequestMapping(method = RequestMethod.POST)
+  @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Long> createNewUser(
       @RequestBody(required = true) final NewUserResource userResource,
       final HttpServletRequest request) throws MessagingException {

@@ -31,7 +31,7 @@ public class LoginController {
     if (auth == null || auth instanceof AnonymousAuthenticationToken) {
       return "login";
     } else {
-      return "redirect:" + env.getProperty("jmud.home", "/");
+      return "redirect:" + env.getProperty("yggdrasil.home", "/");
     }
   }
 }
