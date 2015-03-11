@@ -55,7 +55,7 @@ public class SecurityConfig {
       http
         .authorizeRequests()
           .antMatchers("/page/error/**").permitAll()
-          .antMatchers("/page/verified").permitAll()
+          .antMatchers("/page/verify/**").permitAll()
           .antMatchers("/v/**").permitAll()
           .anyRequest().authenticated()
         .and()

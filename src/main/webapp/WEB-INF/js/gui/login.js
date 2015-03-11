@@ -75,7 +75,7 @@ define(['jquery',
 									password: modal.find('input[name*="createPassword"]').val(),
 								}),
 							}).done(function(data) {
-								window.location.href = contextPath();
+								window.location.href = contextPath('page/verify/sent');
 							}).fail(function(msg) {
 								$.notify("Error creating account: " + msg.statusText, 'error');
 							});

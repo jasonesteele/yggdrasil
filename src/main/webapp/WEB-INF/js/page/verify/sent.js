@@ -16,7 +16,7 @@ define(['jquery',
 			$.getJSON(contextPath("/api/public/session"))
 				.done(function(data) {
 					if (data) {
-						$('#verification').html(data.email);
+						$('#verificationTo').html("<em>" + data.email + "</em>");
 					} 
 				});
 		});
