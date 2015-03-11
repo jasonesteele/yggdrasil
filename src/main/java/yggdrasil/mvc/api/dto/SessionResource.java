@@ -16,6 +16,9 @@ public class SessionResource {
   @ApiModelProperty(value = "User's login name")
   private String username;
 
+  @ApiModelProperty(value = "User's email address")
+  private String email;
+
   @ApiModelProperty(value = "Roles assigned to the user")
   private List<String> roles = new ArrayList<String>();
 
@@ -25,12 +28,20 @@ public class SessionResource {
   public SessionResource() {
   }
 
+  public String getEmail() {
+    return email;
+  }
+
   public List<String> getRoles() {
     return roles;
   }
 
   public String getUsername() {
     return username;
+  }
+
+  public void setEmail(final String email) {
+    this.email = email;
   }
 
   public void setRoles(final List<String> roles) {

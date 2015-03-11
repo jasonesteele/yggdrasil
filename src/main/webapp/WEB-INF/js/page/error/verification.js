@@ -13,7 +13,7 @@ define(['jquery',
 		
 		require([template], function(contents) {
 			body.initialize({
-				title: 'Error',
+				title: 'Verification Error',
 				contents: contents({ resendUrl: contextPath("/page/profile") }),
 			});
 		});

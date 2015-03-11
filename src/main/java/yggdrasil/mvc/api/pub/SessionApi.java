@@ -51,6 +51,7 @@ public class SessionApi {
       final User user = (User) auth.getPrincipal();
 
       resource.setUsername(user.getUsername());
+      resource.setEmail(user.getEmail());
 
       for (final Role role : user.getRoles()) {
         resource.getRoles().add(role.getName());

@@ -7,7 +7,7 @@ define(['jquery',
 ], function($, body, verified) {
 	var initialize = function() {
 		body.initialize({
-			title: 'Home',
+			title: 'Account Verified',
 			contents: verified(),
 		});
 	};

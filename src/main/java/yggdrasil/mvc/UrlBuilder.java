@@ -22,7 +22,7 @@ public class UrlBuilder {
   public UrlBuilder absolute() {
     base.setLength(0);
     base.append(request.getScheme());
-    base.append(":");
+    base.append("://");
     base.append(request.getServerName());
     if (("http".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 80)
         || ("https".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 443)) {
