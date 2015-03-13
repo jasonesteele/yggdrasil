@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -27,6 +28,11 @@ public abstract class AbstractDaoImpl<T, PK extends Serializable> implements Abs
   @Override
   public PK create(final T entity) {
     return (PK) getSession().save(entity);
+  }
+
+  @Override
+  public Criteria createCriteria() {
+    return getSession().createCriteria(getEntityClass());
   }
 
   @Override

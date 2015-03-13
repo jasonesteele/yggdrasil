@@ -20,6 +20,24 @@ import yggdrasil.model.User;
  */
 @Repository("userDao")
 public class UserDaoImpl extends AbstractDaoImpl<User, Long> implements UserDao, UserDetailsService {
+  @Override
+  public User findByEmail(final String email) {
+    final Session session = getSession();
+
+    // @formatter:off
+    @SuppressWarnings("unchecked")
+    final List<User> results =
+        session.createCriteria(getEntityClass())
+          .add(Restrictions.eq("email", email))
+          .list();
+    // @formatter:on
+
+    if (results.size() == 0) {
+      throw new EntityNotFoundException("e-mail address " + email + " not found");
+    } else {
+      return results.get(0);
+    }
+  }
 
   @Override
   public User findByName(final String username) {

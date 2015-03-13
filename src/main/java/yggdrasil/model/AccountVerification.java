@@ -23,6 +23,9 @@ public class AccountVerification {
   @Column(nullable = false)
   private Date invalidAfterTime;
 
+  @Column(nullable = false)
+  private Date createdTime = new Date();
+
   @Override
   public boolean equals(final Object obj) {
     if (this == obj) {
@@ -43,6 +46,10 @@ public class AccountVerification {
       return false;
     }
     return true;
+  }
+
+  public Date getCreatedTime() {
+    return createdTime;
   }
 
   public String getId() {
@@ -67,6 +74,10 @@ public class AccountVerification {
 
   public boolean isExpired() {
     return invalidAfterTime.before(new Date());
+  }
+
+  public void setCreatedTime(final Date createdTime) {
+    this.createdTime = createdTime;
   }
 
   public void setId(final String id) {

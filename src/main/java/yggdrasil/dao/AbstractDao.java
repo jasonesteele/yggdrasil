@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Criteria;
+
 /**
  * Implementations of this interface provide base data access operations for an
  * entity type.
@@ -25,6 +27,13 @@ public interface AbstractDao<T, PK extends Serializable> {
    * @return entity object with any modifications made by the persistence layer
    */
   PK create(T entity);
+
+  /**
+   * Creates search criteria for the entity type of this DAO.
+   *
+   * @return search criteria
+   */
+  Criteria createCriteria();
 
   /**
    * Deletes an entity.

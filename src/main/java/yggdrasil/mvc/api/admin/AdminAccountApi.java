@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -149,24 +149,11 @@ public class AdminAccountApi {
     return new UserResource(userDao.get(Long.valueOf(id)));
   }
 
-  @ExceptionHandler(EntityNotFoundException.class)
-  @ResponseBody
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ApiError handleException(final EntityNotFoundException enfe) {
-    return new ApiError(enfe.getMessage());
-  }
-
-  @ExceptionHandler(Exception.class)
-  @ResponseBody
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ApiError handleException(final Exception e) {
-    return new ApiError(e.getMessage());
-  }
-
   @ExceptionHandler(ConstraintViolationException.class)
-  @ResponseBody
-  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-  public ApiError handlerException(final ConstraintViolationException cve) {
+  public @ResponseBody ApiError handleException(final ConstraintViolationException cve,
+      final HttpServletResponse response) {
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
+    response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
     final StringBuilder sb = new StringBuilder();
     String delim = "";
     for (ConstraintViolation<?> violation : cve.getConstraintViolations()) {
@@ -177,6 +164,22 @@ public class AdminAccountApi {
     }
 
     return new ApiError("data constraint violation", sb.toString());
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public @ResponseBody ApiError handleException(final EntityNotFoundException enfe,
+      final HttpServletResponse response) {
+    response.setStatus(HttpStatus.NOT_FOUND.value());
+    response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    return new ApiError(enfe.getMessage());
+  }
+
+  @ExceptionHandler(Exception.class)
+  public @ResponseBody ApiError handleException(final Exception e,
+      final HttpServletResponse response) {
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
+    response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    return new ApiError(e.getMessage());
   }
 
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")

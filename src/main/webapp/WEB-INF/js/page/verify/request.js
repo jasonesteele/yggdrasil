@@ -51,18 +51,22 @@ define(['jquery',
 						var emailVal = form.find('input[name*="email"]').val();
 						$.ajax({
 							type: "POST",
-							url: contextPath("/api/public/account/resend"),
-							contentType: "application/json; charset=utf-8",
+							url: contextPath("/api/public/account/verify"),
 							dataType: "json",
+							contentType: "application/json; charset=utf-8",
 							data: JSON.stringify({
 								email: emailVal,
 							}),
 						}).done(function(data) {
 							$.notify("A new verification e-mail has been sent to " + emailVal, 'success');
-							form.ajaxSubmit();
-						}).fail(function(msg) {
-							$.notify("Error resending account verification: " + msg.statusText, 'error');
-							// TODO - if account already verified, show different error
+						}).fail(function(jqXHR, textStatus, errorThrown) {
+							var errMsg;
+							if (jqXHR.responseJSON) {
+								errMsg = jqXHR.responseJSON.message;
+							} else {
+								errMsg = "HTTP " + jqXHR.status + ": " + jqXHR.statusText;
+							}
+							$.notify("Error: " + errMsg);
 						});
 					},
 				});
