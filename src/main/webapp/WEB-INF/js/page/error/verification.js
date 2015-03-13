@@ -14,7 +14,7 @@ define(['jquery',
 		require([template], function(contents) {
 			body.initialize({
 				title: 'Verification Error',
-				contents: contents({ resendUrl: contextPath("/page/profile") }),
+				contents: contents({ resendUrl: contextPath("/page/verify/request") }),
 			});
 		});
 	}

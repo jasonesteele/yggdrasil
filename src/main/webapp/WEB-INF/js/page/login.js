@@ -21,7 +21,11 @@ define(['jquery',
 						var errorMessage = $('meta[name="_lastSecurityError"]').attr('content');
 						if (!errorMessage) errorMessage = 'Unknown security error';
 						modal.show({
-							content: message({title: 'Security Error', error: errorMessage}),
+							content: message({
+								title: 'Security Error',
+								error: errorMessage,
+								recoverAccountUrl: contextPath("/page/verify/recover"),
+							}),
 							parent: body,
 						});
 					});

@@ -13,6 +13,9 @@ define(['jquery',
 	var _options = {
 			title: 'Page',
 			contents: null,
+			navbar: {
+				autoFocus: true,
+			},
 			onShow: function() {},
 	};
 	var _el;

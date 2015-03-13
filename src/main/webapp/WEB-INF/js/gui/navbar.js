@@ -13,6 +13,7 @@ define(['jquery',
 			tooltip: 'Home',
 			label: '<span class="glyphicon glyphicon-home"></span>',
 		},
+		autoFocus: true,
 	};
 	var _menuItem = {
 		content: 'Menu',
@@ -47,7 +48,7 @@ define(['jquery',
 			.done(function(data) {
 				if (!data) {
 					require(['gui/login'], function(login) {
-						login.initialize(_menu);
+						login.initialize({ menuContainer: _menu, autoFocus: _options.autoFocus });
 					});
 				} else {
 					initializeNav(data);

@@ -29,6 +29,8 @@ public class AccountVerificationController {
   @Resource
   private UserDao userDao;
 
+  // TODO add reaping of unverified accounts
+
   @RequestMapping(value = "/{verificationKey}")
   public String getVerificationPage(@PathVariable("verificationKey") final String verificationKey) {
     final AccountVerification verification = verificationDao.get(verificationKey);

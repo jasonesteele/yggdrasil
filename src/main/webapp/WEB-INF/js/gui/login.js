@@ -8,6 +8,10 @@ define(['jquery',
         'util/csrf',
         'util/validation',
 ], function($, _, contextPath, loginForm) {
+	var _options = {
+		menuContainer: null,
+		autoFocus: true,
+	};
 	var _el = $(loginForm());
 	
 	var createAccountPopup = function(e) {
@@ -101,7 +105,11 @@ define(['jquery',
 		e.preventDefault();
 	};
 	
-	var initialize = function(menuContainer) {
+	var initialize = function(options) {
+		if (options) {
+			$.extend(true, _options, options);
+		}
+		
 		var form = _el.find("form");
 		var usernameInput = form.find("input[name*='username']");
 		var passwordInput = form.find("input[name*='password']");
@@ -127,11 +135,13 @@ define(['jquery',
 		
 		createAccount.on('click', createAccountPopup)
 		
-		menuContainer.append(_el);
-		
-		$(function() {
-			usernameInput.focus();
-		});
+		_options.menuContainer.append(_el);
+
+		if (_options.autoFocus) {
+			$(function() {
+				usernameInput.focus();
+			});
+		}
 	}
 	
 	return {
