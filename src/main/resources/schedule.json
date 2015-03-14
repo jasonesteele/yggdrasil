@@ -1,0 +1,8 @@
+[
+  {
+    "trigger": "periodic.reapUnverifiedAccounts",
+    "job": "reapUnverifiedAccounts",
+    "cron": "0 0/15 * * * ?",
+    "comment": "Reaps any accounts that have been unverified for a period of time."
+  }
+]

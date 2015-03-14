@@ -70,6 +70,8 @@ public class DaoConfig {
     props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
     props.setProperty("hibernate.hbm2ddl.auto",
         env.getProperty("hibernate.hbm2ddl.auto", "validate"));
+    props.setProperty("hibernate.hbm2ddl.import_files_sql_extractor",
+        "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor");
 
     factory.setHibernateProperties(props);
     factory.setDataSource(dataSource());

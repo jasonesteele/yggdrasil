@@ -9,7 +9,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import yggdrasil.dao.DaoConfig;
+import yggdrasil.jmx.JmxConfig;
 import yggdrasil.mail.MailConfig;
+import yggdrasil.scheduler.SchedulerConfig;
 
 /**
  * Root configuration for application.
@@ -18,7 +20,7 @@ import yggdrasil.mail.MailConfig;
  */
 @Configuration
 @PropertySource("classpath:application.properties")
-@Import({ DaoConfig.class, MailConfig.class })
+@Import({ DaoConfig.class, MailConfig.class, JmxConfig.class, SchedulerConfig.class })
 @ComponentScan
 @EnableTransactionManagement
 public class RootConfig {
