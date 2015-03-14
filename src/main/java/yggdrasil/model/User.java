@@ -1,10 +1,12 @@
 package yggdrasil.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -49,8 +52,14 @@ public class User implements UserDetails {
   @Column
   private boolean emailVerified;
 
+  @Column(nullable = false)
+  private Date createdTime;
+
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<Role> roles = new TreeSet<Role>();
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+  private Set<AccountVerification> verifications = new TreeSet<AccountVerification>();
 
   /**
    * Default constructor.
@@ -94,6 +103,10 @@ public class User implements UserDetails {
     return authorities;
   }
 
+  public Date getCreatedTime() {
+    return createdTime;
+  }
+
   public String getEmail() {
     return email;
   }
@@ -122,6 +135,10 @@ public class User implements UserDetails {
   @Override
   public String getUsername() {
     return username;
+  }
+
+  public Set<AccountVerification> getVerifications() {
+    return verifications;
   }
 
   @Override
@@ -156,6 +173,10 @@ public class User implements UserDetails {
     return enabled;
   }
 
+  public void setCreatedTime(final Date createdTime) {
+    this.createdTime = createdTime;
+  }
+
   public void setEmail(final String email) {
     this.email = email;
   }
@@ -182,6 +203,10 @@ public class User implements UserDetails {
 
   public void setUsername(final String username) {
     this.username = username;
+  }
+
+  public void setVerifications(final Set<AccountVerification> verifications) {
+    this.verifications = verifications;
   }
 
   @Override

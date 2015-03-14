@@ -1,6 +1,7 @@
 package yggdrasil.mvc.api.admin;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,6 +67,7 @@ public class AdminAccountApi {
       @RequestBody(required = true) final UserResource userResource,
       final HttpServletRequest request) {
     final User user = new User();
+    user.setCreatedTime(new Date());
     if (null != userResource.getUsername()) {
       user.setUsername(userResource.getUsername());
     }

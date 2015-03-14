@@ -1,5 +1,6 @@
 package yggdrasil.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -56,6 +57,22 @@ public class UserDaoImpl extends AbstractDaoImpl<User, Long> implements UserDao,
     } else {
       return results.get(0);
     }
+  }
+
+  @Override
+  public List<User> findUnverifiedCreatedBefore(final Date before) {
+    final Session session = getSession();
+
+    // @formatter:off
+    @SuppressWarnings("unchecked")
+    final List<User> results =
+        session.createCriteria(getEntityClass())
+          .add(Restrictions.eq("emailVerified", false))
+          .add(Restrictions.lt("createdTime", before))
+          .list();
+    // @formatter:on
+
+    return results;
   }
 
   @Override

@@ -83,6 +83,7 @@ public class AccountApi {
       @RequestBody(required = true) final NewUserResource userResource,
       final HttpServletRequest request) throws MessagingException {
     final User newUser = new User();
+    newUser.setCreatedTime(new Date());
     newUser.setUsername(userResource.getUsername());
     newUser.setEmail(userResource.getEmail());
     newUser.setEnabled(true);
