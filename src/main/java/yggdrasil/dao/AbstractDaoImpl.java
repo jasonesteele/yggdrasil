@@ -18,8 +18,6 @@ import org.hibernate.SessionFactory;
  */
 @Transactional
 public abstract class AbstractDaoImpl<T, PK extends Serializable> implements AbstractDao<T, PK> {
-  // TODO - add exceptions?
-
   /** Hibernate session factory. */
   @Resource
   private SessionFactory sessionFactory;

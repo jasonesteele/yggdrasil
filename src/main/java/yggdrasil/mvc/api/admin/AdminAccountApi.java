@@ -54,7 +54,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 @RequestMapping(value = "api/admin/account")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminAccountApi {
-  // TODO - need much better error handling and reporting
   @Resource
   private UserDao userDao;
 
