@@ -7,6 +7,8 @@ import javax.persistence.EntityNotFoundException;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,30 @@ import yggdrasil.model.User;
  */
 @Repository("userDao")
 public class UserDaoImpl extends AbstractDaoImpl<User, Long> implements UserDao, UserDetailsService {
+  /** Class logger. */
+  private static final Logger log = LoggerFactory.getLogger(UserDaoImpl.class);
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public int deleteUnverifiedCreatedBefore(final Date expirationTime) {
+    // @formatter:off
+    final List<User> users = getSession().createCriteria(getEntityClass())
+        .add(Restrictions.eq("emailVerified", false))
+        .add(Restrictions.lt("createdTime", expirationTime))
+        .list();
+    // @formatter:on
+
+    if (users.size() == 0) {
+      log.debug("no unverified users");
+    }
+    for (User user : users) {
+      log.info(String.format("deleting unverified account %s [email=%s]", user.getUsername(),
+          user.getEmail()));
+      delete(user.getId());
+    }
+    return users.size();
+  }
+
   @Override
   public User findByEmail(final String email) {
     final Session session = getSession();
@@ -57,22 +83,6 @@ public class UserDaoImpl extends AbstractDaoImpl<User, Long> implements UserDao,
     } else {
       return results.get(0);
     }
-  }
-
-  @Override
-  public List<User> findUnverifiedCreatedBefore(final Date before) {
-    final Session session = getSession();
-
-    // @formatter:off
-    @SuppressWarnings("unchecked")
-    final List<User> results =
-        session.createCriteria(getEntityClass())
-          .add(Restrictions.eq("emailVerified", false))
-          .add(Restrictions.lt("createdTime", before))
-          .list();
-    // @formatter:on
-
-    return results;
   }
 
   @Override

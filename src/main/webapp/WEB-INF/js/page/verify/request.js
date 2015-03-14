@@ -62,7 +62,7 @@ define(['jquery',
 						}).fail(function(jqXHR, textStatus, errorThrown) {
 							var errMsg;
 							if (jqXHR.responseJSON) {
-								if (jqXHR.status = 404) {
+								if (jqXHR.status == 404) {
 									errMsg = "Account with that e-mail address not found."
 								} else {
 									errMsg = jqXHR.responseJSON.message;

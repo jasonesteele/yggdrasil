@@ -9,15 +9,6 @@ import yggdrasil.model.AccountVerification;
  */
 public interface AccountVerificationDao extends AbstractDao<AccountVerification, String> {
   /**
-   * Disables all account verifications for a user, e.g. after a successful
-   * login.
-   *
-   * @param userId
-   *          user id to clear all verifications for
-   */
-  void clearVerifications(Long userId);
-
-  /**
    * Creates a new account verification for a user. Any existing account
    * verification links are disabled.
    *
@@ -28,4 +19,21 @@ public interface AccountVerificationDao extends AbstractDao<AccountVerification,
    * @return ID for newly created account verification
    */
   String createVerification(Long userId, int validFor);
+
+  /**
+   * Deletes all expired account verifications.
+   *
+   * @return number of verifications deleted
+   */
+  int deleteExpiredVerifications();
+
+  /**
+   * Deletes all account verifications for a user, e.g. after a successful
+   * login.
+   *
+   * @param userId
+   *          user id to clear all verifications for
+   * @return number of verifications deleted
+   */
+  int deleteVerificationsFor(Long userId);
 }

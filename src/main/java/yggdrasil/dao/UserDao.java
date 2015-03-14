@@ -1,7 +1,6 @@
 package yggdrasil.dao;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -13,6 +12,15 @@ import yggdrasil.model.User;
  * @author jason
  */
 public interface UserDao extends AbstractDao<User, Long> {
+  /**
+   * Deletes unverified user accounts created before a certain time.
+   *
+   * @param expirationTime
+   *          creation time threshold for unverified users
+   * @return number of users accounts deleted
+   */
+  int deleteUnverifiedCreatedBefore(Date expirationTime);
+
   /**
    * Finds a user by e-mail address.
    *
@@ -32,14 +40,4 @@ public interface UserDao extends AbstractDao<User, Long> {
    *           if no such user is found
    */
   User findByName(String username);
-
-  /**
-   * Finds all unverified users whose accounts were created before a certain
-   * time.
-   *
-   * @param before
-   *          threshold for finding unverified users
-   * @return list of unverified users
-   */
-  List<User> findUnverifiedCreatedBefore(Date before);
 }

@@ -4,5 +4,11 @@
     "job": "reapUnverifiedAccounts",
     "cron": "0 0/15 * * * ?",
     "comment": "Reaps any accounts that have been unverified for a period of time."
+  },
+  {
+    "trigger": "periodic.reapExpiredVerificationLinks",
+    "job": "reapExpiredVerificationLinks",
+    "cron": "0 * * * * ?",
+    "comment": "Reaps unused account verification links that have expired."
   }
 ]
