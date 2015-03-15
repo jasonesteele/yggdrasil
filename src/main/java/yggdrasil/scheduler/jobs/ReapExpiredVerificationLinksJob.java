@@ -5,20 +5,17 @@ import javax.annotation.Resource;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.core.env.Environment;
 
 import yggdrasil.dao.AccountVerificationDao;
 import yggdrasil.scheduler.SystemJob;
 
 /**
+ * This scheduled job reaps all expired account verification links.
  *
  * @author jason
  */
 @SystemJob(value = "reapExpiredVerificationLinks", description = "Reaps expired account verification links.")
 public class ReapExpiredVerificationLinksJob implements Job {
-  @Resource
-  private Environment env;
-
   @Resource
   private AccountVerificationDao verificationDao;
 

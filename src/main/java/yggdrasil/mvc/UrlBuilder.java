@@ -30,7 +30,18 @@ public class UrlBuilder {
       base.append(request.getServerPort());
     }
     base.append(request.getContextPath());
-    base.append("/");
+    if (!request.getContextPath().endsWith("/")) {
+      base.append("/");
+    }
+    return this;
+  }
+
+  public UrlBuilder contextRelative() {
+    base.setLength(0);
+    base.append(request.getContextPath());
+    if (!request.getContextPath().endsWith("/")) {
+      base.append("/");
+    }
     return this;
   }
 

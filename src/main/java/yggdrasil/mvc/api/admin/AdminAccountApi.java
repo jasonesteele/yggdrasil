@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import yggdrasil.dao.UserDao;
 import yggdrasil.model.User;
 import yggdrasil.mvc.api.dto.ApiError;
+import yggdrasil.mvc.api.dto.NewUserResource;
 import yggdrasil.mvc.api.dto.UserResource;
 import yggdrasil.mvc.exception.InvalidOperationException;
 
@@ -63,19 +63,13 @@ public class AdminAccountApi {
       @ApiResponse(code = 201, message = "User was added succesfully.  The Location header contains the URI of the newly created user.", response = UserResource.class) })
   @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Long> addUser(
-      @RequestBody(required = true) final UserResource userResource,
+      @RequestBody(required = true) final NewUserResource userResource,
       final HttpServletRequest request) {
     final User user = new User();
     user.setCreatedTime(new Date());
-    if (null != userResource.getUsername()) {
-      user.setUsername(userResource.getUsername());
-    }
-    if (null != userResource.getEmail()) {
-      user.setEmail(userResource.getEmail());
-    }
-    if (null != userResource.getIsEnabled()) {
-      user.setEnabled(userResource.getIsEnabled());
-    }
+    user.setUsername(userResource.getUsername());
+    user.setEmail(userResource.getEmail());
+    user.setEnabled(true);
 
     // Set random password
     user.setPassword(UUID.randomUUID().toString());
@@ -117,29 +111,11 @@ public class AdminAccountApi {
     return userList;
   }
 
-  public User getAuthenticatedUser() {
+  private User getAuthenticatedUser() {
+    // An unauthenticated user can never access this API
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication instanceof AnonymousAuthenticationToken) {
-      return null;
-    } else {
-      final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      return userDao.findByName(userDetails.getUsername());
-    }
-  }
-
-  @ApiOperation(value = "Retrieve the current user", notes = "Retrieve the currently logged in user.")
-  @ApiResponses(@ApiResponse(code = 200, message = "Current user was successfully returned."))
-  @RequestMapping(value = "current", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserResource> getCurrentUser(final HttpServletRequest request) {
-    final User user = getAuthenticatedUser();
-
-    final HttpHeaders headers = new HttpHeaders();
-    headers.add(
-        HttpHeaders.LOCATION,
-        ServletUriComponentsBuilder.fromContextPath(request)
-            .path("/admin/api/account/" + user.getId()).toUriString());
-
-    return new ResponseEntity<UserResource>(new UserResource(user), headers, HttpStatus.OK);
+    final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    return userDao.findByName(userDetails.getUsername());
   }
 
   @ApiOperation(value = "Retrieve a user", notes = "Retrieves account information for a user.")
@@ -175,12 +151,20 @@ public class AdminAccountApi {
     return new ApiError(enfe.getMessage());
   }
 
-  @ExceptionHandler(Exception.class)
-  public @ResponseBody ApiError handleException(final Exception e,
+  @ExceptionHandler(InvalidOperationException.class)
+  public @ResponseBody ApiError handleException(final InvalidOperationException enfe,
+      final HttpServletResponse response) {
+    response.setStatus(HttpStatus.FORBIDDEN.value());
+    response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    return new ApiError(enfe.getMessage());
+  }
+
+  @ExceptionHandler(NumberFormatException.class)
+  public @ResponseBody ApiError handleException(final NumberFormatException enfe,
       final HttpServletResponse response) {
     response.setStatus(HttpStatus.BAD_REQUEST.value());
     response.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-    return new ApiError(e.getMessage());
+    return new ApiError(enfe.getMessage());
   }
 
   @ApiOperation(value = "Update a user", notes = "Updates account information for a user.")
@@ -192,16 +176,24 @@ public class AdminAccountApi {
       @ApiParam("Primary key for user to update.") @PathVariable("id") final String id,
       @RequestBody(required = true) final UserResource userResource) {
     final User user = userDao.get(Long.valueOf(id));
+    final User authUser = getAuthenticatedUser();
+
     if (null != userResource.getUsername()) {
-      user.setUsername(userResource.getUsername());
+      if (authUser.getId().equals(user.getId())) {
+        if (!user.getUsername().equals(userResource.getUsername())) {
+          throw new InvalidOperationException("can not change username of current user");
+        }
+      } else {
+        user.setUsername(userResource.getUsername());
+      }
     }
     if (null != userResource.getEmail()) {
       user.setEmail(userResource.getEmail());
     }
     if (null != userResource.getIsEnabled()) {
-      if (getAuthenticatedUser().getId().equals(user.getId())) {
+      if (authUser.getId().equals(user.getId())) {
         if (user.isEnabled() != userResource.getIsEnabled()) {
-          throw new IllegalArgumentException("can not enable or disable current user");
+          throw new InvalidOperationException("can not enable or disable current user");
         }
       } else {
         user.setEnabled(userResource.getIsEnabled());

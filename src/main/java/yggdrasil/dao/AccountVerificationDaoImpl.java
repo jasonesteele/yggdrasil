@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,17 @@ public class AccountVerificationDaoImpl extends AbstractDaoImpl<AccountVerificat
   public int deleteVerificationsFor(final Long userId) {
     return getSession().createQuery("delete from AccountVerification av where av.user.id = :id")
         .setLong("id", userId).executeUpdate();
+  }
+
+  @Override
+  public AccountVerification findMostRecentForUser(final Long userId) {
+    // @formatter:off
+    return (AccountVerification) createCriteria()
+      .add(Restrictions.eq("user.id", userId))
+      .addOrder(Order.desc("createdTime"))
+      .setMaxResults(1)
+      .uniqueResult();
+    // @formatter:on
   }
 
   @Override

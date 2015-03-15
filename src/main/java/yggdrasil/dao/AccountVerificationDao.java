@@ -36,4 +36,15 @@ public interface AccountVerificationDao extends AbstractDao<AccountVerification,
    * @return number of verifications deleted
    */
   int deleteVerificationsFor(Long userId);
+
+  /**
+   * Finds the most recent account verification request for a user, if one
+   * exists.
+   *
+   * @param userId
+   *          id of user the search for
+   * @return most recent account verification or <code>null</code> if there are
+   *         none
+   */
+  AccountVerification findMostRecentForUser(Long userId);
 }

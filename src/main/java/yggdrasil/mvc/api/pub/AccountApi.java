@@ -2,7 +2,6 @@ package yggdrasil.mvc.api.pub;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -144,6 +141,8 @@ public class AccountApi {
       sb.append(String.format("Verification can not be resent for %d minute%s", vhe.getMinutes(),
           vhe.getMinutes() == 1 ? "" : "s"));
     }
+    response.setHeader("Retry-After",
+        Long.toString((vhe.getMinutes() < 1 ? 1 : vhe.getMinutes()) * 60));
     return new ApiError(sb.toString(), vhe.toString());
   }
 
@@ -155,7 +154,6 @@ public class AccountApi {
       @ApiResponse(code = 404, message = "No account with specified e-mail address could be found.", response = ApiError.class),
       @ApiResponse(code = 500, message = "Internal error sending e-mail with verification link. ", response = ApiError.class), })
   @RequestMapping(value = "/verify", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  @SuppressWarnings("unchecked")
   public ResponseEntity<String> requestVerification(
       @RequestBody(required = true) final EmailResource emailResource,
       final HttpServletRequest request) throws UserAlreadyVerifiedException, MessagingException,
@@ -167,17 +165,10 @@ public class AccountApi {
     }
 
     // Don't allow a new verification within a certain period from the last one
-    // @formatter:off
-    final List<AccountVerification> verifications =
-        verificationDao.createCriteria()
-          .add(Restrictions.eq("user.id", user.getId()))
-          .addOrder(Order.desc("createdTime"))
-          .setMaxResults(1)
-          .list();
-    // @formatter:on
+    final AccountVerification verification = verificationDao.findMostRecentForUser(user.getId());
 
-    if (verifications.size() > 0) {
-      final Date lastCreated = verifications.get(0).getCreatedTime();
+    if (verification != null) {
+      final Date lastCreated = verification.getCreatedTime();
       final Date now = new Date();
       final long holdOffMs = env.getProperty("mail.link.holdoff", Long.class, 30L) * 60000;
       if (lastCreated.getTime() > now.getTime() - holdOffMs) {

@@ -21,7 +21,7 @@ public class EmailResource {
   }
 
   /**
-   * Creates the new user resource.
+   * Creates the new email resource.
    *
    * @param email
    *          user email
