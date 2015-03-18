@@ -103,10 +103,6 @@ public class SchedulerConfig {
   @Bean
   public List<Trigger> systemSchedule() throws IOException {
     final String scheduleFile = env.getProperty("schedule.system.file", "schedule.json");
-    if (null == scheduleFile) {
-      throw new BeanInitializationException("no system schedule file found (" + scheduleFile + ")");
-    } else {
-      return loadSchedule(scheduleFile).build();
-    }
+    return loadSchedule(scheduleFile).build();
   }
 }

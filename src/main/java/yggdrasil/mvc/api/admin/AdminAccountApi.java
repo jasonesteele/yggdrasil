@@ -92,7 +92,7 @@ public class AdminAccountApi {
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
   public ResponseEntity<String> deleteUser(
       @ApiParam("Primary key for user to delete.") @PathVariable("id") final String id) {
-    final long userId = Long.valueOf(id);
+    final long userId = Long.parseLong(id);
     if (userId == getAuthenticatedUser().getId()) {
       throw new InvalidOperationException("can not delete current user");
     }

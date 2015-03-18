@@ -104,7 +104,7 @@ public class User implements UserDetails {
   }
 
   public Date getCreatedTime() {
-    return createdTime;
+    return new Date(createdTime.getTime());
   }
 
   public String getEmail() {
@@ -174,7 +174,7 @@ public class User implements UserDetails {
   }
 
   public void setCreatedTime(final Date createdTime) {
-    this.createdTime = createdTime;
+    this.createdTime = new Date(createdTime.getTime());
   }
 
   public void setEmail(final String email) {

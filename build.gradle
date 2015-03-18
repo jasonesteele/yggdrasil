@@ -2,6 +2,7 @@ apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'jacoco'
+apply plugin: 'findbugs'
 
 // ---------------------------------------------------------------
 // Project Properties and Versions
@@ -100,6 +101,17 @@ jacocoTestReport {
         })
     }
 }
+
+findbugs {
+    excludeFilter = project.file("src/test/resources/findbugs-exclude.xml")
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+ }
 
 // ---------------------------------------------------------------
 // Java Dependencies

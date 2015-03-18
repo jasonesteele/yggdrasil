@@ -49,7 +49,7 @@ public class AccountVerification {
   }
 
   public Date getCreatedTime() {
-    return createdTime;
+    return new Date(createdTime.getTime());
   }
 
   public String getId() {
@@ -57,7 +57,7 @@ public class AccountVerification {
   }
 
   public Date getInvalidAfterTime() {
-    return invalidAfterTime;
+    return new Date(invalidAfterTime.getTime());
   }
 
   public User getUser() {
@@ -77,7 +77,7 @@ public class AccountVerification {
   }
 
   public void setCreatedTime(final Date createdTime) {
-    this.createdTime = createdTime;
+    this.createdTime = new Date(createdTime.getTime());
   }
 
   public void setId(final String id) {
@@ -85,7 +85,7 @@ public class AccountVerification {
   }
 
   public void setInvalidAfterTime(final Date invalidAfterTime) {
-    this.invalidAfterTime = invalidAfterTime;
+    this.invalidAfterTime = new Date(invalidAfterTime.getTime());
   }
 
   public void setUser(final User user) {
