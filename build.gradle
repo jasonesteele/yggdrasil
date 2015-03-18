@@ -4,6 +4,7 @@ apply plugin: 'eclipse-wtp'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
+apply plugin: 'project-report'
 
 // ---------------------------------------------------------------
 // Project Properties and Versions
