@@ -3,6 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
+apply plugin: 'jdepend'
 
 // ---------------------------------------------------------------
 // Project Properties and Versions
@@ -111,7 +112,7 @@ tasks.withType(FindBugs) {
         xml.enabled = false
         html.enabled = true
     }
- }
+}
 
 // ---------------------------------------------------------------
 // Java Dependencies
