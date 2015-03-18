@@ -24,8 +24,8 @@ public class UrlBuilder {
     base.append(request.getScheme());
     base.append("://");
     base.append(request.getServerName());
-    if (("http".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 80)
-        || ("https".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 443)) {
+    if ("http".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 80
+        || "https".equalsIgnoreCase(request.getScheme()) && request.getServerPort() != 443) {
       base.append(":");
       base.append(request.getServerPort());
     }

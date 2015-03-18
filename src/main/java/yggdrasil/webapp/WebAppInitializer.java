@@ -1,8 +1,6 @@
 package yggdrasil.webapp;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.core.annotation.Order;
@@ -45,10 +43,5 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
   @Override
   protected String getServletName() {
     return "Yggdrasil Server";
-  }
-
-  @Override
-  public void onStartup(final ServletContext servletContext) throws ServletException {
-    super.onStartup(servletContext);
   }
 }

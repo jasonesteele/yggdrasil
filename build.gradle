@@ -5,6 +5,7 @@ apply plugin: 'jacoco'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'project-report'
+apply plugin: 'pmd'
 
 // ---------------------------------------------------------------
 // Project Properties and Versions
