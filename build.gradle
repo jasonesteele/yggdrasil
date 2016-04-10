@@ -149,11 +149,11 @@ dependencies {
     compile "com.h2database:h2:1.4.184"
 
     providedCompile "javax:javaee-web-api:7.0"
-    providedCompile "org.slf4j:slf4j-api:1.7.10"
+    compile "org.slf4j:slf4j-api:1.7.10"
     
-    providedRuntime "org.slf4j:jul-to-slf4j:1.7.10"
-    providedRuntime "org.slf4j:jcl-over-slf4j:1.7.10"
-    providedRuntime "ch.qos.logback:logback-classic:1.1.2"
+    runtime "org.slf4j:jul-to-slf4j:1.7.10"
+    runtime "org.slf4j:jcl-over-slf4j:1.7.10"
+    runtime "ch.qos.logback:logback-classic:1.1.2"
 
     testCompile ("junit:junit:4.+") {
        exclude group: "org.hamcrest"
