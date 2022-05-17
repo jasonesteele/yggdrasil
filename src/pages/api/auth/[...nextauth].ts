@@ -10,7 +10,7 @@ export default NextAuth({
           DiscordProvider({
             clientId: process.env.DISCORD_ID,
             clientSecret: process.env.DISCORD_SECRET,
-            authorization: { params: { scope: "identify discriminator" } },
+            authorization: { params: { scope: "identify" } },
           }),
         ]
       : []),
