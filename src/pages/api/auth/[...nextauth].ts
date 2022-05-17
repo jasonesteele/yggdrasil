@@ -1,41 +1,46 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
-import CredentialsProvider from "next-auth/providers/credentials";
+// import CredentialsProvider from "next-auth/providers/credentials";
 import logger from "../../../util/logger";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     ...(process.env.DISCORD_ID && process.env.DISCORD_SECRET
       ? [
           DiscordProvider({
             clientId: process.env.DISCORD_ID,
             clientSecret: process.env.DISCORD_SECRET,
-            authorization: { params: { scope: "identify" } },
+            authorization: { params: { scope: "identify email" } },
           }),
         ]
       : []),
-    ...(process.env.NODE_ENV !== "production"
-      ? [
-          CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-              name: {
-                label: "Name",
-                type: "text",
-              },
-            },
-            async authorize(credentials) {
-              if (credentials?.name) {
-                return {
-                  name: credentials.name,
-                  image: process.env.DEFAULT_USER_AVATAR,
-                };
-              }
-              return null;
-            },
-          }),
-        ]
-      : []),
+    // ...(process.env.NODE_ENV !== "production"
+    //   ? [
+    //       CredentialsProvider({
+    //         name: "Credentials",
+    //         credentials: {
+    //           name: {
+    //             label: "Name",
+    //             type: "text",
+    //           },
+    //         },
+    //         async authorize(credentials) {
+    //           if (credentials?.name) {
+    //             return {
+    //               name: credentials.name,
+    //               image: process.env.DEFAULT_USER_AVATAR,
+    //             };
+    //           }
+    //           return null;
+    //         },
+    //       }),
+    //     ]
+    //   : []),
   ],
   session: {
     strategy: "jwt",
