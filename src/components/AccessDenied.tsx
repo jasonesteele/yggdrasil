@@ -1,11 +1,12 @@
 import { Alert } from "@mui/material";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 const AccessDenied = () => {
   return (
     <>
       <Alert severity="error" title="Access Denied">
-        <a
+        <Link
           href="/api/auth/signin"
           onClick={(e) => {
             e.preventDefault();
@@ -13,7 +14,7 @@ const AccessDenied = () => {
           }}
         >
           You must be signed in to view this page
-        </a>
+        </Link>
       </Alert>
     </>
   );
