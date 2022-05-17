@@ -1,4 +1,4 @@
-import AccessDenied from "../src/components/AccessDenied";
+import AccessDenied from "../../src/components/AccessDenied";
 import { cleanup, render, screen } from "@testing-library/react";
 
 afterEach(cleanup);
