@@ -40,7 +40,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Typography variant="h3">Welcome {session.user.name}!</Typography>
+      <Typography variant="h5">Token</Typography>
       <pre>{JSON.stringify(token, null, 2)}</pre>
+      <Typography variant="h5">user</Typography>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <div>
         <Button onClick={() => signOut()}>Sign Out</Button>
       </div>

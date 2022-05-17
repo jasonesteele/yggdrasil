@@ -19,20 +19,16 @@ export default NextAuth({
           CredentialsProvider({
             name: "Credentials",
             credentials: {
-              username: {
-                label: "Username",
+              name: {
+                label: "Name",
                 type: "text",
               },
-              password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-              if (
-                credentials &&
-                credentials.username === credentials.password
-              ) {
+              if (credentials?.name) {
                 return {
-                  id: credentials.username,
-                  name: credentials.username,
+                  name: credentials.name,
+                  image: process.env.DEFAULT_USER_AVATAR,
                 };
               }
               return null;
