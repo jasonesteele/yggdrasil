@@ -1,0 +1,8 @@
+.nyc_output
+build
+coverage
+tmp
+
+package-lock.json
+.next
+dist
