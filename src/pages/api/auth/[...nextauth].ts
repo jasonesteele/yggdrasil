@@ -10,6 +10,7 @@ export default NextAuth({
           DiscordProvider({
             clientId: process.env.DISCORD_ID,
             clientSecret: process.env.DISCORD_SECRET,
+            authorization: { params: { scope: "identify" } },
           }),
         ]
       : []),
@@ -18,19 +19,20 @@ export default NextAuth({
           CredentialsProvider({
             name: "Credentials",
             credentials: {
-              email: {
-                label: "E-mail",
+              username: {
+                label: "Username",
                 type: "text",
-                placeholder: "me@example.com",
               },
               password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-              if (credentials && credentials.email === credentials.password) {
+              if (
+                credentials &&
+                credentials.username === credentials.password
+              ) {
                 return {
-                  id: credentials.email,
-                  email: credentials.email,
-                  name: credentials.email.split(/@/)[0],
+                  id: credentials.username,
+                  name: credentials.username,
                 };
               }
               return null;
