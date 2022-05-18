@@ -1,13 +1,5 @@
 import { GetServerSideProps, NextPage } from "next";
-import {
-  getCsrfToken,
-  getProviders,
-  getSession,
-  signIn,
-  useSession,
-} from "next-auth/react";
-import { Button } from "@mui/material";
-import DiscordIcon from "../components/icons/DiscordIcon";
+import { getSession, useSession } from "next-auth/react";
 import AppFrame from "../components/AppFrame";
 
 const Signin: NextPage = () => {
@@ -16,20 +8,7 @@ const Signin: NextPage = () => {
   if (status === "loading") return null;
 
   return (
-    <AppFrame
-      title="Text Roleplay"
-      rightButton={
-        <Button
-          size="small"
-          color="inherit"
-          aria-label="login"
-          sx={{ mr: 2 }}
-          onClick={() => signIn("discord")}
-        >
-          <DiscordIcon />
-        </Button>
-      }
-    >
+    <AppFrame title="Text Roleplay">
       <div>Sign-in page</div>
     </AppFrame>
   );
@@ -38,19 +17,17 @@ const Signin: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
-  return session?.user
-    ? {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      }
-    : {
-        props: {
-          providers: await getProviders(),
-          csrfToken: await getCsrfToken(),
-        },
-      };
+  if (session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default Signin;
