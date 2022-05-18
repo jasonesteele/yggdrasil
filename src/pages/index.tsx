@@ -3,13 +3,17 @@ import { useSession } from "next-auth/react";
 import AppFrame from "../components/AppFrame";
 import { User } from "next-auth";
 
-const Home: NextPage = () => {
+type HomeProps = {
+  appTitle: string;
+};
+
+const Home: NextPage<HomeProps> = ({ appTitle }) => {
   const { data: session, status } = useSession({ required: true });
 
   if (status === "loading") return null;
 
   return (
-    <AppFrame title="Text Roleplay" user={session?.user as User}>
+    <AppFrame title={appTitle} user={session?.user as User}>
       <div>Home page</div>
     </AppFrame>
   );
@@ -17,7 +21,9 @@ const Home: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
-    props: {},
+    props: {
+      appTitle: process.env.APP_TITLE,
+    },
   };
 };
 

@@ -2,13 +2,17 @@ import { GetServerSideProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import AppFrame from "../components/AppFrame";
 
-const Signin: NextPage = () => {
+type SigninProps = {
+  appTitle: string;
+};
+
+const Signin: NextPage<SigninProps> = ({ appTitle }) => {
   const { status } = useSession();
 
   if (status === "loading") return null;
 
   return (
-    <AppFrame title="Text Roleplay">
+    <AppFrame title={appTitle}>
       <div>Sign-in page</div>
     </AppFrame>
   );
@@ -26,7 +30,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   return {
-    props: {},
+    props: {
+      appTitle: process.env.APP_TITLE,
+    },
   };
 };
 
