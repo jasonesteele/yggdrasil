@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Grid, Toolbar, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { signIn, signOut } from "next-auth/react";
 import DiscordIcon from "./icons/DiscordIcon";
@@ -17,25 +17,31 @@ const AppFrame: NextPage<AppFrameProps> = ({ children, title, user }) => {
     <>
       <AppBar position="static">
         <Toolbar>
-          <YggdrasilIcon width="48" />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          {user ? (
-            <Button onClick={() => signOut()} color="inherit">
-              Logout
-            </Button>
-          ) : (
-            <Button
-              size="small"
-              color="inherit"
-              aria-label="login"
-              sx={{ mr: 2 }}
-              onClick={() => signIn("discord")}
-            >
-              <DiscordIcon />
-            </Button>
-          )}
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <YggdrasilIcon width="48" />
+            </Grid>
+            <Grid item sx={{ flexGrow: 1 }}>
+              <Typography variant="h6">{title}</Typography>
+            </Grid>
+            <Grid item>
+              {user ? (
+                <Button onClick={() => signOut()} color="inherit">
+                  Logout
+                </Button>
+              ) : (
+                <Button
+                  size="small"
+                  color="inherit"
+                  aria-label="login"
+                  sx={{ mr: 2 }}
+                  onClick={() => signIn("discord")}
+                >
+                  <DiscordIcon />
+                </Button>
+              )}
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       {children}

@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { getSession, useSession } from "next-auth/react";
 import AppFrame from "../components/AppFrame";
+import Head from "next/head";
 
 type SigninProps = {
   appTitle: string;
@@ -12,9 +13,14 @@ const Signin: NextPage<SigninProps> = ({ appTitle }) => {
   if (status === "loading") return null;
 
   return (
-    <AppFrame title={appTitle}>
-      <div>Sign-in page</div>
-    </AppFrame>
+    <>
+      <Head>
+        <title>{appTitle} - Signin</title>
+      </Head>
+      <AppFrame title={appTitle}>
+        <div>Sign-in page</div>
+      </AppFrame>
+    </>
   );
 };
 
