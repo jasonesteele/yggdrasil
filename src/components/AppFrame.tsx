@@ -1,10 +1,10 @@
 import React, { ReactElement } from "react";
 import { AppBar, Button, Grid, Toolbar, Typography } from "@mui/material";
-import { NextPage } from "next";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import DiscordIcon from "./icons/DiscordIcon";
 import { User } from "next-auth";
 import YggdrasilIcon from "./icons/YggdrasilIcon";
+import UserProfileButton from "./UserProfileButton";
 
 type AppFrameProps = {
   title: string;
@@ -12,10 +12,17 @@ type AppFrameProps = {
   children?: ReactElement;
 };
 
-const AppFrame: NextPage<AppFrameProps> = ({ children, title, user }) => {
+const AppFrame = ({ children, title }: AppFrameProps) => {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return null;
+
   return (
     <>
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
         <Toolbar>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -25,10 +32,8 @@ const AppFrame: NextPage<AppFrameProps> = ({ children, title, user }) => {
               <Typography variant="h6">{title}</Typography>
             </Grid>
             <Grid item>
-              {user ? (
-                <Button onClick={() => signOut()} color="inherit">
-                  Logout
-                </Button>
+              {session?.user ? (
+                <UserProfileButton />
               ) : (
                 <Button
                   size="small"
