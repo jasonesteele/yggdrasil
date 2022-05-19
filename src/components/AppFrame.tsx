@@ -49,6 +49,7 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
           </Grid>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       {children}
     </>
   );
