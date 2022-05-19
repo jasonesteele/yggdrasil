@@ -3,6 +3,8 @@ import { useSession } from "next-auth/react";
 import AppFrame from "../components/AppFrame";
 import { User } from "next-auth";
 import Head from "next/head";
+import ChatWindow from "../components/ChatWindow";
+import { Box, Container } from "@mui/material";
 
 type HomeProps = {
   appTitle: string;
@@ -19,7 +21,11 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
         <title>{appTitle} - Home</title>
       </Head>
       <AppFrame title={appTitle} user={session?.user as User}>
-        <div>Home page</div>
+        <Container>
+          <Box m={2}>
+            <ChatWindow />
+          </Box>
+        </Container>
       </AppFrame>
     </>
   );
