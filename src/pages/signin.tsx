@@ -15,9 +15,10 @@ import {
 
 type SigninProps = {
   appTitle: string;
+  discordLink: string;
 };
 
-const Signin: NextPage<SigninProps> = ({ appTitle }) => {
+const Signin: NextPage<SigninProps> = ({ appTitle, discordLink }) => {
   const { status } = useSession();
 
   if (status === "loading") return null;
@@ -57,8 +58,7 @@ const Signin: NextPage<SigninProps> = ({ appTitle }) => {
                 </ListItem>
                 <ListItem>
                   <span>
-                    Join our{" "}
-                    <Link href="https://discord.gg/bbSFJzk6FV"> Discord</Link>
+                    Join our <Link href={discordLink}> Discord</Link>
                   </span>
                 </ListItem>
               </List>
@@ -84,6 +84,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       appTitle: process.env.APP_TITLE,
+      discordLink: process.env.DISCORD_LINK,
     },
   };
 };
