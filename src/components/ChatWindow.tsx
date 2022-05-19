@@ -19,7 +19,7 @@ type IMessage = {
 
 const Message = ({ message }: { message: IMessage }) => {
   return (
-    <div>
+    <Box sx={{ pr: 1, wordBreak: "break-all" }}>
       <Typography sx={{ mr: 1, ...theme.chat.timestamp }} component="span">
         [
         {message.timestamp.toLocaleTimeString(undefined, {
@@ -35,7 +35,7 @@ const Message = ({ message }: { message: IMessage }) => {
       <Typography sx={{ ...theme.chat.message }} component="span">
         {message.text}
       </Typography>
-    </div>
+    </Box>
   );
 };
 
@@ -69,7 +69,7 @@ const ChatWindow = () => {
       <Box sx={{ minHeight: "300px" }}>
         <List>
           {messages.map((message, idx) => (
-            <ListItem key={`message-${idx}`} sx={{ p: 0, m: 0, ml: 1, mr: 1 }}>
+            <ListItem key={`message-${idx}`} sx={{ p: 0, pl: 1 }}>
               <Message message={message} />
             </ListItem>
           ))}
