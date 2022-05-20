@@ -1,7 +1,6 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import AppFrame from "../../src/components/AppFrame";
 import { SessionProvider } from "next-auth/react";
-import { act } from "react-dom/test-utils";
 
 describe("AppFrame", () => {
   afterEach(cleanup);
@@ -38,9 +37,7 @@ describe("AppFrame", () => {
 
     expect(screen.queryByText("Logout")).toBeNull();
 
-    act(() => {
-      button.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-    });
+    fireEvent.click(button, { target: { value: "ABC" }, bubbles: true });
 
     expect(screen.getByText("Logout")).toBeVisible();
   });

@@ -20,6 +20,8 @@ model Account {
   scope              String?
   id_token           String?  @db.Text
   session_state      String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -31,6 +33,9 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -42,6 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 }
 
 model VerificationToken {

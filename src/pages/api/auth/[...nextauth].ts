@@ -19,28 +19,6 @@ export default NextAuth({
           }),
         ]
       : []),
-    // ...(process.env.NODE_ENV !== "production"
-    //   ? [
-    //       CredentialsProvider({
-    //         name: "Credentials",
-    //         credentials: {
-    //           name: {
-    //             label: "Name",
-    //             type: "text",
-    //           },
-    //         },
-    //         async authorize(credentials) {
-    //           if (credentials?.name) {
-    //             return {
-    //               name: credentials.name,
-    //               image: process.env.DEFAULT_USER_AVATAR,
-    //             };
-    //           }
-    //           return null;
-    //         },
-    //       }),
-    //     ]
-    //   : []),
   ],
   session: {
     strategy: "jwt",
