@@ -31,14 +31,25 @@ const postMessage = async (
   res: NextApiResponse,
   token: JWT
 ) => {
-  const message = await prisma.message.create({
-    data: {
-      text: req.body.text,
-      userId: token.sub,
-    },
-  });
-  logger.info({ message: "postMessage", newMessage: message });
-  res.status(200).json(message);
+  if (!req.body.text) {
+    res
+      .status(400)
+      .json({
+        statusCode: 400,
+        message: "Malformed request - missing message text",
+      });
+  } else if (!token.sub) {
+    res.status(401).json({ statusCode: 401, message: "Not authorized" });
+  } else {
+    const message = await prisma.message.create({
+      data: {
+        text: req.body.text,
+        userId: token.sub,
+      },
+    });
+    logger.info({ message: "postMessage", newMessage: message });
+    res.status(200).json(message);
+  }
 };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
