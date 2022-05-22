@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import { accessLogger } from "../../util/logger";
-import { ErrorResponse } from "./types";
+import { IApiError } from "../../types";
 
 const secret = process.env.SESSION_SECRET;
 
@@ -11,7 +11,7 @@ type Data = {
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Data | ErrorResponse>
+  res: NextApiResponse<Data | IApiError>
 ) => {
   const token = await getToken({ req, secret });
   if (token) {

@@ -8,21 +8,17 @@ import {
   Typography,
 } from "@mui/material";
 import theme from "../theme";
+import { IMessage } from "../types";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
-type IMessage = {
-  timestamp: Date;
-  username: string;
-  text: string;
-};
-
-const Message = ({ message }: { message: IMessage }) => {
+const ChatMessage = ({ message }: { message: IMessage }) => {
   return (
     <Box sx={{ pr: 1, wordBreak: "break-all" }}>
       <Typography sx={{ mr: 1, ...theme.chat.timestamp }} component="span">
         [
-        {message.timestamp.toLocaleTimeString(undefined, {
+        {new Date(message.createdAt).toLocaleTimeString(undefined, {
           hour: "numeric",
           minute: "numeric",
           second: "numeric",
@@ -30,7 +26,7 @@ const Message = ({ message }: { message: IMessage }) => {
         ]
       </Typography>
       <Typography sx={{ mr: 1, ...theme.chat.username }} component="span">
-        {message.username}
+        {message.user.name}
       </Typography>
       <Typography sx={{ ...theme.chat.message }} component="span">
         {message.text}
@@ -40,25 +36,29 @@ const Message = ({ message }: { message: IMessage }) => {
 };
 
 const ChatWindow = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [command, setCommand] = useState<string>("");
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const { data: messages, error } = useSWR("/api/chat/message", {
+    refreshInterval: 500,
+  });
 
-  const handleSendChat = () => {
+  const handleSendChat = async () => {
     if (command.trim().length > 0) {
-      setMessages([
-        ...messages,
-        {
-          timestamp: new Date(),
-          username: session?.user?.name || "Anonymous",
-          text: command.trim(),
+      await fetch("/api/chat/message", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
+        body: JSON.stringify({ text: command.trim() }),
+      });
     }
     setCommand("");
   };
 
   if (status === "loading") return null;
+  if (error) {
+    console.error(error);
+  }
 
   return (
     <Paper variant="elevation">
@@ -68,9 +68,9 @@ const ChatWindow = () => {
       <Divider />
       <Box sx={{ minHeight: "300px" }}>
         <List>
-          {messages.map((message, idx) => (
+          {messages?.map((message: IMessage, idx: number) => (
             <ListItem key={`message-${idx}`} sx={{ p: 0, pl: 1 }}>
-              <Message message={message} />
+              <ChatMessage message={message} />
             </ListItem>
           ))}
         </List>
@@ -85,8 +85,10 @@ const ChatWindow = () => {
           size="small"
           name="chat"
           onChange={(e) => setCommand(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSendChat();
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
+              await handleSendChat();
+            }
           }}
         />
       </Box>

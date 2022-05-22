@@ -5,6 +5,7 @@ import DiscordIcon from "./icons/DiscordIcon";
 import { User } from "next-auth";
 import YggdrasilIcon from "./icons/YggdrasilIcon";
 import UserProfileButton from "./UserProfileButton";
+import SWRConfig from "swr/dist/utils/config-context";
 
 type AppFrameProps = {
   title: string;
@@ -19,38 +20,43 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      <SWRConfig
+        value={{
+          refreshInterval: 500,
+          fetcher: (resource, init) =>
+            fetch(resource, init).then((res) => res.json()),
+        }}
       >
-        <Toolbar>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <YggdrasilIcon width="48" />
+        <AppBar position="fixed">
+          <Toolbar>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <YggdrasilIcon width="48" />
+              </Grid>
+              <Grid item sx={{ flexGrow: 1 }}>
+                <Typography variant="h6">{title}</Typography>
+              </Grid>
+              <Grid item>
+                {session?.user ? (
+                  <UserProfileButton />
+                ) : (
+                  <Button
+                    size="small"
+                    color="inherit"
+                    aria-label="login"
+                    sx={{ mr: 2 }}
+                    onClick={() => signIn("discord")}
+                  >
+                    <DiscordIcon />
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-            <Grid item sx={{ flexGrow: 1 }}>
-              <Typography variant="h6">{title}</Typography>
-            </Grid>
-            <Grid item>
-              {session?.user ? (
-                <UserProfileButton />
-              ) : (
-                <Button
-                  size="small"
-                  color="inherit"
-                  aria-label="login"
-                  sx={{ mr: 2 }}
-                  onClick={() => signIn("discord")}
-                >
-                  <DiscordIcon />
-                </Button>
-              )}
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-      {children}
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+        {children}
+      </SWRConfig>
     </>
   );
 };
