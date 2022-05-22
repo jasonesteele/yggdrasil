@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import { accessLogger } from "../../util/logger";
+import { ErrorResponse } from "./types";
 
 const secret = process.env.SESSION_SECRET;
-
-type ErrorResponse = {
-  statusCode: number;
-  message: string;
-};
 
 type Data = {
   token: unknown;
