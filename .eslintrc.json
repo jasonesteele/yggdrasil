@@ -17,7 +17,7 @@
   "plugins": ["@typescript-eslint", "cypress"],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": ["*.ts", "*.tsx"],
       "extends": [
         "standard",
         "plugin:@typescript-eslint/recommended",
@@ -30,7 +30,8 @@
       },
       "rules": {
         "semi": ["error", "always"],
-        "no-extra-semi": "error"
+        "no-extra-semi": "error",
+        "no-undef": "off"
       }
     }
   ]

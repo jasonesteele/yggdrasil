@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import { accessLogger } from "../../util/logger";
+import { IApiError } from "../../types";
 
 const secret = process.env.SESSION_SECRET;
-
-type ErrorResponse = {
-  statusCode: number;
-  message: string;
-};
 
 type Data = {
   token: unknown;
@@ -15,7 +11,7 @@ type Data = {
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Data | ErrorResponse>
+  res: NextApiResponse<Data | IApiError>
 ) => {
   const token = await getToken({ req, secret });
   if (token) {

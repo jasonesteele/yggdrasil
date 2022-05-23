@@ -5,12 +5,16 @@ import DiscordIcon from "./icons/DiscordIcon";
 import { User } from "next-auth";
 import YggdrasilIcon from "./icons/YggdrasilIcon";
 import UserProfileButton from "./UserProfileButton";
+import { fetch } from "cross-fetch";
 
 type AppFrameProps = {
   title: string;
   user?: User;
   children?: ReactElement;
 };
+
+export const fetcher = (resource: RequestInfo, init: RequestInit) =>
+  fetch(resource, init).then((res) => res.json());
 
 const AppFrame = ({ children, title }: AppFrameProps) => {
   const { data: session, status } = useSession();
@@ -19,10 +23,7 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
+      <AppBar position="fixed">
         <Toolbar>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
