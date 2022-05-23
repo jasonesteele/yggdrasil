@@ -30,7 +30,7 @@
 
     "incremental": true,
 
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "dist", ".next", "next.config.js"]
