@@ -19,6 +19,7 @@ export default class MyDocument extends Document {
 
     ctx.renderPage = () =>
       originalRenderPage({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         enhanceApp: (App: any) =>
           function EnhanceApp(props) {
             return <App emotionCache={cache} {...props} />;
@@ -51,6 +52,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(this.props as any).emotionStyleTags}
         </Head>
         <body style={{ height: "100%" }}>

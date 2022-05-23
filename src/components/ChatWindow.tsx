@@ -12,6 +12,7 @@ import { IMessage } from "../types";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
+import { fetcher } from "./AppFrame";
 
 const ChatMessage = ({ message }: { message: IMessage }) => {
   return (
@@ -38,9 +39,20 @@ const ChatMessage = ({ message }: { message: IMessage }) => {
 const ChatWindow = () => {
   const { status } = useSession();
   const [command, setCommand] = useState<string>("");
-  const { data: messages, error } = useSWR("/api/chat/message", {
-    refreshInterval: 500,
-  });
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const lastMessageSeq = messages[messages.length - 1]?.sequence;
+
+  const { data: newMessages, error } = useSWR(
+    `/api/chat/message?from=${lastMessageSeq || 0}`,
+    fetcher,
+    {
+      refreshInterval: 500,
+    }
+  );
+
+  if (newMessages?.length > 0) {
+    setMessages([...messages, ...newMessages]);
+  }
 
   const handleSendChat = async () => {
     if (command.trim().length > 0) {
@@ -92,6 +104,9 @@ const ChatWindow = () => {
           }}
         />
       </Box>
+      {error && (
+        <Typography sx={{ ...theme.palette.error }}>{error}</Typography>
+      )}
     </Paper>
   );
 };

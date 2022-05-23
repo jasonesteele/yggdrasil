@@ -7,7 +7,12 @@ export type IApiError = {
 
 export type IMessage = {
   id: string;
+  sequence: number;
   user: User;
   createdAt: Date;
   text: string;
+};
+
+export type ILatestMessage = {
+  sequence: number;
 };

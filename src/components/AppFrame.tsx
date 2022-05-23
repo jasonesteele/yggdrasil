@@ -5,13 +5,16 @@ import DiscordIcon from "./icons/DiscordIcon";
 import { User } from "next-auth";
 import YggdrasilIcon from "./icons/YggdrasilIcon";
 import UserProfileButton from "./UserProfileButton";
-import SWRConfig from "swr/dist/utils/config-context";
+import { fetch } from "cross-fetch";
 
 type AppFrameProps = {
   title: string;
   user?: User;
   children?: ReactElement;
 };
+
+export const fetcher = (resource: RequestInfo, init: RequestInit) =>
+  fetch(resource, init).then((res) => res.json());
 
 const AppFrame = ({ children, title }: AppFrameProps) => {
   const { data: session, status } = useSession();
@@ -20,43 +23,35 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
 
   return (
     <>
-      <SWRConfig
-        value={{
-          refreshInterval: 500,
-          fetcher: (resource, init) =>
-            fetch(resource, init).then((res) => res.json()),
-        }}
-      >
-        <AppBar position="fixed">
-          <Toolbar>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item>
-                <YggdrasilIcon width="48" />
-              </Grid>
-              <Grid item sx={{ flexGrow: 1 }}>
-                <Typography variant="h6">{title}</Typography>
-              </Grid>
-              <Grid item>
-                {session?.user ? (
-                  <UserProfileButton />
-                ) : (
-                  <Button
-                    size="small"
-                    color="inherit"
-                    aria-label="login"
-                    sx={{ mr: 2 }}
-                    onClick={() => signIn("discord")}
-                  >
-                    <DiscordIcon />
-                  </Button>
-                )}
-              </Grid>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <YggdrasilIcon width="48" />
             </Grid>
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
-        {children}
-      </SWRConfig>
+            <Grid item sx={{ flexGrow: 1 }}>
+              <Typography variant="h6">{title}</Typography>
+            </Grid>
+            <Grid item>
+              {session?.user ? (
+                <UserProfileButton />
+              ) : (
+                <Button
+                  size="small"
+                  color="inherit"
+                  aria-label="login"
+                  sx={{ mr: 2 }}
+                  onClick={() => signIn("discord")}
+                >
+                  <DiscordIcon />
+                </Button>
+              )}
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+      {children}
     </>
   );
 };
