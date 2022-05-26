@@ -33,5 +33,5 @@
     "skipLibCheck": true
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "dist", ".next", "next.config.js"]
+  "exclude": ["node_modules", "dist", "cypress", ".next", "next.config.js"]
 }

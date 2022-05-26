@@ -37,6 +37,7 @@ const UserProfileButton = () => {
       size="large"
       aria-label="User Profile"
       onClick={toggleDrawer(!openProfile)}
+      data-cy="user-profile-button"
     >
       <Avatar
         alt={session?.user?.name || "User"}

@@ -2,15 +2,25 @@
   "name": "yggdrasil",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
+    "dev:test": "cross-env NODE_ENV=test next dev -- -p 3001",
+    "db:migrate:dev": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma migrate dev",
+    "db:seed:dev": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma db seed",
+    "db:migrate:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma migrate dev",
+    "db:seed:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma db seed",
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "next start",
     "test": "echo Implement tests",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "prettier": "prettier -w .",
-    "prettier:check": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -40,7 +50,8 @@
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.4",
     "@typescript-eslint/eslint-plugin": "^5.24.0",
-    "cypress": "^9.6.1",
+    "cross-env": "^7.0.3",
+    "cypress": "^9.7.0",
     "cypress-file-upload": "^5.0.8",
     "eslint": "8.15.0",
     "eslint-config-next": "12.1.6",
@@ -53,6 +64,7 @@
     "nock": "^13.2.4",
     "prettier": "^2.6.2",
     "prisma": "^3.14.0",
+    "ts-node": "^10.8.0",
     "typescript": "4.6.4"
   }
 }

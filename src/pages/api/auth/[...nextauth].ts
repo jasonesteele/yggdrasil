@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 import logger from "../../../util/logger";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -18,6 +19,28 @@ export default NextAuth({
           }),
         ]
       : []),
+    ...(process.env.APP_ENV === "test"
+      ? [
+          CredentialsProvider({
+            name: "Test Sign-in",
+            credentials: {
+              username: {
+                label: "Username",
+                type: "text",
+                placeholder: "Cypress",
+              },
+            },
+            async authorize(credentials) {
+              return {
+                id: "cypressuser",
+                name: credentials?.username || "Cypress",
+                image:
+                  "https://cdn.discordapp.com/attachments/979367973175316490/979436920490844180/unknown.png",
+              };
+            },
+          }),
+        ]
+      : []),
   ],
   session: {
     strategy: "jwt",
@@ -28,7 +51,7 @@ export default NextAuth({
     secret: process.env.SESSION_SECRET,
   },
   pages: {
-    signIn: "/signin",
+    signIn: process.env.APP_ENV === "test" ? undefined : "/signin",
     // signOut: '/auth/signout'
     // error: '/auth/error'
     // verifyRequest: '/auth/verify-request'
