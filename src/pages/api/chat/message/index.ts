@@ -5,6 +5,8 @@ import { prisma } from "../../../../util/prisma";
 
 const secret = process.env.SESSION_SECRET;
 
+const MAX_QUERY_MESSAGES = 50;
+
 const getMessages = async (req: NextApiRequest, res: NextApiResponse) => {
   const token = await getToken({ req, secret });
   const { from } = req.query;
@@ -13,7 +15,7 @@ const getMessages = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(401).json({ statusCode: 401, message: "Not authorized" });
   } else {
     const messages = await prisma.message.findMany({
-      take: 100,
+      take: MAX_QUERY_MESSAGES,
       where: {
         sequence: {
           gt: from ? parseInt(from as string) : 0,
