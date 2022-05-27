@@ -33,7 +33,8 @@ Cypress.Commands.add("dbSetup", () => {
   cy.exec(`cross-env DATABASE_URL=${DATABASE_URL} prisma db seed`);
 });
 
-Cypress.Commands.add("login", (user) => {
+Cypress.Commands.add("login", (user?: string) => {
   cy.visit("/");
+  if (user) cy.get(`#input-username-for-credentials-provider`).type(user);
   cy.contains("Sign in with Test Sign-in").click();
 });
