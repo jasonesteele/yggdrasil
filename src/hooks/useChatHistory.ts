@@ -1,7 +1,8 @@
-import { useState } from "react";
 import { fetcher } from "../components/AppFrame";
 import useSWR from "swr";
-import { IMessage } from "../types";
+import { append } from "../features/messages/messagesSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 type IChatHistoryOptions = {
   numMessages?: number;
@@ -15,31 +16,26 @@ const DEFAULT_OPTIONS: IChatHistoryOptions = {
 
 export default function useChatHistory(options?: IChatHistoryOptions) {
   const mergedOptions = { ...DEFAULT_OPTIONS, ...(options || {}) };
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const dispatch = useDispatch();
+  const latestSequence = useSelector(
+    (state: RootState) => state.messages.latestSequence
+  );
 
-  const lastMessageSeq = messages[messages.length - 1]?.sequence;
-
+  const maxNumMessages = mergedOptions.numMessages as number;
   const { data: newMessages, error } = useSWR(
-    `/api/chat/message?numMessages=${mergedOptions.numMessages}${
-      lastMessageSeq ? `&from=${lastMessageSeq}` : ""
+    `/api/chat/message?numMessages=${maxNumMessages}${
+      latestSequence ? `&from=${latestSequence}` : ""
     }`,
     fetcher,
     {
       refreshInterval: mergedOptions.refreshInterval,
     }
   );
-  if (newMessages?.length > 0) {
-    setMessages(
-      [...messages, ...newMessages].slice(
-        -(mergedOptions.numMessages
-          ? mergedOptions.numMessages
-          : Number.MAX_SAFE_INTEGER)
-      )
-    );
-  }
-
-  return {
-    messages,
-    error,
-  };
+  dispatch(
+    append({
+      messages: newMessages || [],
+      maxNumMessages,
+      error,
+    })
+  );
 }

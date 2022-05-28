@@ -12,6 +12,8 @@ import { IMessage } from "../types";
 import { useState } from "react";
 import useChat from "../hooks/useChat";
 import useChatHistory from "../hooks/useChatHistory";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 const ChatMessage = ({ message }: { message: IMessage }) => {
   return (
@@ -38,8 +40,10 @@ const ChatMessage = ({ message }: { message: IMessage }) => {
 const ChatWindow = () => {
   const [command, setCommand] = useState<string>("");
 
-  const { messages, error: historyError } = useChatHistory({ numMessages: 10 });
   const { sendCommand, error: sendError } = useChat();
+  useChatHistory({ numMessages: 10 });
+  const messages = useSelector((state: RootState) => state.messages.messages);
+  const historyError = useSelector((state: RootState) => state.messages.error);
 
   const handleSendCommand = (): void => {
     if (command.trim().length > 0) {
@@ -65,7 +69,7 @@ const ChatWindow = () => {
             <ListItem key={"message-error"} sx={{ p: 0, pl: 1 }}>
               <Box sx={{ pr: 1, wordBreak: "break-all" }}>
                 <Typography sx={{ ...theme.palette.error }}>
-                  {historyError}
+                  {historyError.message}
                 </Typography>
               </Box>
             </ListItem>
