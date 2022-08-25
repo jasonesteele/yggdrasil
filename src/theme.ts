@@ -38,9 +38,9 @@ const theme = createTheme({
   },
   palette: {
     error: {
-      main: '#ff0000'
-    }
-  }
+      main: "#ff0000",
+    },
+  },
 });
 
 export default theme;

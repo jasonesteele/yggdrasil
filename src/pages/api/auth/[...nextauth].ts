@@ -12,34 +12,34 @@ export default NextAuth({
   providers: [
     ...(process.env.DISCORD_ID && process.env.DISCORD_SECRET
       ? [
-        DiscordProvider({
-          clientId: process.env.DISCORD_ID,
-          clientSecret: process.env.DISCORD_SECRET,
-          authorization: { params: { scope: "identify email" } },
-        }),
-      ]
+          DiscordProvider({
+            clientId: process.env.DISCORD_ID,
+            clientSecret: process.env.DISCORD_SECRET,
+            authorization: { params: { scope: "identify email" } },
+          }),
+        ]
       : []),
     ...(process.env.APP_ENV !== "test"
       ? [
-        CredentialsProvider({
-          name: "Test Sign-in",
-          credentials: {
-            username: {
-              label: "Username",
-              type: "text",
-              placeholder: "Cypress",
+          CredentialsProvider({
+            name: "Test Sign-in",
+            credentials: {
+              username: {
+                label: "Username",
+                type: "text",
+                placeholder: "Cypress",
+              },
             },
-          },
-          async authorize(credentials) {
-            return {
-              id: "cypressuser",
-              name: credentials?.username || "Cypress",
-              image:
-                "https://cdn.discordapp.com/attachments/979367973175316490/979436920490844180/unknown.png",
-            };
-          },
-        }),
-      ]
+            async authorize(credentials) {
+              return {
+                id: "cypressuser",
+                name: credentials?.username || "Cypress",
+                image:
+                  "https://cdn.discordapp.com/attachments/979367973175316490/979436920490844180/unknown.png",
+              };
+            },
+          }),
+        ]
       : []),
   ],
   session: {

@@ -2,26 +2,25 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
-import { ApolloProvider, createHttpLink } from '@apollo/client';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider, createHttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const link = createHttpLink({
   uri: "http://localhost:3000/api/graphql",
-  credentials: 'same-origin'
+  credentials: "same-origin",
 });
 
 const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link
+  cache: new InMemoryCache(),
+  link,
 });
-
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <SessionProvider session={pageProps.session}>
-      <ApolloProvider client={client}>
-        <Component {...pageProps} />
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
         </ApolloProvider>
       </SessionProvider>
     </ThemeProvider>
