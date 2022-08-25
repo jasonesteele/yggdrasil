@@ -23,7 +23,7 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
       <AppFrame title={appTitle} user={session?.user as User}>
         <Container>
           <Box m={2}>
-            <ChatWindow />
+            <ChatWindow/>
           </Box>
         </Container>
       </AppFrame>

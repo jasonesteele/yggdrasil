@@ -62,11 +62,9 @@ model VerificationToken {
 
 model Message {
   id        String   @id @default(cuid())
-  sequence  Int      @default(autoincrement())
   userId    String
   createdAt DateTime @default(now()) @map(name: "created_at")
   text      String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@index([sequence])
 }

@@ -36,6 +36,11 @@ const theme = createTheme({
       color: "#000000",
     },
   },
+  palette: {
+    error: {
+      main: '#ff0000'
+    }
+  }
 });
 
 export default theme;
