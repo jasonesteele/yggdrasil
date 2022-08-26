@@ -8,10 +8,11 @@ export const GQLDateTime = asNexusMethod(GraphQLDateTime, "dateTime");
 
 const schema = makeSchema({
   types: [MessageTypes, UserTypes, GQLDateTime],
+  shouldGenerateArtifacts: process.env.NODE_ENV === "development",
   plugins: [fieldAuthorizePlugin()],
   outputs: {
-    typegen: path.join(process.cwd(), "generated/nexus-typegen.ts"),
-    schema: path.join(process.cwd(), "generated/schema.graphql"),
+    typegen: path.join(process.cwd(), "src/nexus-typegen.ts"),
+    schema: path.join(process.cwd(), "src/schema.graphql"),
   },
   contextType: {
     module: path.join(process.cwd(), "src/pages/api/context.ts"),
