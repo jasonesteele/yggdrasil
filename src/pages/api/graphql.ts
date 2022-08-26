@@ -5,7 +5,7 @@ import schema from "../../schema";
 import { createContext } from "./context";
 
 const cors = Cors({
-  origin: "http://localhost:3000",
+  origin: process.env.ORIGIN,
   allowCredentials: true,
 });
 
