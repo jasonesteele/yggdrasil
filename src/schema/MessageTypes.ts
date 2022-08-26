@@ -1,7 +1,10 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { User } from "./UserTypes";
+import { MAX_MESSAGE_LENGTH } from "src/util/constants";
+import { object, string } from "yup";
+import { UserInputError } from "apollo-server-micro";
 
-const MAX_QUERY_MESSAGES = 1000;
+export const MAX_QUERY_MESSAGES = 1000;
 
 export const Message = objectType({
   name: "Message",
@@ -41,6 +44,18 @@ export const Query = extendType({
   },
 });
 
+const postMessageSchema = object({
+  text: string().required().min(1).max(MAX_MESSAGE_LENGTH),
+});
+
+const validatePostMessage = (schema: any, obj: any) => {
+  try {
+    return schema.validateSync(obj);
+  } catch (error: any) {
+    throw new UserInputError(error);
+  }
+};
+
 export const Mutation = extendType({
   type: "Mutation",
   definition(t) {
@@ -51,10 +66,10 @@ export const Mutation = extendType({
       },
       authorize: (_root, _args, ctx) => !!ctx.token,
       resolve(_root, args, ctx) {
-        console.log({ ctx });
+        const { text } = validatePostMessage(postMessageSchema, args);
         return ctx.prisma.message.create({
           data: {
-            text: args.text,
+            text,
             user: { connect: { id: ctx.token.sub } },
           },
         });

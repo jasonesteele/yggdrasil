@@ -7,11 +7,14 @@ import {
   ListItem,
   Paper,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { MAX_MESSAGE_LENGTH } from "src/util/constants";
 import { IMessage } from "src/types";
 import theme from "../theme";
+import { Wifi, WifiOff } from "@mui/icons-material";
 
 const GET_MESSAGES = gql`
   query Messages {
@@ -63,11 +66,24 @@ const ChatMessage = ({ message }: { message: IMessage }) => {
   );
 };
 
+const formatError = ({
+  graphQLErrors,
+  networkError,
+}: {
+  graphQLErrors: any[];
+  networkError: string;
+}): string[] => {
+  return [
+    ...graphQLErrors?.map(({ message }) => message),
+    ...(networkError ? [networkError] : []),
+  ];
+};
+
 const ChatWindow = () => {
   const { loading, error, data, startPolling, stopPolling } =
     useQuery(GET_MESSAGES);
-  const [postMessage, { loading: postLoading, error: postError }] =
-    useMutation(POST_MESSAGE);
+  const [postMessage, { loading: postLoading }] = useMutation(POST_MESSAGE);
+  const [postErrors, setPostErrors] = useState<string[]>([]);
   const [command, setCommand] = useState<string>("");
 
   useEffect(() => {
@@ -79,13 +95,18 @@ const ChatWindow = () => {
 
   if (loading) return <p>Loading...</p>;
 
-  const handleSendCommand = (): void => {
+  const handleSendCommand = async () => {
     if (command.trim().length > 0) {
-      postMessage({
-        variables: {
-          text: command.trim(),
-        },
-      });
+      try {
+        await postMessage({
+          variables: {
+            text: command.trim(),
+          },
+        });
+        setPostErrors([]);
+      } catch (error: any) {
+        setPostErrors(formatError(error));
+      }
     }
     setCommand("");
   };
@@ -93,7 +114,21 @@ const ChatWindow = () => {
   return (
     <Paper variant="elevation">
       <Box p={1}>
-        <Typography variant="subtitle2">Chat</Typography>
+        <div style={{ position: "relative" }}>
+          <Typography variant="subtitle2">Chat</Typography>
+          {error ? (
+            <WifiOff
+              sx={{
+                color: theme.palette.error.main,
+                position: "absolute",
+                right: 8,
+                top: 0,
+              }}
+            />
+          ) : (
+            <Wifi sx={{ position: "absolute", right: 8, top: 0 }} />
+          )}
+        </div>
       </Box>
       <Divider />
       <Box sx={{ minHeight: "300px" }}>
@@ -116,6 +151,7 @@ const ChatWindow = () => {
             size="small"
             name="chat"
             data-cy="chat-command-input"
+            inputProps={{ maxLength: MAX_MESSAGE_LENGTH }}
             onChange={(e) => setCommand(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -131,18 +167,17 @@ const ChatWindow = () => {
           )}
         </div>
       </Box>
-      {error && (
+      {postErrors && (
         <Box p={0.5}>
-          <Typography sx={{ color: theme.palette.error.main }}>
-            Error polling messages
-          </Typography>
-        </Box>
-      )}
-      {postError && (
-        <Box p={0.5}>
-          <Typography sx={{ color: theme.palette.error.main }}>
-            Error sending message
-          </Typography>
+          <List>
+            {postErrors.map((postError) => (
+              <ListItem>
+                <Typography sx={{ color: theme.palette.error.main }}>
+                  {postError}
+                </Typography>
+              </ListItem>
+            ))}
+          </List>
         </Box>
       )}
     </Paper>

@@ -7,16 +7,30 @@ import {
   ApolloProvider,
   InMemoryCache,
   createHttpLink,
+  from,
 } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 
-const link = createHttpLink({
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
+          locations
+        )}, Path: ${path}`
+      )
+    );
+  if (networkError) console.error(`[Network error]: ${networkError}`);
+});
+
+const httpLink = createHttpLink({
   uri: "/api/graphql",
   credentials: "same-origin",
 });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link,
+  link: from([errorLink, httpLink]),
 });
 
 function MyApp({ Component, pageProps }: AppProps) {

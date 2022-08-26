@@ -64,7 +64,7 @@ model Message {
   id        String   @id @default(cuid())
   userId    String
   createdAt DateTime @default(now()) @map(name: "created_at")
-  text      String
+  text      String @db.VarChar(2048)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
