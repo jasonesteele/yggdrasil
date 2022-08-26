@@ -10,7 +10,7 @@ import {
 } from "@apollo/client";
 
 const link = createHttpLink({
-  uri: "${process.env.BASE_URL}/api/graphql",
+  uri: `${process.env.BASE_URL}/api/graphql`,
   credentials: "same-origin",
 });
 
