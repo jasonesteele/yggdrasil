@@ -1,4 +1,4 @@
-import { objectType, extendType, nonNull, stringArg } from "nexus";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { User } from "./UserTypes";
 
 const MAX_QUERY_MESSAGES = 1000;
@@ -55,7 +55,7 @@ export const Mutation = extendType({
         return ctx.prisma.message.create({
           data: {
             text: args.text,
-            userId: ctx.token.sub,
+            user: { connect: { id: ctx.token.sub } },
           },
         });
       },

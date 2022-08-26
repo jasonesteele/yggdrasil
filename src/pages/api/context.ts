@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { prisma } from "../../util/prisma";
-import { getToken, JWT } from "next-auth/jwt";
+import { JWT, getToken } from "next-auth/jwt";
 import { NextApiRequest } from "next";
 
 export interface Context {

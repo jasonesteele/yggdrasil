@@ -2,8 +2,12 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import theme from "../theme";
 import { ThemeProvider } from "@mui/material";
-import { ApolloProvider, createHttpLink } from "@apollo/client";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
 
 const link = createHttpLink({
   uri: "http://localhost:3000/api/graphql",

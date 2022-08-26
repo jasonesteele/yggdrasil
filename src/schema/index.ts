@@ -1,4 +1,4 @@
-import { makeSchema, asNexusMethod, fieldAuthorizePlugin } from "nexus";
+import { asNexusMethod, fieldAuthorizePlugin, makeSchema } from "nexus";
 import * as UserTypes from "./UserTypes";
 import * as MessageTypes from "./MessageTypes";
 import path from "path";
@@ -10,7 +10,7 @@ const schema = makeSchema({
   types: [MessageTypes, UserTypes, GQLDateTime],
   plugins: [fieldAuthorizePlugin()],
   outputs: {
-    typegen: path.join(process.cwd(), "src/nexus-typegen.ts"),
+    typegen: path.join(process.cwd(), "generated/nexus-typegen.ts"),
     schema: path.join(process.cwd(), "generated/schema.graphql"),
   },
   contextType: {
