@@ -14,7 +14,6 @@
     "resolveJsonModule": true,
     "rootDir": "./",
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["./src/types"],
 
     "noEmit": true,
     "sourceMap": true,
