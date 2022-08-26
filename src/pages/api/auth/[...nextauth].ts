@@ -3,9 +3,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import logger from "../../../util/logger";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../../util/prisma";
 
 export default NextAuth({
   adapter: PrismaAdapter(prisma),

@@ -29,6 +29,9 @@ type Mutation {
 type Query {
   """Retrieves all active messages on the server"""
   messages: [Message]
+
+  """Returns any recent user activity"""
+  userActivity(since: DateTime): [User]
 }
 
 """Application user"""
@@ -41,6 +44,9 @@ type User {
 
   """URL to avatar image for user """
   image: String
+
+  """Timestamp of last user activity"""
+  lastActivity: DateTime
 
   """Human readable user name"""
   name: String

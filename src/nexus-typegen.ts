@@ -57,6 +57,7 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id?: string | null; // ID
     image?: string | null; // String
+    lastActivity?: NexusGenScalars['DateTime'] | null; // DateTime
     name?: string | null; // String
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -84,11 +85,13 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
+    userActivity: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: string | null; // ID
     image: string | null; // String
+    lastActivity: NexusGenScalars['DateTime'] | null; // DateTime
     name: string | null; // String
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
@@ -106,11 +109,13 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     messages: 'Message'
+    userActivity: 'User'
   }
   User: { // field return type name
     createdAt: 'DateTime'
     id: 'ID'
     image: 'String'
+    lastActivity: 'DateTime'
     name: 'String'
     updatedAt: 'DateTime'
   }
@@ -120,6 +125,11 @@ export interface NexusGenArgTypes {
   Mutation: {
     postMessage: { // args
       text: string; // String!
+    }
+  }
+  Query: {
+    userActivity: { // args
+      since?: NexusGenScalars['DateTime'] | null; // DateTime
     }
   }
 }

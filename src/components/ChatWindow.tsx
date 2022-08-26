@@ -7,7 +7,6 @@ import {
   ListItem,
   Paper,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -27,6 +26,17 @@ const GET_MESSAGES = gql`
         name
         image
       }
+    }
+  }
+`;
+
+const GET_USER_ACTIVITY = gql`
+  query UserActivity($since: DateTime) {
+    userActivity(since: $since) {
+      id
+      name
+      image
+      lastActivity
     }
   }
 `;
@@ -70,6 +80,7 @@ const formatError = ({
   graphQLErrors,
   networkError,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   graphQLErrors: any[];
   networkError: string;
 }): string[] => {
@@ -82,16 +93,23 @@ const formatError = ({
 const ChatWindow = () => {
   const { loading, error, data, startPolling, stopPolling } =
     useQuery(GET_MESSAGES);
+  const {
+    data: userActivity,
+    startPolling: startActivityPolling,
+    stopPolling: stopActivityPolling,
+  } = useQuery(GET_USER_ACTIVITY);
   const [postMessage, { loading: postLoading }] = useMutation(POST_MESSAGE);
   const [postErrors, setPostErrors] = useState<string[]>([]);
   const [command, setCommand] = useState<string>("");
 
   useEffect(() => {
     startPolling(1000);
+    startActivityPolling(1000);
     return () => {
       stopPolling();
+      stopActivityPolling();
     };
-  }, [startPolling, stopPolling]);
+  }, [startActivityPolling, startPolling, stopActivityPolling, stopPolling]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -104,6 +122,7 @@ const ChatWindow = () => {
           },
         });
         setPostErrors([]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         setPostErrors(formatError(error));
       }
@@ -170,8 +189,8 @@ const ChatWindow = () => {
       {postErrors && (
         <Box p={0.5}>
           <List>
-            {postErrors.map((postError) => (
-              <ListItem>
+            {postErrors.map((postError, idx) => (
+              <ListItem key={`postError-${idx}`}>
                 <Typography sx={{ color: theme.palette.error.main }}>
                   {postError}
                 </Typography>
@@ -180,6 +199,7 @@ const ChatWindow = () => {
           </List>
         </Box>
       )}
+      {JSON.stringify(userActivity)}
     </Paper>
   );
 };
