@@ -39,7 +39,7 @@ export const Query = extendType({
         return ctx.prisma.user.findMany({
           where: {
             lastActivity: {
-              gte: moment().subtract({ seconds: 10 }).toDate(),
+              gte: args.since || moment().subtract({ seconds: 10 }).toDate(),
             },
           },
           orderBy: [
