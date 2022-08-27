@@ -16,7 +16,7 @@ const typingMessage = (userActivity: User[]) => {
 
 const ChatStatusBar = ({ userActivity }: { userActivity: User[] }) => {
   return (
-    <Box sx={{ p: "0.5em" }}>
+    <Box sx={{ p: "0.5em", pt: "0" }}>
       {userActivity.length > 0 ? (
         <Typography variant="caption">{typingMessage(userActivity)}</Typography>
       ) : (
