@@ -50,7 +50,7 @@ model User {
   Message       Message[]
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  lastActivity  DateTime  @default(now()) @map(name: "last_activity")
+  lastActivity  DateTime? @map(name: "last_activity")
 }
 
 model VerificationToken {

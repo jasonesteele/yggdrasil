@@ -1,4 +1,4 @@
-import { arg, extendType, objectType } from "nexus";
+import { arg, booleanArg, extendType, objectType } from "nexus";
 import { Context } from "src/pages/api/context";
 import moment from "moment";
 
@@ -24,6 +24,14 @@ export const User = objectType({
   },
 });
 
+export const OperationResponse = objectType({
+  name: "OperationResponse",
+  description: "Generic response to an API operation",
+  definition(t) {
+    t.boolean("success", { description: "Was the operation successful" });
+  },
+});
+
 export const Query = extendType({
   type: "Query",
   definition(t) {
@@ -33,7 +41,10 @@ export const Query = extendType({
       authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
       description: "Returns any recent user activity",
       args: {
-        since: arg({ type: "DateTime" }),
+        since: arg({
+          type: "DateTime",
+          description: "Check for activity since this time",
+        }),
       },
       resolve: (_root, args, ctx) => {
         return ctx.prisma.user.findMany({
@@ -53,4 +64,28 @@ export const Query = extendType({
   },
 });
 
-// TODO: add mutation to update timestamp and hook into chat input
+export const Mutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("notifyActivity", {
+      type: OperationResponse,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      description: "Notifies the server of user activity in a chat window",
+      args: {
+        active: booleanArg({ description: "True if user is active" }),
+      },
+      async resolve(_root, args, ctx) {
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.token.sub,
+          },
+          data: {
+            lastActivity: args.active ? moment().toDate() : null,
+          },
+        });
+        return { success: true };
+      },
+    });
+  },
+});

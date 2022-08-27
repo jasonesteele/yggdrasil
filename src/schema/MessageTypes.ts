@@ -3,7 +3,6 @@ import { MAX_MESSAGE_LENGTH } from "../util/constants";
 import { object, string } from "yup";
 import { UserInputError } from "apollo-server-micro";
 import { Context } from "src/pages/api/context";
-import moment from "moment";
 
 export const MAX_QUERY_MESSAGES = 1000;
 
@@ -75,24 +74,12 @@ export const Mutation = extendType({
       authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
-        const [newMessage] = await prisma.$transaction([
-          ctx.prisma.message.create({
-            data: {
-              text,
-              user: { connect: { id: ctx.token.sub } },
-            },
-          }),
-          ctx.prisma.user.update({
-            where: {
-              id: ctx.token.sub,
-            },
-            data: {
-              lastActivity: moment().toDate(),
-            },
-          }),
-        ]);
-
-        return newMessage;
+        return ctx.prisma.message.create({
+          data: {
+            text,
+            user: { connect: { id: ctx.token.sub } },
+          },
+        });
       },
     });
   },

@@ -23,7 +23,18 @@ type Message {
 }
 
 type Mutation {
+  """Notifies the server of user activity in a chat window"""
+  notifyActivity(
+    """True if user is active"""
+    active: Boolean
+  ): OperationResponse
   postMessage(text: String!): Message
+}
+
+"""Generic response to an API operation"""
+type OperationResponse {
+  """Was the operation successful"""
+  success: Boolean
 }
 
 type Query {
@@ -31,7 +42,10 @@ type Query {
   messages: [Message]
 
   """Returns any recent user activity"""
-  userActivity(since: DateTime): [User]
+  userActivity(
+    """Check for activity since this time"""
+    since: DateTime
+  ): [User]
 }
 
 """Application user"""

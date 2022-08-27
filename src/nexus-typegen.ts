@@ -52,6 +52,9 @@ export interface NexusGenObjects {
     user?: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: {};
+  OperationResponse: { // root type
+    success?: boolean | null; // Boolean
+  }
   Query: {};
   User: { // root type
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -81,7 +84,11 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
+    notifyActivity: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
+  }
+  OperationResponse: { // field return type
+    success: boolean | null; // Boolean
   }
   Query: { // field return type
     messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
@@ -105,7 +112,11 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    notifyActivity: 'OperationResponse'
     postMessage: 'Message'
+  }
+  OperationResponse: { // field return type name
+    success: 'Boolean'
   }
   Query: { // field return type name
     messages: 'Message'
@@ -123,6 +134,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    notifyActivity: { // args
+      active?: boolean | null; // Boolean
+    }
     postMessage: { // args
       text: string; // String!
     }
