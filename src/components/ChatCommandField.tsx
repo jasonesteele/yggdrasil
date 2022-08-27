@@ -55,13 +55,13 @@ const ChatCommandField = () => {
 
   const notifyActivityHandler = useMemo(
     () => throttle(() => notifyActivity({ variables: { active: true } }), 2000),
-    []
+    [notifyActivity]
   );
   useEffect(() => {
     return () => {
       notifyActivityHandler.cancel();
     };
-  }, []);
+  }, [notifyActivityHandler]);
 
   const handleSendCommand = async () => {
     if (command.trim().length > 0) {

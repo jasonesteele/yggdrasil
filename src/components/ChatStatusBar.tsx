@@ -4,8 +4,6 @@ import { User } from "@prisma/client";
 const MAX_ACTIVITY_USERS = 3;
 
 const typingMessage = (userActivity: User[]) => {
-  if (userActivity?.length > 3) {
-  }
   return `${userActivity
     .slice(0, MAX_ACTIVITY_USERS)
     .map(({ name }) => name)
