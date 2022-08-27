@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MAX_MESSAGE_LENGTH } from "src/util/constants";
 import { IMessage } from "src/types";
 import theme from "../theme";
@@ -101,6 +101,7 @@ const ChatWindow = () => {
   const [postMessage, { loading: postLoading }] = useMutation(POST_MESSAGE);
   const [postErrors, setPostErrors] = useState<string[]>([]);
   const [command, setCommand] = useState<string>("");
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     startPolling(1000);
@@ -110,6 +111,12 @@ const ChatWindow = () => {
       stopActivityPolling();
     };
   }, [startActivityPolling, startPolling, stopActivityPolling, stopPolling]);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [data]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -150,13 +157,14 @@ const ChatWindow = () => {
         </div>
       </Box>
       <Divider />
-      <Box sx={{ minHeight: "300px" }}>
+      <Box sx={{ height: "300px", overflow: "auto" }}>
         <List data-cy="chat-messages">
           {data?.messages?.map((message: IMessage, idx: number) => (
             <ListItem key={`message-${idx}`} sx={{ p: 0, pl: 1 }}>
               <ChatMessage message={message} />
             </ListItem>
           ))}
+          <div ref={lastMessageRef} />
         </List>
       </Box>
       <Divider />
