@@ -1,5 +1,5 @@
 import { arg, booleanArg, extendType, objectType } from "nexus";
-import { Context } from "src/pages/api/context";
+import { Context } from "src/util/context";
 import moment from "moment";
 
 export const User = objectType({

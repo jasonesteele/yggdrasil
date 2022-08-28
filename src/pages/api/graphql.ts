@@ -2,7 +2,7 @@ import Cors from "micro-cors";
 import { ApolloServer } from "apollo-server-micro";
 import { PageConfig } from "next";
 import schema from "../../schema";
-import { createContext } from "./context";
+import { createContext } from "../../util/context";
 
 const cors = Cors({
   origin: process.env.BASE_URL,

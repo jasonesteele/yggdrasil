@@ -3,16 +3,18 @@
  * Do not make changes to this file directly
  */
 
-
-import type { Context } from "./pages/api/context"
-import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import type { core } from "nexus"
+import type { Context } from "./util/context";
+import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin";
+import type { core } from "nexus";
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
-    dateTime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    dateTime<FieldName extends string>(
+      fieldName: FieldName,
+      opts?: core.CommonInputFieldConfig<TypeName, FieldName>
+    ): void; // "DateTime";
   }
 }
 declare global {
@@ -20,139 +22,151 @@ declare global {
     /**
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
-    dateTime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    dateTime<FieldName extends string>(
+      fieldName: FieldName,
+      ...opts: core.ScalarOutSpread<TypeName, FieldName>
+    ): void; // "DateTime";
   }
 }
-
 
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
-export interface NexusGenInputs {
-}
+export interface NexusGenInputs {}
 
-export interface NexusGenEnums {
-}
+export interface NexusGenEnums {}
 
 export interface NexusGenScalars {
-  String: string
-  Int: number
-  Float: number
-  Boolean: boolean
-  ID: string
-  DateTime: any
+  String: string;
+  Int: number;
+  Float: number;
+  Boolean: boolean;
+  ID: string;
+  DateTime: any;
 }
 
 export interface NexusGenObjects {
-  Message: { // root type
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  Message: {
+    // root type
+    createdAt?: NexusGenScalars["DateTime"] | null; // DateTime
     id?: string | null; // ID
     text?: string | null; // String
-    user?: NexusGenRootTypes['User'] | null; // User
-  }
+    user?: NexusGenRootTypes["User"] | null; // User
+  };
   Mutation: {};
-  OperationResponse: { // root type
+  OperationResponse: {
+    // root type
     success?: boolean | null; // Boolean
-  }
+  };
   Query: {};
-  User: { // root type
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  User: {
+    // root type
+    createdAt?: NexusGenScalars["DateTime"] | null; // DateTime
     id?: string | null; // ID
     image?: string | null; // String
-    lastActivity?: NexusGenScalars['DateTime'] | null; // DateTime
+    lastActivity?: NexusGenScalars["DateTime"] | null; // DateTime
     name?: string | null; // String
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-  }
+    updatedAt?: NexusGenScalars["DateTime"] | null; // DateTime
+  };
 }
 
-export interface NexusGenInterfaces {
-}
+export interface NexusGenInterfaces {}
 
-export interface NexusGenUnions {
-}
+export interface NexusGenUnions {}
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects;
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars;
 
 export interface NexusGenFieldTypes {
-  Message: { // field return type
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+  Message: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] | null; // DateTime
     id: string | null; // ID
     text: string | null; // String
-    user: NexusGenRootTypes['User'] | null; // User
-  }
-  Mutation: { // field return type
-    notifyActivity: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
-    postMessage: NexusGenRootTypes['Message'] | null; // Message
-  }
-  OperationResponse: { // field return type
+    user: NexusGenRootTypes["User"] | null; // User
+  };
+  Mutation: {
+    // field return type
+    notifyActivity: NexusGenRootTypes["OperationResponse"] | null; // OperationResponse
+    postMessage: NexusGenRootTypes["Message"] | null; // Message
+  };
+  OperationResponse: {
+    // field return type
     success: boolean | null; // Boolean
-  }
-  Query: { // field return type
-    messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
-    userActivity: Array<NexusGenRootTypes['User'] | null> | null; // [User]
-  }
-  User: { // field return type
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+  };
+  Query: {
+    // field return type
+    messages: Array<NexusGenRootTypes["Message"] | null> | null; // [Message]
+    userActivity: Array<NexusGenRootTypes["User"] | null> | null; // [User]
+  };
+  User: {
+    // field return type
+    createdAt: NexusGenScalars["DateTime"] | null; // DateTime
     id: string | null; // ID
     image: string | null; // String
-    lastActivity: NexusGenScalars['DateTime'] | null; // DateTime
+    lastActivity: NexusGenScalars["DateTime"] | null; // DateTime
     name: string | null; // String
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-  }
+    updatedAt: NexusGenScalars["DateTime"] | null; // DateTime
+  };
 }
 
 export interface NexusGenFieldTypeNames {
-  Message: { // field return type name
-    createdAt: 'DateTime'
-    id: 'ID'
-    text: 'String'
-    user: 'User'
-  }
-  Mutation: { // field return type name
-    notifyActivity: 'OperationResponse'
-    postMessage: 'Message'
-  }
-  OperationResponse: { // field return type name
-    success: 'Boolean'
-  }
-  Query: { // field return type name
-    messages: 'Message'
-    userActivity: 'User'
-  }
-  User: { // field return type name
-    createdAt: 'DateTime'
-    id: 'ID'
-    image: 'String'
-    lastActivity: 'DateTime'
-    name: 'String'
-    updatedAt: 'DateTime'
-  }
+  Message: {
+    // field return type name
+    createdAt: "DateTime";
+    id: "ID";
+    text: "String";
+    user: "User";
+  };
+  Mutation: {
+    // field return type name
+    notifyActivity: "OperationResponse";
+    postMessage: "Message";
+  };
+  OperationResponse: {
+    // field return type name
+    success: "Boolean";
+  };
+  Query: {
+    // field return type name
+    messages: "Message";
+    userActivity: "User";
+  };
+  User: {
+    // field return type name
+    createdAt: "DateTime";
+    id: "ID";
+    image: "String";
+    lastActivity: "DateTime";
+    name: "String";
+    updatedAt: "DateTime";
+  };
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
-    notifyActivity: { // args
+    notifyActivity: {
+      // args
       active?: boolean | null; // Boolean
-    }
-    postMessage: { // args
+    };
+    postMessage: {
+      // args
       text: string; // String!
-    }
-  }
+    };
+  };
   Query: {
-    userActivity: { // args
-      since?: NexusGenScalars['DateTime'] | null; // DateTime
-    }
-  }
+    userActivity: {
+      // args
+      since?: NexusGenScalars["DateTime"] | null; // DateTime
+    };
+  };
 }
 
-export interface NexusGenAbstractTypeMembers {
-}
+export interface NexusGenAbstractTypeMembers {}
 
-export interface NexusGenTypeInterfaces {
-}
+export interface NexusGenTypeInterfaces {}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
@@ -172,11 +186,11 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
-    __typename: false
-  }
-}
+    isTypeOf: false;
+    resolveType: true;
+    __typename: false;
+  };
+};
 
 export interface NexusGenTypes {
   context: Context;
@@ -194,23 +208,33 @@ export interface NexusGenTypes {
   interfaceNames: NexusGenInterfaceNames;
   scalarNames: NexusGenScalarNames;
   unionNames: NexusGenUnionNames;
-  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
-  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
-  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
-  abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
+  allInputTypes:
+    | NexusGenTypes["inputNames"]
+    | NexusGenTypes["enumNames"]
+    | NexusGenTypes["scalarNames"];
+  allOutputTypes:
+    | NexusGenTypes["objectNames"]
+    | NexusGenTypes["enumNames"]
+    | NexusGenTypes["unionNames"]
+    | NexusGenTypes["interfaceNames"]
+    | NexusGenTypes["scalarNames"];
+  allNamedTypes:
+    | NexusGenTypes["allInputTypes"]
+    | NexusGenTypes["allOutputTypes"];
+  abstractTypes: NexusGenTypes["interfaceNames"] | NexusGenTypes["unionNames"];
   abstractTypeMembers: NexusGenAbstractTypeMembers;
   objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
   abstractsUsingStrategyResolveType: NexusGenAbstractsUsingStrategyResolveType;
   features: NexusGenFeaturesConfig;
 }
 
-
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginInputTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+  interface NexusGenPluginTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginInputTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {
     /**
      * Authorization for an individual field. Returning "true"
      * or "Promise<true>" means the field can be accessed.
@@ -219,12 +243,12 @@ declare global {
      * Returning or throwing an error will also prevent the
      * resolver from executing.
      */
-    authorize?: FieldAuthorizeResolver<TypeName, FieldName>
+    authorize?: FieldAuthorizeResolver<TypeName, FieldName>;
   }
-  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginSchemaConfig {
-  }
-  interface NexusGenPluginArgConfig {
-  }
+  interface NexusGenPluginInputFieldConfig<
+    TypeName extends string,
+    FieldName extends string
+  > {}
+  interface NexusGenPluginSchemaConfig {}
+  interface NexusGenPluginArgConfig {}
 }

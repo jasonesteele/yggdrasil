@@ -2,7 +2,7 @@ import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { MAX_MESSAGE_LENGTH } from "../util/constants";
 import { object, string } from "yup";
 import { UserInputError } from "apollo-server-micro";
-import { Context } from "src/pages/api/context";
+import { Context } from "src/util/context";
 
 export const MAX_QUERY_MESSAGES = 1000;
 
