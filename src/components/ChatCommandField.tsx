@@ -63,6 +63,12 @@ const ChatCommandField = () => {
     };
   }, [notifyActivityHandler]);
 
+  const cancelActivityHandler = () => {
+    notifyActivityHandler.cancel();
+    notifyActivity({ variables: { active: false } });
+    setCommand("");
+  };
+
   const handleSendCommand = async () => {
     if (command.trim().length > 0) {
       try {
@@ -77,9 +83,7 @@ const ChatCommandField = () => {
         setPostErrors(formatError(error));
       }
     }
-    notifyActivityHandler.cancel();
-    notifyActivity({ variables: { active: false } });
-    setCommand("");
+    cancelActivityHandler();
   };
 
   return (
@@ -94,12 +98,17 @@ const ChatCommandField = () => {
           name="chat"
           data-cy="chat-command-input"
           inputProps={{ maxLength: MAX_MESSAGE_LENGTH }}
-          onChange={(e) => setCommand(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length > 0) {
+              notifyActivityHandler();
+            } else {
+              cancelActivityHandler();
+            }
+            setCommand(e.target.value);
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleSendCommand();
-            } else {
-              notifyActivityHandler();
             }
           }}
         />
