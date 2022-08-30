@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { IMessage } from "src/types";
 import theme from "../theme";
 
-const ChatMessage = ({ message }: { message: IMessage }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ChatMessage = ({ message }: { message: any }) => {
   return (
     <Box sx={{ pr: 1, wordBreak: "break-all" }}>
       <Typography sx={{ mr: 1, ...theme.chat.timestamp }} component="span">

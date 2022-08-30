@@ -1,6 +1,10 @@
-import { arg, booleanArg, extendType, objectType } from "nexus";
-import { Context } from "src/util/context";
 import moment from "moment";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { Context } from "src/util/context";
+import { Article } from "./ArticleTypes";
+import { Channel } from "./ChannelTypes";
+import { Character } from "./CharacterTypes";
+import { World } from "./WorldTypes";
 
 export const User = objectType({
   name: "User",
@@ -17,9 +21,29 @@ export const User = objectType({
       description: "Timestamp when user was last updated",
       type: "DateTime",
     });
+    t.list.field("worlds", {
+      description: "Worlds that belong to this user",
+      type: World,
+    });
+    t.list.field("characters", {
+      description: "Characters that belong to this user",
+      type: Character,
+    });
+    t.list.field("channels", {
+      description: "Channels this user is a member of",
+      type: Channel,
+    });
+    t.list.field("createdArticles", {
+      description: "Articles this user has created",
+      type: Article,
+    });
     t.field("lastActivity", {
       description: "Timestamp of last user activity",
       type: "DateTime",
+    });
+    t.list.field("activeChannel", {
+      description: "Message channel user is currently active in",
+      type: Channel,
     });
   },
 });
@@ -35,29 +59,44 @@ export const OperationResponse = objectType({
 export const Query = extendType({
   type: "Query",
   definition(t) {
-    t.list.field("userActivity", {
-      type: "User",
+    t.field("user", {
+      type: User,
+      description: "Retrieves a user by ID",
+      args: {
+        id: nonNull(stringArg()),
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
-      description: "Returns any recent user activity",
-      args: {
-        since: arg({
-          type: "DateTime",
-          description: "Check for activity since this time",
-        }),
-      },
       resolve: (_root, args, ctx) => {
-        return ctx.prisma.user.findMany({
+        return ctx.prisma.user.findUnique({
           where: {
-            lastActivity: {
-              gte: args.since || moment().subtract({ seconds: 10 }).toDate(),
-            },
+            id: args.id,
           },
-          orderBy: [
-            {
-              lastActivity: "desc",
-            },
-          ],
+          include: {
+            createdArticles: true,
+            characters: true,
+            channels: true,
+            messages: true,
+            activeChannel: true,
+          },
+        });
+      },
+    });
+
+    t.list.field("users", {
+      type: World,
+      description: "Retrieves users on the server",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      resolve: (_root, _args, ctx) => {
+        return ctx.prisma.user.findMany({
+          include: {
+            createdArticles: true,
+            characters: true,
+            channels: true,
+            messages: true,
+            activeChannel: true,
+          },
         });
       },
     });
@@ -73,7 +112,9 @@ export const Mutation = extendType({
       authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
       description: "Notifies the server of user activity in a chat window",
       args: {
-        active: booleanArg({ description: "True if user is active" }),
+        channelId: stringArg({
+          description: "ID of channel user is active in",
+        }),
       },
       async resolve(_root, args, ctx) {
         await ctx.prisma.user.update({
@@ -81,7 +122,8 @@ export const Mutation = extendType({
             id: ctx.token.sub,
           },
           data: {
-            lastActivity: args.active ? moment().toDate() : null,
+            activeChannel: { connect: { id: args.channelId } },
+            lastActivity: args.channelId ? moment().toDate() : null,
           },
         });
         return { success: true };

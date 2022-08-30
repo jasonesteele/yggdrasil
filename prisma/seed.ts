@@ -15,7 +15,7 @@ async function main() {
 
   console.log("Creating seed data...");
 
-  const cypress = await prisma.user.upsert({
+  const users = await prisma.user.upsert({
     where: { email: "cypress@example.com" },
     update: {},
     create: {
@@ -27,7 +27,12 @@ async function main() {
     },
   });
 
-  console.log("users =", [cypress]);
+  const channels = await prisma.channel.create({
+    data: { name: "global" },
+  });
+
+  console.log("users =", [users]);
+  console.log("channels =", [channels]);
 }
 
 main()

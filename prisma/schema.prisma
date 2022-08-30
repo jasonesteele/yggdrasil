@@ -12,7 +12,7 @@ model Account {
   userId            String
   type              String
   provider          String
-  providerAccountId String
+  providerAccountId String   @map(name: "provider_account_id")
   refresh_token     String?  @db.Text
   access_token      String?  @db.Text
   expires_at        Int?
@@ -30,8 +30,8 @@ model Account {
 
 model Session {
   id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
+  sessionToken String   @unique @map(name: "session_token")
+  userId       String   @map(name: "user_id")
   expires      DateTime
   createdAt    DateTime @default(now()) @map(name: "created_at")
   updatedAt    DateTime @default(now()) @map(name: "updated_at")
@@ -40,17 +40,24 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  Message       Message[]
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  lastActivity  DateTime? @map(name: "last_activity")
+  id              String      @id @default(cuid())
+  name            String?
+  email           String?     @unique
+  emailVerified   DateTime?   @map(name: "email_verified")
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  createdAt       DateTime    @default(now()) @map(name: "created_at")
+  updatedAt       DateTime    @default(now()) @map(name: "updated_at")
+  worlds          World[]
+  createdArticles Article[]   @relation("createdById")
+  updatedArticles Article[]   @relation("updatedById")
+  characters      Character[]
+  channels        Channel[]
+  messages        Message[]
+  activeChannelId String?     @map(name: "active_channel_id")
+  activeChannel   Channel?    @relation("activeChannelId", fields: [activeChannelId], references: [id])
+  lastActivity    DateTime?   @map(name: "last_activity")
 }
 
 model VerificationToken {
@@ -61,11 +68,94 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model World {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime    @default(now()) @map(name: "created_at")
+  updatedAt   DateTime    @default(now()) @map(name: "updated_at")
+  ownerId     String      @map(name: "owner_id")
+  owner       User        @relation(fields: [ownerId], references: [id])
+  articles    Article[]
+  characters  Character[]
+  locations   Location[]
+  channelId   String      @unique @map(name: "channel_id")
+  channel     Channel     @relation("worldChannelId", fields: [channelId], references: [id])
+}
+
+model Article {
+  id            String   @id @default(cuid())
+  title         String
+  text          String
+  createdAt     DateTime @default(now()) @map(name: "created_at")
+  updatedAt     DateTime @default(now()) @map(name: "updated_at")
+  worldId       String?  @unique @map(name: "world_id")
+  world         World?   @relation(fields: [worldId], references: [id])
+  createdById   String   @map(name: "created_by_id")
+  createdByUser User     @relation("createdById", fields: [createdById], references: [id])
+  updatedById   String   @map(name: "updated_by_id")
+  updatedByUser User     @relation("updatedById", fields: [updatedById], references: [id])
+}
+
+model Character {
+  id         String    @id @default(cuid())
+  name       String
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+  worldId    String    @map(name: "world_id")
+  world      World     @relation(fields: [worldId], references: [id])
+  userId     String    @map(name: "user_id")
+  user       User      @relation(fields: [userId], references: [id])
+  locationId String?   @map(name: "location_id")
+  location   Location? @relation(fields: [locationId], references: [id])
+}
+
+model Location {
+  id          String               @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime             @default(now()) @map(name: "created_at")
+  updatedAt   DateTime             @default(now()) @map(name: "updated_at")
+  characters  Character[]
+  worldId     String               @map(name: "world_id")
+  world       World                @relation(fields: [worldId], references: [id])
+  channelId   String               @unique @map(name: "channel_id")
+  channel     Channel              @relation("locationChannelId", fields: [channelId], references: [id])
+  exits       LocationConnection[] @relation("sourceLocationId")
+  entrances   LocationConnection[] @relation("targetLocationId")
+}
+
+model LocationConnection {
+  id               String   @id @default(cuid())
+  name             String
+  description      String
+  createdAt        DateTime @default(now()) @map(name: "created_at")
+  updatedAt        DateTime @default(now()) @map(name: "updated_at")
+  sourceLocationId String   @map(name: "source_location_id")
+  sourceLocation   Location @relation("sourceLocationId", fields: [sourceLocationId], references: [id])
+  targetLocationId String   @map(name: "target_location_id")
+  targetLocation   Location @relation("targetLocationId", fields: [targetLocationId], references: [id])
+}
+
+model Channel {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  createdAt   DateTime  @default(now()) @map(name: "created_at")
+  updatedAt   DateTime  @default(now()) @map(name: "updated_at")
+  users       User[]
+  messages    Message[]
+  world       World?    @relation("worldChannelId")
+  location    Location? @relation("locationChannelId")
+  activeUsers User[]    @relation("activeChannelId")
+}
+
 model Message {
   id        String   @id @default(cuid())
-  userId    String
+  sequence  BigInt   @default(autoincrement())
   createdAt DateTime @default(now()) @map(name: "created_at")
-  text      String   @db.VarChar(2048)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  channelId String   @map(name: "channel_id")
+  channel   Channel  @relation(fields: [channelId], references: [id])
+  userId    String   @map(name: "user_id")
+  user      User     @relation(fields: [userId], references: [id])
 }

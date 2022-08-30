@@ -9,6 +9,7 @@
     "dev": "next dev",
     "dev:test": "cross-env NODE_ENV=test next dev -- -p 3001",
     "db:migrate:dev": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma migrate dev",
+    "db:migrate:dev:create": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma migrate dev --create-only",
     "db:seed:dev": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma db seed",
     "db:reset:dev": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5432/mydb?schema=public prisma migrate reset",
     "db:migrate:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma migrate dev",
