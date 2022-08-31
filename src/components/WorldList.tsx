@@ -93,7 +93,7 @@ const WorldList = () => {
       sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)", minWidth: "250px" }}
       elevation={10}
     >
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item xs={12} sm={4}>
           <Box
             sx={{ display: "flex", flexGrow: 1 }}
