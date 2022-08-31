@@ -76,12 +76,6 @@ export const Query = extendType({
           where: {
             id: args.id,
           },
-          include: {
-            characters: true,
-            world: true,
-            channel: true,
-            exits: true,
-          },
         });
       },
     });
@@ -90,7 +84,7 @@ export const Query = extendType({
       type: Location,
       description: "Retrieves a list of locations in a world",
       args: {
-        worldId: stringArg(),
+        worldId: nonNull(stringArg()),
       },
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,12 +93,6 @@ export const Query = extendType({
         return ctx.prisma.location.findMany({
           where: {
             worldId: args.worldId,
-          },
-          include: {
-            characters: true,
-            world: true,
-            channel: true,
-            exits: true,
           },
         });
       },

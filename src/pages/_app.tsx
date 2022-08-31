@@ -1,15 +1,15 @@
-import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
-import theme from "../theme";
-import { ThemeProvider } from "@mui/material";
 import {
   ApolloClient,
   ApolloProvider,
-  InMemoryCache,
   createHttpLink,
   from,
+  InMemoryCache,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import { ThemeProvider } from "@mui/material";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import theme from "../theme";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)

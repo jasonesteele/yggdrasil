@@ -15,7 +15,7 @@
     "db:migrate:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma migrate dev",
     "db:seed:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma db seed",
     "build:nexus-typegen": "npx ts-node --transpile-only src/schema",
-    "build": "npm run build:nexus-typegen && next build && tsc --project tsconfig.server.json",
+    "build": "npx prisma generate && npm run build:nexus-typegen && next build && tsc --project tsconfig.server.json",
     "start": "next start",
     "test": "echo Implement tests",
     "lint": "next lint",

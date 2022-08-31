@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { throttle } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import theme from "src/theme";
 import { MAX_MESSAGE_LENGTH } from "src/util/constants";
-import theme from "../theme";
 
 const POST_MESSAGE = gql`
   mutation PostMessage($text: String!) {

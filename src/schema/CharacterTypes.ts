@@ -62,7 +62,7 @@ export const Query = extendType({
       type: Character,
       description: "Retrieves a list of characters in a world",
       args: {
-        worldId: stringArg(),
+        worldId: nonNull(stringArg()),
       },
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

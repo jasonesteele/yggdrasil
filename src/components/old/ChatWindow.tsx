@@ -3,7 +3,6 @@ import { Box, Divider, List, ListItem, Paper, Typography } from "@mui/material";
 import { Message } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import useChatMessages from "src/hooks/useChatActivity";
-import theme from "../theme";
 import ChatCommandField from "./ChatCommandField";
 import ChatMessage from "./ChatMessage";
 import ChatStatusBar from "./ChatStatusBar";
@@ -28,7 +27,6 @@ const ChatWindow = () => {
           {error ? (
             <WifiOff
               sx={{
-                color: theme.palette.error.main,
                 position: "absolute",
                 right: 8,
                 top: 0,

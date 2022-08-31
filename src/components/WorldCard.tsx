@@ -1,46 +1,31 @@
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
   CardMedia,
   Chip,
-  List,
-  ListItem,
-  Popover,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import theme from "../theme";
 
 const WorldCard = ({
   world,
   onSelect,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   world: any;
   onSelect?: (worldId: string) => void;
 }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
   const onlineCount = world?.users?.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (users: any) => users.online
   )?.length;
 
   return (
     <Card
-      elevation={5}
       sx={{
         display: "flex",
-        "&:hover": { background: "rgba(0,0,0,0.1)" },
+        "&:hover": { background: "rgba(0,0,0,0.05)" },
       }}
       onClick={() => {
         if (world?.id && onSelect) {
@@ -76,63 +61,15 @@ const WorldCard = ({
           </Typography>
           <Chip
             color={onlineCount > 0 ? "success" : "default"}
-            sx={{ ml: "1em" }}
+            sx={{ ml: "0.5em" }}
+            size="small"
             label={onlineCount || "0"}
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
           />
-          {onlineCount > 0 && (
-            <Popover
-              id="online-users-popover"
-              sx={{ pointerEvents: "none" }}
-              open={open}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
-            >
-              <List sx={{ pb: "0", pt: "5" }}>
-                {world?.users?.map((user: any) => (
-                  <ListItem sx={{ pt: "0", pb: "5" }}>
-                    <Avatar
-                      sx={{ width: 24, height: 24 }}
-                      alt={user.name || "User"}
-                      src={user.image || ""}
-                    />
-                    <Typography sx={{ ml: "0.4em" }}>{user.name}</Typography>
-                  </ListItem>
-                ))}
-              </List>
-            </Popover>
-          )}
-          <Box
-            sx={{
-              flex: "1 0 auto",
-              justifyContent: "right",
-              alignItems: "center",
-            }}
-            display={{ md: "flex", xs: "none" }}
-          >
-            <Avatar
-              sx={{ width: 24, height: 24 }}
-              alt={world?.owner?.name || "User"}
-              src={world?.owner?.image || ""}
-            />
-            <Typography sx={{ pl: "0.4em" }} component="span">
-              {world?.owner?.name}
-            </Typography>
-          </Box>
         </Box>
         <Typography variant="subtitle2" color="text.secondary" component="div">
           {world?.description || <i>No description available</i>}
         </Typography>
+        {/* TODO: Add content tags for RP worlds */}
       </CardContent>
     </Card>
   );

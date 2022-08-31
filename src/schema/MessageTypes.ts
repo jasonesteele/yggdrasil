@@ -46,7 +46,7 @@ export const Query = extendType({
           where: {
             channelId: args.channel,
             sequence: {
-              gte: BigInt(args.sinceSequence) || 0,
+              gte: BigInt(args.sinceSequence || 0),
             },
           },
           include: {

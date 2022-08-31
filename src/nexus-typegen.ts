@@ -107,7 +107,7 @@ export interface NexusGenObjects {
   }
   Query: {};
   User: { // root type
-    activeChannel?: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
+    activeChannel?: NexusGenRootTypes['Channel'] | null; // Channel
     channels?: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     characters?: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     createdArticles?: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
@@ -200,6 +200,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
+    notifyActivity: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   OperationResponse: { // field return type
@@ -208,9 +209,20 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     article: NexusGenRootTypes['Article'] | null; // Article
     articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
+    channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
+    character: NexusGenRootTypes['Character'] | null; // Character
+    charactersInLocation: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
+    charactersInWorld: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
+    location: NexusGenRootTypes['Location'] | null; // Location
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
+    user: NexusGenRootTypes['User'] | null; // User
+    users: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+    world: NexusGenRootTypes['World'] | null; // World
+    worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
   User: { // field return type
-    activeChannel: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
+    activeChannel: NexusGenRootTypes['Channel'] | null; // Channel
     channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     characters: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     createdArticles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
@@ -293,6 +305,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    notifyActivity: 'OperationResponse'
     postMessage: 'Message'
   }
   OperationResponse: { // field return type name
@@ -301,6 +314,17 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     article: 'Article'
     articles: 'Article'
+    channels: 'Channel'
+    character: 'Character'
+    charactersInLocation: 'Character'
+    charactersInWorld: 'Character'
+    location: 'Location'
+    locations: 'Location'
+    messages: 'Message'
+    user: 'User'
+    users: 'World'
+    world: 'World'
+    worlds: 'World'
   }
   User: { // field return type name
     activeChannel: 'Channel'
@@ -331,6 +355,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    notifyActivity: { // args
+      channelId?: string | null; // String
+    }
     postMessage: { // args
       channel: string; // String!
       text: string; // String!
@@ -342,6 +369,31 @@ export interface NexusGenArgTypes {
     }
     articles: { // args
       worldId?: string | null; // String
+    }
+    character: { // args
+      id: string; // String!
+    }
+    charactersInLocation: { // args
+      locationId?: string | null; // String
+    }
+    charactersInWorld: { // args
+      worldId: string; // String!
+    }
+    location: { // args
+      id: string; // String!
+    }
+    locations: { // args
+      worldId: string; // String!
+    }
+    messages: { // args
+      channel: string; // String!
+      sinceSequence?: string | null; // String
+    }
+    user: { // args
+      id: string; // String!
+    }
+    world: { // args
+      id: string; // String!
     }
   }
 }

@@ -11,7 +11,10 @@
     "semi": ["error", "always"],
     "no-extra-semi": "error",
     "no-user-before-define": "off",
-    "sort-imports": ["error", { "ignoreDeclarationSort": true }],
+    "sort-imports": [
+      "error",
+      { "ignoreDeclarationSort": true, "ignoreCase": true }
+    ],
     "react/display-name": "off"
   },
   "plugins": ["@typescript-eslint", "cypress"],

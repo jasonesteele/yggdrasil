@@ -41,7 +41,7 @@ export const User = objectType({
       description: "Timestamp of last user activity",
       type: "DateTime",
     });
-    t.list.field("activeChannel", {
+    t.field("activeChannel", {
       description: "Message channel user is currently active in",
       type: Channel,
     });
@@ -122,7 +122,9 @@ export const Mutation = extendType({
             id: ctx.token.sub,
           },
           data: {
-            activeChannel: { connect: { id: args.channelId } },
+            activeChannel: args.channelId
+              ? { connect: { id: args.channelId } }
+              : { disconnect: true },
             lastActivity: args.channelId ? moment().toDate() : null,
           },
         });

@@ -5,8 +5,10 @@ async function flushDatabase() {
   await prisma.account.deleteMany();
   await prisma.message.deleteMany();
   await prisma.session.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.world.deleteMany();
+  await prisma.channel.deleteMany();
   await prisma.verificationToken.deleteMany();
+  await prisma.user.deleteMany();
 }
 
 async function main() {
@@ -15,7 +17,7 @@ async function main() {
 
   console.log("Creating seed data...");
 
-  const users = await prisma.user.upsert({
+  const cypressUser = await prisma.user.upsert({
     where: { email: "cypress@example.com" },
     update: {},
     create: {
@@ -27,12 +29,61 @@ async function main() {
     },
   });
 
-  const channels = await prisma.channel.create({
+  const globalChannel = await prisma.channel.create({
     data: { name: "global" },
   });
 
-  console.log("users =", [users]);
-  console.log("channels =", [channels]);
+  const world1Channel = await prisma.channel.create({
+    data: { name: "Realms of the Lost" },
+  });
+
+  const world2Channel = await prisma.channel.create({
+    data: { name: "Soulbound" },
+  });
+
+  const world3Channel = await prisma.channel.create({
+    data: { name: "Realms of Tyranny" },
+  });
+
+  const world1 = await prisma.world.create({
+    data: {
+      name: "Realms of the Lost",
+      description:
+        "Molestie at elementum eu facilisis sed odio morbi quis commodo odio aenean sed adipiscing diam donec adipiscing tristique risus nec.",
+      owner: { connect: { id: cypressUser.id } },
+      channel: {
+        connect: { id: world1Channel.id },
+      },
+    },
+  });
+
+  const world2 = await prisma.world.create({
+    data: {
+      name: "Soulbound",
+      description:
+        "Molestie at elementum eu facilisis sed odio morbi quis commodo odio aenean.",
+      owner: { connect: { id: cypressUser.id } },
+      channel: {
+        connect: { id: world2Channel.id },
+      },
+    },
+  });
+
+  const world3 = await prisma.world.create({
+    data: {
+      name: "Realms of Tyranny",
+      description:
+        "Molestie at elementum eu facilisis sed odio morbi quis commodo.",
+      owner: { connect: { id: cypressUser.id } },
+      channel: {
+        connect: { id: world3Channel.id },
+      },
+    },
+  });
+
+  console.log("users =", [cypressUser]);
+  console.log("channels =", [globalChannel]);
+  console.log("worlds =", [world1, world2, world3]);
 }
 
 main()

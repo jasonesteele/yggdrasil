@@ -160,6 +160,11 @@ type Message {
 }
 
 type Mutation {
+  """Notifies the server of user activity in a chat window"""
+  notifyActivity(
+    """ID of channel user is active in"""
+    channelId: String
+  ): OperationResponse
   postMessage(channel: String!, text: String!): Message
 }
 
@@ -175,12 +180,45 @@ type Query {
 
   """Retrieves a list of articles from the server"""
   articles(worldId: String): [Article]
+
+  """Retrieves all message channels on the server"""
+  channels: [Channel]
+
+  """Retrieves a character by ID"""
+  character(id: String!): Character
+
+  """Retrieves a list of characters in a location"""
+  charactersInLocation(locationId: String): [Character]
+
+  """Retrieves a list of characters in a world"""
+  charactersInWorld(worldId: String!): [Character]
+
+  """Retrieves a location by ID"""
+  location(id: String!): Location
+
+  """Retrieves a list of locations in a world"""
+  locations(worldId: String!): [Location]
+
+  """Retrieves all active messages on a channel"""
+  messages(channel: String!, sinceSequence: String): [Message]
+
+  """Retrieves a user by ID"""
+  user(id: String!): User
+
+  """Retrieves users on the server"""
+  users: [World]
+
+  """Retrieves a world by ID"""
+  world(id: String!): World
+
+  """Retrieves a list of worlds from the server"""
+  worlds: [World]
 }
 
 """Application user"""
 type User {
   """Message channel user is currently active in"""
-  activeChannel: [Channel]
+  activeChannel: Channel
 
   """Channels this user is a member of"""
   channels: [Channel]
