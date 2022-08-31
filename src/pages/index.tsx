@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -21,10 +21,8 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
         <title>{appTitle} - Home</title>
       </Head>
       <AppFrame title={appTitle} user={session?.user as User}>
-        <Container>
-          <Box m={2}>
-            <WorldList />
-          </Box>
+        <Container sx={{ p: 1 }}>
+          <WorldList />
         </Container>
       </AppFrame>
     </>

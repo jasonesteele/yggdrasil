@@ -56,6 +56,10 @@ const WorldList = () => {
     name.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0 ||
     description.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0;
 
+  const filteredWorlds = data.worlds
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .filter((world: any) => filterWorld(world, searchFilter));
+
   return (
     <Paper
       sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)", minWidth: "250px" }}
@@ -119,11 +123,9 @@ const WorldList = () => {
           xs={12}
           sx={{ maxHeight: "400px", overflow: "auto" }}
         >
-          {data?.worlds?.length > 0 ? (
+          {filteredWorlds.length > 0 ? (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            data.worlds
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              .filter((world: any) => filterWorld(world, searchFilter))
+            filteredWorlds
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               .map((world: any, idx: number) => (
                 <Grid key={`grid-${idx}`} item xs={12} md={6}>
@@ -132,7 +134,11 @@ const WorldList = () => {
               ))
           ) : (
             <Grid item xs={12}>
-              <Alert severity="info">No worlds available</Alert>
+              <Alert severity="info">
+                {data?.worlds?.length > 0
+                  ? "No matching worlds"
+                  : "No worlds available"}
+              </Alert>
             </Grid>
           )}
         </Grid>
