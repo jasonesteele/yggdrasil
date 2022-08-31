@@ -1,15 +1,12 @@
-import { ApolloError, gql, ServerError, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { Close, Search } from "@mui/icons-material";
 import {
   Alert,
-  AlertTitle,
   Box,
   CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
-  List,
-  ListItem,
   Paper,
   TextField,
   Typography,
@@ -17,6 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import theme from "src/theme";
+import ApolloErrorAlert from "./ApolloErrorAlert";
 import WorldCard from "./WorldCard";
 
 const GET_WORLDS = gql`
@@ -33,36 +31,6 @@ const GET_WORLDS = gql`
     }
   }
 `;
-
-const ApolloErrorAlert = ({
-  title,
-  error,
-}: {
-  title: string;
-  error: ApolloError;
-}) => {
-  return (
-    <Alert severity="error" sx={{ maxHeight: "200px", overflow: "auto" }}>
-      <AlertTitle>{title}</AlertTitle>
-      <List sx={{ p: 0 }}>
-        {error.graphQLErrors &&
-          error.graphQLErrors.map(({ message }, idx) => (
-            <ListItem key={`graphql-error-${idx}`} sx={{ p: 0 }}>
-              {message}
-            </ListItem>
-          ))}
-        {error.networkError &&
-          (error.networkError as ServerError).result.errors.map(
-            ({ message }: { message: string }, idx: number) => (
-              <ListItem key={`network-error-${idx}`} sx={{ p: 0 }}>
-                {message}
-              </ListItem>
-            )
-          )}
-      </List>
-    </Alert>
-  );
-};
 
 const WorldList = () => {
   const { loading, error, data, startPolling, stopPolling } =
