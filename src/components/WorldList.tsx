@@ -143,22 +143,31 @@ const WorldList = () => {
             <ApolloErrorAlert title="Error retrieving worlds" error={error} />
           </Grid>
         )}
-        {data?.worlds?.length > 0 ? (
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.worlds
+        <Grid
+          item
+          container
+          spacing={2}
+          mt={1}
+          xs={12}
+          sx={{ maxHeight: "400px", overflow: "auto" }}
+        >
+          {data?.worlds?.length > 0 ? (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .filter((world: any) => filterWorld(world, searchFilter))
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .map((world: any, idx: number) => (
-              <Grid key={`grid-${idx}`} item xs={12} md={6}>
-                <WorldCard world={world} onSelect={handleSelectWorld} />
-              </Grid>
-            ))
-        ) : (
-          <Grid item xs={12}>
-            <Alert severity="info">No worlds available</Alert>
-          </Grid>
-        )}
+            data.worlds
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .filter((world: any) => filterWorld(world, searchFilter))
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              .map((world: any, idx: number) => (
+                <Grid key={`grid-${idx}`} item xs={12} md={6}>
+                  <WorldCard world={world} onSelect={handleSelectWorld} />
+                </Grid>
+              ))
+          ) : (
+            <Grid item xs={12}>
+              <Alert severity="info">No worlds available</Alert>
+            </Grid>
+          )}
+        </Grid>
       </Grid>
     </Paper>
   );
