@@ -1,15 +1,22 @@
 import { ApolloError, gql, ServerError, useQuery } from "@apollo/client";
+import { Close, Search } from "@mui/icons-material";
 import {
   Alert,
   AlertTitle,
+  Box,
   CircularProgress,
   Grid,
+  IconButton,
+  InputAdornment,
   List,
   ListItem,
   Paper,
+  TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import theme from "src/theme";
 import WorldCard from "./WorldCard";
 
 const GET_WORLDS = gql`
@@ -60,6 +67,8 @@ const ApolloErrorAlert = ({
 const WorldList = () => {
   const { loading, error, data, startPolling, stopPolling } =
     useQuery(GET_WORLDS);
+  const [searchFilter, setSearchFilter] = useState("");
+  const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
 
   useEffect(() => {
     startPolling(10000);
@@ -72,12 +81,62 @@ const WorldList = () => {
     console.log(`Selected ${worldId}...`);
   };
 
+  const filterWorld = (
+    { name, description }: { name: string; description: string },
+    searchFilter: string
+  ) =>
+    name.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0 ||
+    description.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0;
+
   return (
-    <Paper sx={{ p: 1 }}>
+    <Paper
+      sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)", minWidth: "250px" }}
+      elevation={10}
+    >
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h6">Worlds</Typography>
-          {loading && <CircularProgress />}
+        <Grid item xs={12} sm={4}>
+          <Box
+            sx={{ display: "flex", flexGrow: 1 }}
+            alignItems="center"
+            justifyContent={breakpoint ? "inherit" : "center"}
+          >
+            <Typography
+              component="span"
+              variant={breakpoint ? "h5" : "subtitle1"}
+            >
+              Worlds
+            </Typography>
+            {loading && <CircularProgress size={24} sx={{ ml: "10px" }} />}
+          </Box>
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <TextField
+            label="Search"
+            size="small"
+            fullWidth
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            sx={{ backgroundColor: theme.palette.background.paper }}
+            InputProps={{
+              endAdornment: (
+                <>
+                  {searchFilter.trim().length > 0 ? (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setSearchFilter("")}>
+                        <Close />
+                      </IconButton>
+                    </InputAdornment>
+                  ) : (
+                    <InputAdornment position="end">
+                      <IconButton disabled={true}>
+                        <Search />
+                      </IconButton>
+                    </InputAdornment>
+                  )}
+                </>
+              ),
+            }}
+          />
         </Grid>
         {error && (
           <Grid item xs={12}>
@@ -86,11 +145,15 @@ const WorldList = () => {
         )}
         {data?.worlds?.length > 0 ? (
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          data.worlds.map((world: any, idx: number) => (
-            <Grid key={`grid-${idx}`} item xs={12} md={6}>
-              <WorldCard world={world} onSelect={handleSelectWorld} />
-            </Grid>
-          ))
+          data.worlds
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .filter((world: any) => filterWorld(world, searchFilter))
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((world: any, idx: number) => (
+              <Grid key={`grid-${idx}`} item xs={12} md={6}>
+                <WorldCard world={world} onSelect={handleSelectWorld} />
+              </Grid>
+            ))
         ) : (
           <Grid item xs={12}>
             <Alert severity="info">No worlds available</Alert>

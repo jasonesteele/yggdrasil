@@ -5,6 +5,7 @@ import {
   CardMedia,
   Chip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import theme from "../theme";
 
@@ -16,6 +17,8 @@ const WorldCard = ({
   world: any;
   onSelect?: (worldId: string) => void;
 }) => {
+  const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
+
   const onlineCount = world?.users?.filter(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (users: any) => users.online
@@ -33,21 +36,26 @@ const WorldCard = ({
         }
       }}
     >
-      <CardMedia
-        component="img"
-        sx={{
-          width: "90px",
-          minHeight: "90px",
-          objectFit: "contain",
-          p: "5px",
-          background: theme.palette.secondary.light,
-        }}
-        image={world.image || "/world.svg"}
-        alt={`${world.name} Thumbnail`}
-      />
+      {breakpoint && (
+        <CardMedia
+          component="img"
+          sx={{
+            width: "90px",
+            minHeight: "90px",
+            objectFit: "contain",
+            p: "5px",
+            background: theme.palette.secondary.light,
+          }}
+          image={world.image || "/world.svg"}
+          alt={`${world.name} Thumbnail`}
+        />
+      )}
       <CardContent
         sx={{
           width: "100%",
+          borderLeft: !breakpoint
+            ? `20px solid ${theme.palette.secondary.light}`
+            : "inherit",
         }}
       >
         <Box
