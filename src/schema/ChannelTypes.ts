@@ -55,7 +55,11 @@ export const Query = extendType({
           },
           include: {
             users: true,
-            messages: true,
+            messages: {
+              include: {
+                user: true,
+              },
+            },
           },
         });
       },
@@ -69,7 +73,11 @@ export const Query = extendType({
         return ctx.prisma.channel.findMany({
           include: {
             users: true,
-            messages: true,
+            messages: {
+              include: {
+                user: true,
+              },
+            },
           },
         });
       },

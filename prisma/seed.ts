@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import moment from "moment";
 const prisma = new PrismaClient();
 
 async function flushDatabase() {
@@ -17,20 +18,49 @@ async function main() {
 
   console.log("Creating seed data...");
 
-  const cypressUser = await prisma.user.upsert({
-    where: { email: "cypress@example.com" },
-    update: {},
-    create: {
-      id: "cypressuser",
+  const cypressUser = await prisma.user.create({
+    data: {
       email: "cypress@example.com",
-      name: "cypress",
+      name: "Cypress",
       image:
         "https://cdn.discordapp.com/attachments/979367973175316490/979436920490844180/unknown.png",
     },
   });
 
+  const shazaUser = await prisma.user.create({
+    data: {
+      email: "shaza@example.com",
+      name: "Shaza",
+      image:
+        "https://cdn.discordapp.com/avatars/71750301031337984/26265cd4d7049a74da9517d6b28801d1.png",
+    },
+  });
+
   const globalChannel = await prisma.channel.create({
-    data: { name: "global", global: true },
+    data: {
+      name: "global",
+      global: true,
+      users: { connect: [{ id: shazaUser.id }, { id: cypressUser.id }] },
+    },
+  });
+
+  const message1 = await prisma.message.create({
+    data: {
+      sequence: BigInt(0),
+      createdAt: moment().subtract(5, "minutes").toDate(),
+      text: "This is a test message",
+      user: { connect: { id: cypressUser.id } },
+      channel: { connect: { id: globalChannel.id } },
+    },
+  });
+  const message2 = await prisma.message.create({
+    data: {
+      sequence: BigInt(1),
+      createdAt: moment().toDate(),
+      text: "Is it really?",
+      user: { connect: { id: shazaUser.id } },
+      channel: { connect: { id: globalChannel.id } },
+    },
   });
 
   const world1Channel = await prisma.channel.create({
@@ -81,9 +111,15 @@ async function main() {
     },
   });
 
-  console.log("users =", [cypressUser]);
-  console.log("channels =", [globalChannel]);
+  console.log("users =", [cypressUser, shazaUser]);
+  console.log("channels =", [
+    globalChannel,
+    world1Channel,
+    world2Channel,
+    world3Channel,
+  ]);
   console.log("worlds =", [world1, world2, world3]);
+  console.log("messages =", [message1, message2]);
 }
 
 main()
