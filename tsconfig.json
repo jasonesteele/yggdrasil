@@ -32,6 +32,11 @@
 
     "skipLibCheck": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "__tests__/components/world/WorldCard.test.jsx"
+  ],
   "exclude": ["node_modules", "dist", "cypress", ".next", "next.config.js"]
 }

@@ -26,6 +26,7 @@ const WorldCard = ({
 
   return (
     <Card
+      data-testid="world-card"
       sx={{
         display: "flex",
         "&:hover": { background: "rgba(0,0,0,0.05)" },
@@ -39,6 +40,7 @@ const WorldCard = ({
       {breakpoint && (
         <CardMedia
           component="img"
+          data-testid="world-media"
           sx={{
             width: "90px",
             minHeight: "90px",
@@ -64,20 +66,25 @@ const WorldCard = ({
             alignItems: "center",
           }}
         >
-          <Typography color="primary" variant="h6">
+          <Typography data-testid="world-name" color="primary" variant="h6">
             {world?.name || <i>Untitled</i>}
           </Typography>
           <Chip
+            data-testid="world-online-counter"
             color={onlineCount > 0 ? "success" : "default"}
             sx={{ ml: "0.5em" }}
             size="small"
             label={onlineCount || "0"}
           />
         </Box>
-        <Typography variant="subtitle2" color="text.secondary" component="div">
+        <Typography
+          data-testid="world-description"
+          variant="subtitle2"
+          color="text.secondary"
+          component="div"
+        >
           {world?.description || <i>No description available</i>}
         </Typography>
-        {/* TODO: Add content tags for RP worlds */}
       </CardContent>
     </Card>
   );
