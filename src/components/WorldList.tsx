@@ -56,15 +56,13 @@ const WorldList = () => {
     name.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0 ||
     description.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0;
 
-  const filteredWorlds = data.worlds
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .filter((world: any) => filterWorld(world, searchFilter));
+  const filteredWorlds =
+    data?.worlds
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .filter((world: any) => filterWorld(world, searchFilter)) || [];
 
   return (
-    <Paper
-      sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)", minWidth: "250px" }}
-      elevation={10}
-    >
+    <Paper sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)" }} elevation={5}>
       <Grid container>
         <Grid item xs={12} sm={4}>
           <Box

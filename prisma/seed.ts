@@ -30,7 +30,7 @@ async function main() {
   });
 
   const globalChannel = await prisma.channel.create({
-    data: { name: "global" },
+    data: { name: "global", global: true },
   });
 
   const world1Channel = await prisma.channel.create({

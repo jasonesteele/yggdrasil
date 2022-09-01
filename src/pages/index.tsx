@@ -1,8 +1,9 @@
-import { Container } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { GetServerSideProps, NextPage } from "next";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import ChatPanel from "src/components/ChatPanel";
 import WorldList from "src/components/WorldList";
 import AppFrame from "../components/AppFrame";
 
@@ -22,7 +23,10 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
       </Head>
       <AppFrame title={appTitle} user={session?.user as User}>
         <Container sx={{ p: 1 }}>
-          <WorldList />
+          <Stack spacing={3}>
+            <WorldList />
+            <ChatPanel />
+          </Stack>
         </Container>
       </AppFrame>
     </>

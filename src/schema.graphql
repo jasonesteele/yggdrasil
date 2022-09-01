@@ -193,6 +193,9 @@ type Query {
   """Retrieves a list of characters in a world"""
   charactersInWorld(worldId: String!): [Character]
 
+  """Retrieves the global chat channel"""
+  globalChannel: Channel
+
   """Retrieves a location by ID"""
   location(id: String!): Location
 

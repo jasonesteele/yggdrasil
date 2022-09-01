@@ -140,6 +140,7 @@ model LocationConnection {
 model Channel {
   id          String    @id @default(cuid())
   name        String    @unique
+  global      Boolean   @default(false)
   createdAt   DateTime  @default(now()) @map(name: "created_at")
   updatedAt   DateTime  @default(now()) @map(name: "updated_at")
   users       User[]

@@ -213,6 +213,7 @@ export interface NexusGenFieldTypes {
     character: NexusGenRootTypes['Character'] | null; // Character
     charactersInLocation: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     charactersInWorld: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
+    globalChannel: NexusGenRootTypes['Channel'] | null; // Channel
     location: NexusGenRootTypes['Location'] | null; // Location
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
@@ -318,6 +319,7 @@ export interface NexusGenFieldTypeNames {
     character: 'Character'
     charactersInLocation: 'Character'
     charactersInWorld: 'Character'
+    globalChannel: 'Channel'
     location: 'Location'
     locations: 'Location'
     messages: 'Message'
