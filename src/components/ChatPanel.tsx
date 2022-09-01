@@ -44,9 +44,10 @@ const TabPanel = (props: TabPanelProps) => {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ height: "100%" }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 1, height: "100%" }}>{children}</Box>}
     </div>
   );
 };
@@ -65,7 +66,14 @@ const ChatPanel = () => {
   };
 
   return (
-    <Paper sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)" }} elevation={5}>
+    <Paper
+      sx={{
+        p: 1,
+        backgroundColor: "rgba(0,0,0,0.05)",
+        height: "100%",
+      }}
+      elevation={5}
+    >
       {loading && (
         <>
           <Alert severity="info">Loading global chat</Alert>;
@@ -79,7 +87,12 @@ const ChatPanel = () => {
         <Alert severity="warning">No global channel found</Alert>
       )}
       {data?.globalChannel && (
-        <>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          sx={{ height: "100%" }}
+        >
           <Tabs value={value} onChange={handleChange} aria-label="chat channel">
             {data?.globalChannel && (
               <Tab label={data?.globalChannel?.name} {...a11yProps(0)}></Tab>
@@ -90,7 +103,7 @@ const ChatPanel = () => {
               <ChatChannel channel={data?.globalChannel} />
             </TabPanel>
           )}
-        </>
+        </Box>
       )}
     </Paper>
   );

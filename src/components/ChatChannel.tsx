@@ -13,7 +13,7 @@ const ChatChannel = ({ channel }: { channel: any }) => {
   if (!channel) return null;
 
   return (
-    <Box display="flex" flexDirection="column" sx={{ height: "400px" }}>
+    <Box display="flex" flexDirection="column" height="100%">
       <Box display="flex" flexGrow={1}>
         <Box flexGrow={1}>
           <ChatHistory messages={channel.messages} />

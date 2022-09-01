@@ -119,7 +119,7 @@ const WorldList = () => {
           spacing={2}
           mt={1}
           xs={12}
-          sx={{ maxHeight: "400px", overflow: "auto" }}
+          sx={{ height: "300px", overflow: "auto" }}
         >
           {filteredWorlds.length > 0 ? (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,4 +1,5 @@
 import { Container, Stack } from "@mui/material";
+import { Box } from "@mui/system";
 import { GetServerSideProps, NextPage } from "next";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -17,19 +18,21 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
   if (status === "loading") return null;
 
   return (
-    <>
+    <Box>
       <Head>
         <title>{appTitle} - Home</title>
       </Head>
       <AppFrame title={appTitle} user={session?.user as User}>
-        <Container sx={{ p: 1 }}>
-          <Stack spacing={3}>
+        <Box display="flex" height="100%" flexDirection="column">
+          <Box flex="0 0 auto">
             <WorldList />
+          </Box>
+          <Box pt={2} flex="1 0 auto">
             <ChatPanel />
-          </Stack>
-        </Container>
+          </Box>
+        </Box>
       </AppFrame>
-    </>
+    </Box>
   );
 };
 

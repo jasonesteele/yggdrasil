@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { AppBar, Button, Grid, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Grid, Toolbar, Typography } from "@mui/material";
 import { signIn, useSession } from "next-auth/react";
 import DiscordIcon from "./icons/DiscordIcon";
 import { User } from "next-auth";
@@ -22,10 +22,10 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
   if (status === "loading") return null;
 
   return (
-    <>
-      <AppBar position="fixed">
+    <Box height="100vh" display="flex" flexDirection="column">
+      <AppBar position="absolute">
         <Toolbar>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="center" flexGrow={0}>
             <Grid item>
               <YggdrasilIcon width="48" />
             </Grid>
@@ -51,8 +51,10 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      {children}
-    </>
+      <Box flexGrow={1} p={2} pb={4} sx={{ border: "1px solid blue" }}>
+        {children}
+      </Box>
+    </Box>
   );
 };
 

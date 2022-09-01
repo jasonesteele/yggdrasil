@@ -44,7 +44,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang="en" style={{ height: "100%" }}>
+      <Html lang="en">
         <Head>
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link
@@ -55,7 +55,7 @@ export default class MyDocument extends Document {
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {(this.props as any).emotionStyleTags}
         </Head>
-        <body style={{ height: "100%" }}>
+        <body style={{ height: "100vh", padding: 0, margin: 0 }}>
           <Main />
           <NextScript />
         </body>
