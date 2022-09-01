@@ -51,7 +51,7 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Box flexGrow={1} p={2} pb={4} sx={{ border: "1px solid blue" }}>
+      <Box flexGrow={1} p={2} pb={4}>
         {children}
       </Box>
     </Box>

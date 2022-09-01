@@ -76,7 +76,7 @@ const WorldList = () => {
             >
               Worlds
             </Typography>
-            {loading && <CircularProgress size={24} sx={{ ml: "10px" }} />}
+            {loading && <CircularProgress size={24} sx={{ ml: "10px" }} />}{" "}
           </Box>
         </Grid>
         <Grid item xs={12} sm={8}>
@@ -119,7 +119,7 @@ const WorldList = () => {
           spacing={2}
           mt={1}
           xs={12}
-          sx={{ height: "300px", overflow: "auto" }}
+          sx={{ maxHeight: "400px", overflow: "auto" }}
         >
           {filteredWorlds.length > 0 ? (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

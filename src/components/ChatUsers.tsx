@@ -15,10 +15,10 @@ const ChatUsers = ({ users }: { users: any[] }) => {
 
   return (
     <Card sx={{ overflow: "auto", height: "100%" }}>
-      <List>
+      <List sx={{ p: 0 }}>
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {users.map((user: any, idx: number) => (
-          <ListItem key={`user-${idx}`} sx={{ p: 0.75 }}>
+          <ListItem key={`user-${idx}`} sx={{ p: 0.5 }}>
             <Avatar
               sx={{ width: "32px", height: "32px", mr: 1 }}
               alt={user?.name || "User"}
