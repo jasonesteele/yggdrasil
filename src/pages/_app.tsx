@@ -6,7 +6,7 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import { Box, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import theme from "../theme";

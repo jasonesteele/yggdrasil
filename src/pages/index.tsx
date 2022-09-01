@@ -1,4 +1,3 @@
-import { Container, Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import { GetServerSideProps, NextPage } from "next";
 import { User } from "next-auth";
