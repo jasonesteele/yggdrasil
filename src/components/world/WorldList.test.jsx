@@ -2,7 +2,8 @@ import { MockedProvider } from "@apollo/react-testing";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userFixture from "../../../fixtures/userFixture";
 import worldFixture from "../../../fixtures/worldFixture";
-import WorldList, { GET_WORLDS } from "../../../src/components/world/WorldList";
+import WorldList, { GET_WORLDS } from "./WorldList";
+import { setWindowWidth } from "../../util/test-utils";
 
 const successResponse = [
   {
@@ -44,6 +45,10 @@ const networkErrorResponse = [
 
 describe("components", () => {
   describe("WorldList", () => {
+    beforeAll(() => {
+      setWindowWidth(1024);
+    });
+
     it("renders a world", async () => {
       render(
         <MockedProvider mocks={successResponse}>

@@ -2,7 +2,8 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import sinon from "sinon";
 import userFixture from "../../../fixtures/userFixture";
 import worldFixture from "../../../fixtures/worldFixture";
-import WorldCard from "../../../src/components/world/WorldCard";
+import WorldCard from "./WorldCard";
+import { setWindowWidth } from "../../util/test-utils";
 
 const worldDescription = () => {
   return screen.queryByTestId("world-description").innerHTML;
@@ -18,6 +19,10 @@ const worldName = () => {
 
 describe("components", () => {
   describe("WorldCard", () => {
+    beforeAll(() => {
+      setWindowWidth(1024);
+    });
+
     it("renders a world", () => {
       render(<WorldCard world={worldFixture()} />);
 

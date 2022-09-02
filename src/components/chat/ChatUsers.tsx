@@ -20,14 +20,18 @@ const ChatUsers = ({ users }: { users: any[] }) => {
         {users.map((user: any, idx: number) => (
           <ListItem key={`user-${idx}`} sx={{ p: 0.5 }}>
             <Avatar
+              data-testid={`user-avatar-${idx}`}
               sx={{ width: "32px", height: "32px", mr: 1 }}
-              alt={user?.name || "User"}
-              src={user?.image || null}
+              alt={user.name}
+              src={user.image}
             />
             {mdBreakpoint && (
               <Link>
-                <Typography variant="subtitle2">
-                  {user?.name || "User"}
+                <Typography
+                  data-testid={`user-name-${idx}`}
+                  variant="subtitle2"
+                >
+                  {user?.name}
                 </Typography>
               </Link>
             )}

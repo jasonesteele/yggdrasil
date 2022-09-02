@@ -1,4 +1,7 @@
 {
+  "env": {
+    "jest/globals": true
+  },
   "extends": [
     "next/core-web-vitals",
     "standard",
@@ -17,7 +20,7 @@
     ],
     "react/display-name": "off"
   },
-  "plugins": ["@typescript-eslint", "cypress"],
+  "plugins": ["@typescript-eslint", "cypress", "jest"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
