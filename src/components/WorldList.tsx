@@ -17,7 +17,7 @@ import theme from "src/theme";
 import ApolloErrorAlert from "./ApolloErrorAlert";
 import WorldCard from "./WorldCard";
 
-const GET_WORLDS = gql`
+export const GET_WORLDS = gql`
   query Worlds {
     worlds {
       id
@@ -81,6 +81,7 @@ const WorldList = () => {
         </Grid>
         <Grid item xs={12} sm={8}>
           <TextField
+            inputProps={{ "data-testid": "worldlist-search" }}
             label="Search"
             size="small"
             fullWidth
@@ -92,7 +93,10 @@ const WorldList = () => {
                 <>
                   {searchFilter.trim().length > 0 ? (
                     <InputAdornment position="end">
-                      <IconButton onClick={() => setSearchFilter("")}>
+                      <IconButton
+                        data-testid="worldlist-search-reset"
+                        onClick={() => setSearchFilter("")}
+                      >
                         <Close />
                       </IconButton>
                     </InputAdornment>

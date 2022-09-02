@@ -1,4 +1,4 @@
-import { ApolloError, ServerError } from "@apollo/client";
+import { ApolloError } from "@apollo/client";
 import { Alert, AlertTitle, List, ListItem } from "@mui/material";
 
 const ApolloErrorAlert = ({
@@ -18,15 +18,11 @@ const ApolloErrorAlert = ({
               {message}
             </ListItem>
           ))}
-        {error.networkError &&
-          // TODO: fix this cast
-          (error.networkError as ServerError).result.errors.map(
-            ({ message }: { message: string }, idx: number) => (
-              <ListItem key={`network-error-${idx}`} sx={{ p: 0 }}>
-                {message}
-              </ListItem>
-            )
-          )}
+        {error.networkError && (
+          <ListItem key={`network-error`} sx={{ p: 0 }}>
+            {error.networkError.message}
+          </ListItem>
+        )}
       </List>
     </Alert>
   );
