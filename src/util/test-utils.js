@@ -9,3 +9,7 @@ export function setWindowWidth(width) {
     };
   };
 }
+
+export function fail(message) {
+  throw new Error(message);
+}
