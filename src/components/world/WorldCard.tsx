@@ -7,7 +7,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import theme from "../theme";
+import theme from "../../theme";
 
 const WorldCard = ({
   world,

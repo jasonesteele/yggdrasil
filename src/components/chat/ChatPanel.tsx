@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { Alert, Box, LinearProgress, Paper, Tab, Tabs } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
-import ApolloErrorAlert from "./ApolloErrorAlert";
+import ApolloErrorAlert from "../ApolloErrorAlert";
 import ChatChannel from "./ChatChannel";
 
 const GET_GLOBAL_CHANNEL = gql`

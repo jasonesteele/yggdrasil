@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import theme from "src/theme";
-import ApolloErrorAlert from "./ApolloErrorAlert";
+import ApolloErrorAlert from "../ApolloErrorAlert";
 import WorldCard from "./WorldCard";
 
 export const GET_WORLDS = gql`

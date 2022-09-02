@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import sinon from "sinon";
 import userFixture from "../../../fixtures/userFixture";
 import worldFixture from "../../../fixtures/worldFixture";
-import WorldCard from "../../../src/components/WorldCard";
+import WorldCard from "../../../src/components/world/WorldCard";
 
 const worldDescription = () => {
   return screen.queryByTestId("world-description").innerHTML;

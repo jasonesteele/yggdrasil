@@ -3,8 +3,8 @@ import { GetServerSideProps, NextPage } from "next";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import ChatPanel from "src/components/ChatPanel";
-import WorldList from "src/components/WorldList";
+import ChatPanel from "src/components/chat/ChatPanel";
+import WorldList from "src/components/world/WorldList";
 import AppFrame from "../components/AppFrame";
 
 type HomeProps = {

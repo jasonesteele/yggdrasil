@@ -2,7 +2,7 @@ import { MockedProvider } from "@apollo/react-testing";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userFixture from "../../../fixtures/userFixture";
 import worldFixture from "../../../fixtures/worldFixture";
-import WorldList, { GET_WORLDS } from "../../../src/components/WorldList";
+import WorldList, { GET_WORLDS } from "../../../src/components/world/WorldList";
 
 const successResponse = [
   {
