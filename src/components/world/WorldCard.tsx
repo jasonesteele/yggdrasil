@@ -48,7 +48,7 @@ const WorldCard = ({
             p: "5px",
             background: theme.palette.secondary.light,
           }}
-          image={world?.image || "/world?.svg"}
+          image={world?.image || "/world.svg"}
           alt={`${world?.name} Thumbnail`}
         />
       )}

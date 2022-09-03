@@ -24,6 +24,7 @@ export const GET_WORLDS = gql`
       id
       name
       description
+      image
       owner {
         id
         name

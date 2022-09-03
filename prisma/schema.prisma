@@ -73,6 +73,7 @@ model World {
   id          String      @id @default(cuid())
   name        String
   description String
+  image       String?
   createdAt   DateTime    @default(now()) @map(name: "created_at")
   updatedAt   DateTime    @default(now()) @map(name: "updated_at")
   ownerId     String      @map(name: "owner_id")
