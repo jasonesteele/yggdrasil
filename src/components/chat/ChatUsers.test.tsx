@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import userFixture from "../../../fixtures/userFixture";
-import { setWindowWidth } from "../../util/test-utils";
+import { MockedProvider } from "@apollo/client/testing";
+import { render } from "@testing-library/react";
+import { fail, setWindowWidth } from "../../util/test-utils";
 import ChatUsers from "./ChatUsers";
 
 describe("components", () => {
@@ -9,35 +9,45 @@ describe("components", () => {
       setWindowWidth(1024);
     });
 
-    it("renders a list of users", async () => {
+    it("renders an empty list of users", async () => {
       render(
-        <ChatUsers
-          users={[userFixture(undefined, 1), userFixture(undefined, 2)]}
-        />
+        <MockedProvider mocks={[]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
       );
 
-      const user0 = await screen.findByTestId("user-name-0");
-      expect(user0).toBeInTheDocument();
-      expect(user0.innerHTML).toEqual("User Name 1");
-      expect(await screen.findByTestId("user-avatar-0")).toBeInTheDocument();
-      const user1 = await screen.findByTestId("user-name-1");
-      expect(user1).toBeInTheDocument();
-      expect(user1.innerHTML).toEqual("User Name 2");
-      expect(await screen.findByTestId("user-avatar-1")).toBeInTheDocument();
+      fail("Not implemented");
+    });
+
+    it("renders a list of users", async () => {
+      render(
+        <MockedProvider mocks={[]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
+      );
+
+      fail("Not implemented");
     });
 
     it("renders a list of users (small screen)", async () => {
       setWindowWidth(600);
       render(
-        <ChatUsers
-          users={[userFixture(undefined, 1), userFixture(undefined, 2)]}
-        />
+        <MockedProvider mocks={[]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
       );
 
-      expect(screen.queryByText("User Name 1")).toBeNull();
-      expect(await screen.findByTestId("user-avatar-0")).toBeInTheDocument();
-      expect(screen.queryByText("User Name 2")).toBeNull();
-      expect(await screen.findByTestId("user-avatar-1")).toBeInTheDocument();
+      fail("Not implemented");
+    });
+
+    it("shows an error", async () => {
+      render(
+        <MockedProvider mocks={[]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
+      );
+
+      fail("Not implemented");
     });
   });
 });

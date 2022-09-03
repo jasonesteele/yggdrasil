@@ -18,5 +18,23 @@ describe("components", () => {
 
       fail("Not implemented");
     });
+
+    it("cancels own activity indicator when command input is cleared", async () => {
+      render(
+        <MockedProvider mocks={[]}>
+          <ChatCommandField channelId="test-channel-id" />
+        </MockedProvider>
+      );
+      fail("Not implemented");
+    });
+
+    it("shows error indicator when message fails to post", async () => {
+      render(
+        <MockedProvider mocks={[]}>
+          <ChatCommandField channelId="test-channel-id" />
+        </MockedProvider>
+      );
+      fail("Not implemented");
+    });
   });
 });

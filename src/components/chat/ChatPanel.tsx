@@ -9,22 +9,6 @@ const GET_GLOBAL_CHANNEL = gql`
     globalChannel {
       id
       name
-      users {
-        id
-        name
-        image
-      }
-      messages {
-        id
-        sequence
-        createdAt
-        text
-        user {
-          id
-          name
-          image
-        }
-      }
     }
   }
 `;
@@ -100,7 +84,7 @@ const ChatPanel = () => {
           </Tabs>
           {data?.globalChannel && (
             <TabPanel value={value} index={0}>
-              <ChatChannel channel={data?.globalChannel} />
+              <ChatChannel channelId={data.globalChannel.id} />
             </TabPanel>
           )}
         </Box>
