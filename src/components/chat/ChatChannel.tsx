@@ -1,13 +1,16 @@
 import { Box, useMediaQuery } from "@mui/material";
 import theme from "src/theme";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 import ChatCommandField from "./ChatCommandField";
-
 import ChatHistory from "./ChatHistory";
 import ChatStatusBar from "./ChatStatusBar";
 import ChatUsers from "./ChatUsers";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ChatChannel = ({ channel }: { channel: any }) => {
+const ChatChannel = ({
+  channel,
+}: {
+  channel: NexusGenRootTypes["Channel"];
+}) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
 
   if (!channel) return null;
@@ -15,8 +18,10 @@ const ChatChannel = ({ channel }: { channel: any }) => {
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box display="flex" flexGrow={1}>
-        <Box flexGrow={1}>
-          <ChatHistory messages={channel.messages} />
+        <Box flexGrow={1} flexShrink={0}>
+          <ChatHistory
+            messages={channel.messages as NexusGenRootTypes["Channel"][]}
+          />
         </Box>
         <Box
           sx={{
@@ -26,13 +31,17 @@ const ChatChannel = ({ channel }: { channel: any }) => {
           }}
           justifyContent="flex-end"
         >
-          <ChatUsers users={channel.users} />
+          <ChatUsers users={channel.users as NexusGenRootTypes["User"][]} />
         </Box>
       </Box>
-      <Box pt={1}>
-        <ChatCommandField channelId={channel.id} />
-      </Box>
-      <ChatStatusBar />
+      {channel.id && (
+        <>
+          <Box pt={1}>
+            <ChatCommandField channelId={channel.id} />
+          </Box>
+          <ChatStatusBar />
+        </>
+      )}
     </Box>
   );
 };

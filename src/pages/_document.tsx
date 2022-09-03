@@ -57,7 +57,7 @@ export default class MyDocument extends Document {
         </Head>
         <body
           style={{
-            height: "100vh",
+            // height: "100vh",
             padding: 0,
             margin: 0,
           }}

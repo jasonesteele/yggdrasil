@@ -6,15 +6,16 @@ import WorldCard from "./WorldCard";
 import { setWindowWidth } from "../../util/test-utils";
 
 const worldDescription = () => {
-  return screen.queryByTestId("world-description").innerHTML;
+  return screen.queryByTestId("world-description")?.innerHTML;
 };
 
 const worldOnlineCount = () => {
-  return screen.queryByTestId("world-online-counter").firstChild.innerHTML;
+  return screen.queryByTestId("world-online-counter")?.firstElementChild
+    ?.innerHTML;
 };
 
 const worldName = () => {
-  return screen.queryByTestId("world-name").innerHTML;
+  return screen.queryByTestId("world-name")?.innerHTML;
 };
 
 describe("components", () => {

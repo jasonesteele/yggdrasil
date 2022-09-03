@@ -13,6 +13,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { NexusGenObjects } from "src/nexus-typegen";
 import theme from "src/theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import WorldCard from "./WorldCard";
@@ -50,16 +51,21 @@ const WorldList = () => {
   };
 
   const filterWorld = (
-    { name, description }: { name: string; description: string },
+    { name, description }: NexusGenObjects["World"],
     searchFilter: string
   ) =>
-    name.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0 ||
-    description.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0;
+    (name
+      ? name.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >= 0
+      : false) ||
+    (description
+      ? description.toLowerCase().indexOf(searchFilter.trim().toLowerCase()) >=
+        0
+      : false);
 
-  const filteredWorlds =
-    data?.worlds
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .filter((world: any) => filterWorld(world, searchFilter)) || [];
+  const filteredWorlds: NexusGenObjects["World"][] =
+    data?.worlds.filter((world: NexusGenObjects["World"]) =>
+      filterWorld(world, searchFilter)
+    ) || [];
 
   return (
     <Paper sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)" }} elevation={5}>
@@ -126,14 +132,11 @@ const WorldList = () => {
           sx={{ maxHeight: "400px", overflow: "auto" }}
         >
           {filteredWorlds.length > 0 ? (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            filteredWorlds
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              .map((world: any, idx: number) => (
-                <Grid key={`grid-${idx}`} item xs={12} md={6}>
-                  <WorldCard world={world} onSelect={handleSelectWorld} />
-                </Grid>
-              ))
+            filteredWorlds.map((world, idx: number) => (
+              <Grid key={`grid-${idx}`} item xs={12} md={6}>
+                <WorldCard world={world} onSelect={handleSelectWorld} />
+              </Grid>
+            ))
           ) : (
             <Grid item xs={12}>
               <Alert severity="info">

@@ -1,4 +1,4 @@
-import { setWindowWidth, fail } from "../util/test-utils";
+import { fail, setWindowWidth } from "../util/test-utils";
 
 describe("components", () => {
   describe("UserProfileButton", () => {

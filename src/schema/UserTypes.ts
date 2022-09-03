@@ -45,6 +45,10 @@ export const User = objectType({
       description: "Message channel user is currently active in",
       type: Channel,
     });
+    t.field("online", {
+      description: "True if user is currently online",
+      type: "Boolean",
+    });
   },
 });
 
@@ -65,8 +69,7 @@ export const Query = extendType({
       args: {
         id: nonNull(stringArg()),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.user.findUnique({
           where: {
@@ -86,8 +89,7 @@ export const Query = extendType({
     t.list.field("users", {
       type: World,
       description: "Retrieves users on the server",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, _args, ctx) => {
         return ctx.prisma.user.findMany({
           include: {
@@ -108,8 +110,7 @@ export const Mutation = extendType({
   definition(t) {
     t.field("notifyActivity", {
       type: OperationResponse,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       description: "Notifies the server of user activity in a chat window",
       args: {
         channelId: stringArg({

@@ -7,22 +7,22 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 import theme from "../../theme";
 
 const WorldCard = ({
   world,
   onSelect,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  world: any;
+  world?: NexusGenRootTypes["World"];
   onSelect?: (worldId: string) => void;
 }) => {
   const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
 
-  const onlineCount = world?.users?.filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (users: any) => users.online
-  )?.length;
+  const onlineCount =
+    world?.users?.filter(
+      (users: NexusGenRootTypes["User"] | null) => users?.online
+    )?.length || 0;
 
   return (
     <Card
@@ -33,7 +33,7 @@ const WorldCard = ({
       }}
       onClick={() => {
         if (world?.id && onSelect) {
-          onSelect(world.id);
+          onSelect(world?.id);
         }
       }}
     >
@@ -48,7 +48,7 @@ const WorldCard = ({
             p: "5px",
             background: theme.palette.secondary.light,
           }}
-          image={world?.image || "/world.svg"}
+          image={world?.image || "/world?.svg"}
           alt={`${world?.name} Thumbnail`}
         />
       )}

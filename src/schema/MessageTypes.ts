@@ -38,8 +38,7 @@ export const Query = extendType({
         channel: nonNull(stringArg()),
         sinceSequence: stringArg(),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       description: "Retrieves all active messages on a channel",
       resolve: (_root, args, ctx) => {
         return ctx.prisma.message.findMany({
@@ -63,7 +62,8 @@ export const Query = extendType({
   },
 });
 
-const postMessageSchema = object({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const postMessageSchema: any = object({
   text: string().required().min(1).max(MAX_MESSAGE_LENGTH),
 });
 
@@ -83,16 +83,15 @@ export const Mutation = extendType({
     t.field("postMessage", {
       type: Message,
       args: {
-        channel: nonNull(stringArg()),
+        channelId: nonNull(stringArg()),
         text: nonNull(stringArg()),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
         return ctx.prisma.message.create({
           data: {
-            channel: { connect: { id: args.channel } },
+            channel: { connect: { id: args.channelId } },
             text,
             user: { connect: { id: ctx.token.sub } },
           },

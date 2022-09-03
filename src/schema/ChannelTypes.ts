@@ -46,8 +46,7 @@ export const Query = extendType({
     t.field("globalChannel", {
       type: Channel,
       description: "Retrieves the global chat channel",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, _args, ctx) => {
         return ctx.prisma.channel.findFirst({
           where: {
@@ -67,8 +66,7 @@ export const Query = extendType({
     t.list.field("channels", {
       type: Channel,
       description: "Retrieves all message channels on the server",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, _args, ctx) => {
         return ctx.prisma.channel.findMany({
           include: {

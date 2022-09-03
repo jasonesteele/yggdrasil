@@ -69,8 +69,7 @@ export const Query = extendType({
       args: {
         id: nonNull(stringArg()),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.location.findUnique({
           where: {
@@ -87,8 +86,7 @@ export const Query = extendType({
         worldId: nonNull(stringArg()),
       },
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.location.findMany({
           where: {

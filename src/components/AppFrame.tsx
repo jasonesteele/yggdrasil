@@ -25,7 +25,7 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
     <Box height="100vh" display="flex" flexDirection="column">
       <AppBar position="absolute">
         <Toolbar>
-          <Grid container spacing={2} alignItems="center" flexGrow={0}>
+          <Grid container spacing={2} alignItems="center">
             <Grid item>
               <YggdrasilIcon width="48" />
             </Grid>

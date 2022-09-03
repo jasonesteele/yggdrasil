@@ -1,7 +1,7 @@
-import { setWindowWidth, fail } from "../../util/test-utils";
+import { fail, setWindowWidth } from "../../util/test-utils";
 
 describe("components", () => {
-  describe("ChatCommandField", () => {
+  describe("ChatPanel", () => {
     beforeAll(() => {
       setWindowWidth(1024);
     });

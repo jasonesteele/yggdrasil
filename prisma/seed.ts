@@ -23,7 +23,7 @@ async function main() {
       email: "cypress@example.com",
       name: "Cypress",
       image:
-        "https://cdn.discordapp.com/attachments/979367973175316490/979436920490844180/unknown.png",
+        "https://cdn.discordapp.com/attachments/1014904252772130879/1015364841952776253/unknown.png",
     },
   });
 

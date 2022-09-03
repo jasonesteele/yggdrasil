@@ -13,6 +13,7 @@ export const World = objectType({
     t.id("id", { description: "Unique identifier for world" });
     t.string("name", { description: "Name of the world" });
     t.string("description", { description: "Description of the world" });
+    t.string("image", { description: "URL for world thumbnail image" });
     t.field("createdAt", {
       description: "Timestamp when world was created",
       type: "DateTime",
@@ -32,6 +33,10 @@ export const World = objectType({
     t.list.field("characters", {
       type: Character,
       description: "Characters currently in this world",
+    });
+    t.list.field("users", {
+      type: User,
+      description: "Users associated with this world",
     });
     t.list.field("locations", {
       type: Location,
@@ -53,8 +58,7 @@ export const Query = extendType({
       args: {
         id: nonNull(stringArg()),
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.world.findUnique({
           where: {
@@ -64,6 +68,7 @@ export const Query = extendType({
             owner: true,
             articles: true,
             characters: true,
+            users: true,
             locations: true,
             channel: true,
           },
@@ -74,14 +79,14 @@ export const Query = extendType({
     t.list.field("worlds", {
       type: World,
       description: "Retrieves a list of worlds from the server",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      authorize: (_root: any, _args: any, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, _args, ctx) => {
         return ctx.prisma.world.findMany({
           include: {
             owner: true,
             articles: true,
             characters: true,
+            users: true,
             locations: true,
             channel: true,
           },

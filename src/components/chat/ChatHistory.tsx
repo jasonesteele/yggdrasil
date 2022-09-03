@@ -6,21 +6,37 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 import theme from "src/theme";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ChatHistory = ({ messages }: { messages: any[] }) => {
+const ChatHistory = ({
+  messages,
+}: {
+  messages: NexusGenRootTypes["Message"][];
+}) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <Card sx={{ overflow: "auto", height: "100%" }}>
+    <Card
+      sx={{
+        overflow: "auto",
+        height: "100%",
+      }}
+    >
       <List sx={{ p: 0 }}>
-        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        {messages.map((message: any, idx: number) => (
+        {messages.map((message: NexusGenRootTypes["Message"], idx: number) => (
           <ListItem key={`message-${idx}`} sx={{ p: 0.5, pt: 0, pb: 0 }}>
             <Box display="flex" sx={{ width: "100%" }} alignItems="flex-start">
               {mdBreakpoint && (
-                <Typography variant="caption" sx={{ mt: 0.4 }}>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    mt: 0.4,
+                    minWidth: "5em",
+                    whiteSpace: "nowrap",
+                    textAlign: "right",
+                  }}
+                >
                   {new Date(message.createdAt).toLocaleTimeString(undefined, {
                     hour: "numeric",
                     minute: "numeric",
@@ -28,7 +44,7 @@ const ChatHistory = ({ messages }: { messages: any[] }) => {
                 </Typography>
               )}
               <Typography sx={{ ml: 1 }}>
-                <b>{message.user.name}</b>
+                <b>{message.user?.name || <i>anonymous</i>}</b>
               </Typography>
               <Typography
                 flexGrow={1}

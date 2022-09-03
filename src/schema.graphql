@@ -165,7 +165,7 @@ type Mutation {
     """ID of channel user is active in"""
     channelId: String
   ): OperationResponse
-  postMessage(channel: String!, text: String!): Message
+  postMessage(channelId: String!, text: String!): Message
 }
 
 """Generic response to an API operation"""
@@ -247,6 +247,9 @@ type User {
   """Human readable user name"""
   name: String
 
+  """True if user is currently online"""
+  online: Boolean
+
   """Timestamp when user was last updated"""
   updatedAt: DateTime
 
@@ -274,6 +277,9 @@ type World {
   """Unique identifier for world"""
   id: ID
 
+  """URL for world thumbnail image"""
+  image: String
+
   """Locations defined in this world"""
   locations: [Location]
 
@@ -285,4 +291,7 @@ type World {
 
   """Timestamp when world was last updated"""
   updatedAt: DateTime
+
+  """Users associated with this world"""
+  users: [User]
 }

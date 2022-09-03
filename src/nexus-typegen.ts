@@ -116,6 +116,7 @@ export interface NexusGenObjects {
     image?: string | null; // String
     lastActivity?: NexusGenScalars['DateTime'] | null; // DateTime
     name?: string | null; // String
+    online?: boolean | null; // Boolean
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     worlds?: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
@@ -126,10 +127,12 @@ export interface NexusGenObjects {
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     description?: string | null; // String
     id?: string | null; // ID
+    image?: string | null; // String
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     name?: string | null; // String
     owner?: NexusGenRootTypes['User'] | null; // User
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    users?: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
 }
 
@@ -232,6 +235,7 @@ export interface NexusGenFieldTypes {
     image: string | null; // String
     lastActivity: NexusGenScalars['DateTime'] | null; // DateTime
     name: string | null; // String
+    online: boolean | null; // Boolean
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
@@ -242,10 +246,12 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     description: string | null; // String
     id: string | null; // ID
+    image: string | null; // String
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     name: string | null; // String
     owner: NexusGenRootTypes['User'] | null; // User
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
 }
 
@@ -338,6 +344,7 @@ export interface NexusGenFieldTypeNames {
     image: 'String'
     lastActivity: 'DateTime'
     name: 'String'
+    online: 'Boolean'
     updatedAt: 'DateTime'
     worlds: 'World'
   }
@@ -348,10 +355,12 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     description: 'String'
     id: 'ID'
+    image: 'String'
     locations: 'Location'
     name: 'String'
     owner: 'User'
     updatedAt: 'DateTime'
+    users: 'User'
   }
 }
 
@@ -361,7 +370,7 @@ export interface NexusGenArgTypes {
       channelId?: string | null; // String
     }
     postMessage: { // args
-      channel: string; // String!
+      channelId: string; // String!
       text: string; // String!
     }
   }

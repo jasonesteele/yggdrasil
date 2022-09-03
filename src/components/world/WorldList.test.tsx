@@ -5,43 +5,37 @@ import worldFixture from "../../../fixtures/worldFixture";
 import WorldList, { GET_WORLDS } from "./WorldList";
 import { setWindowWidth } from "../../util/test-utils";
 
-const successResponse = [
-  {
-    request: {
-      query: GET_WORLDS,
-    },
-    result: {
-      data: {
-        worlds: [
-          worldFixture({ owner: userFixture() }, 0),
-          worldFixture({ owner: userFixture() }, 1),
-        ],
-      },
+const successResponse = {
+  request: {
+    query: GET_WORLDS,
+  },
+  result: {
+    data: {
+      worlds: [
+        worldFixture({ owner: userFixture() }, 0),
+        worldFixture({ owner: userFixture() }, 1),
+      ],
     },
   },
-];
+};
 
-const emptyResponse = [
-  {
-    request: {
-      query: GET_WORLDS,
-    },
-    result: {
-      data: {
-        worlds: [],
-      },
+const emptyResponse = {
+  request: {
+    query: GET_WORLDS,
+  },
+  result: {
+    data: {
+      worlds: [],
     },
   },
-];
+};
 
-const networkErrorResponse = [
-  {
-    request: {
-      query: GET_WORLDS,
-    },
-    error: new Error("An error occurred!"),
+const networkErrorResponse = {
+  request: {
+    query: GET_WORLDS,
   },
-];
+  error: new Error("An error occurred!"),
+};
 
 describe("components", () => {
   describe("WorldList", () => {
@@ -51,7 +45,7 @@ describe("components", () => {
 
     it("renders a world", async () => {
       render(
-        <MockedProvider mocks={successResponse}>
+        <MockedProvider mocks={[successResponse]}>
           <WorldList />
         </MockedProvider>
       );
@@ -85,7 +79,7 @@ describe("components", () => {
 
     it("renders a network error", async () => {
       render(
-        <MockedProvider mocks={networkErrorResponse}>
+        <MockedProvider mocks={[networkErrorResponse]}>
           <WorldList />
         </MockedProvider>
       );
@@ -98,7 +92,7 @@ describe("components", () => {
 
     it("renders a world", async () => {
       render(
-        <MockedProvider mocks={emptyResponse}>
+        <MockedProvider mocks={[emptyResponse]}>
           <WorldList />
         </MockedProvider>
       );
