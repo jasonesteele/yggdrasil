@@ -18,6 +18,12 @@ const ApolloErrorAlert = ({
               {message}
             </ListItem>
           ))}
+        {error.clientErrors &&
+          error.clientErrors.map(({ message }, idx) => (
+            <ListItem key={`client-error-${idx}`} sx={{ p: 0 }}>
+              {message}
+            </ListItem>
+          ))}
         {error.networkError && (
           <ListItem key={`network-error`} sx={{ p: 0 }}>
             {error.networkError.message}
