@@ -1,6 +1,10 @@
 import moment from "moment";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 
-const worldFixture = (properties, sequence) => ({
+const worldFixture = (
+  properties: NexusGenRootTypes["World"],
+  sequence: number
+) => ({
   id: `world-id-${sequence || "0"}`,
   name: `World Name ${sequence || "0"}`,
   description: `Description of world ${sequence || "0"}.`,
