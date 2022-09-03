@@ -29,8 +29,12 @@ const ChatStatusBar = ({
   };
 
   return (
-    <Box p={0.5}>
-      <Typography data-testid="chat-status-activity" variant="caption">
+    <Box p={0.5} display="flex">
+      <Typography
+        flexGrow={1}
+        data-testid="chat-status-activity"
+        variant="caption"
+      >
         {formatActivityMessage()}
       </Typography>
       <IconButton disabled={true}>
@@ -38,7 +42,7 @@ const ChatStatusBar = ({
           <WifiTethering color="success" data-testid="chat-status-connected" />
         ) : (
           <WifiTetheringError
-            color="success"
+            color="error"
             data-testid="chat-status-disconnected"
           />
         )}
