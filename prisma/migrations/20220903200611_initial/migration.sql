@@ -57,6 +57,7 @@ CREATE TABLE "World" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "image" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "owner_id" TEXT NOT NULL,
@@ -122,6 +123,7 @@ CREATE TABLE "LocationConnection" (
 CREATE TABLE "Channel" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "global" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -138,6 +140,12 @@ CREATE TABLE "Message" (
     "user_id" TEXT NOT NULL,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_UserToWorld" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -172,6 +180,12 @@ CREATE UNIQUE INDEX "Location_channel_id_key" ON "Location"("channel_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Channel_name_key" ON "Channel"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_UserToWorld_AB_unique" ON "_UserToWorld"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_UserToWorld_B_index" ON "_UserToWorld"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_ChannelToUser_AB_unique" ON "_ChannelToUser"("A", "B");
@@ -229,6 +243,12 @@ ALTER TABLE "Message" ADD CONSTRAINT "Message_user_id_fkey" FOREIGN KEY ("user_i
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_channel_id_fkey" FOREIGN KEY ("channel_id") REFERENCES "Channel"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserToWorld" ADD CONSTRAINT "_UserToWorld_A_fkey" FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_UserToWorld" ADD CONSTRAINT "_UserToWorld_B_fkey" FOREIGN KEY ("B") REFERENCES "World"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ChannelToUser" ADD CONSTRAINT "_ChannelToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Channel"("id") ON DELETE CASCADE ON UPDATE CASCADE;
