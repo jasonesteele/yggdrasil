@@ -32,7 +32,7 @@ export const Channel = objectType({
       type: World,
     });
     t.field("location", {
-      description: "Location this channel is associated withl",
+      description: "Location this channel is associated with",
       type: Location,
     });
   },

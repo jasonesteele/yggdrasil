@@ -1,5 +1,6 @@
 import moment from "moment";
-import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
+import { DEFAULT_MAX_AGE_SECONDS } from "../util/constants";
 import { Context } from "src/util/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
@@ -87,7 +88,7 @@ export const Query = extendType({
     });
 
     t.list.field("users", {
-      type: World,
+      type: User,
       description: "Retrieves users on the server",
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: (_root, _args, ctx) => {
@@ -98,6 +99,33 @@ export const Query = extendType({
             channels: true,
             messages: true,
             activeChannel: true,
+          },
+        });
+      },
+    });
+
+    t.list.field("channelActivity", {
+      type: User,
+      description: "Retrieves active users on a channel",
+      args: {
+        channelId: nonNull(stringArg({ description: "Channel identifier" })),
+        maxAgeSeconds: intArg({
+          description: "Maximum period for recent activity (in seconds)",
+        }),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      resolve: (_root, args, ctx) => {
+        return ctx.prisma.user.findMany({
+          where: {
+            activeChannelId: args.channelId,
+            lastActivity: {
+              gte: moment()
+                .subtract(
+                  args.maxAgeSeconds || DEFAULT_MAX_AGE_SECONDS,
+                  "seconds"
+                )
+                .toDate(),
+            },
           },
         });
       },

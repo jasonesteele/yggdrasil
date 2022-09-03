@@ -42,7 +42,7 @@ type Channel {
   """Unique channel identifier"""
   id: ID
 
-  """Location this channel is associated withl"""
+  """Location this channel is associated with"""
   location: Location
 
   """Messages in the channell"""
@@ -181,6 +181,15 @@ type Query {
   """Retrieves a list of articles from the server"""
   articles(worldId: String): [Article]
 
+  """Retrieves active users on a channel"""
+  channelActivity(
+    """Channel identifier"""
+    channelId: String!
+
+    """Maximum period for recent activity (in seconds)"""
+    maxAgeSeconds: Int
+  ): [User]
+
   """Retrieves all message channels on the server"""
   channels: [Channel]
 
@@ -209,7 +218,7 @@ type Query {
   user(id: String!): User
 
   """Retrieves users on the server"""
-  users: [World]
+  users: [User]
 
   """Retrieves a world by ID"""
   world(id: String!): World

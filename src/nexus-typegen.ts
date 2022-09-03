@@ -212,6 +212,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     article: NexusGenRootTypes['Article'] | null; // Article
     articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
+    channelActivity: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     character: NexusGenRootTypes['Character'] | null; // Character
     charactersInLocation: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
@@ -221,7 +222,7 @@ export interface NexusGenFieldTypes {
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
     user: NexusGenRootTypes['User'] | null; // User
-    users: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     world: NexusGenRootTypes['World'] | null; // World
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
@@ -321,6 +322,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     article: 'Article'
     articles: 'Article'
+    channelActivity: 'User'
     channels: 'Channel'
     character: 'Character'
     charactersInLocation: 'Character'
@@ -330,7 +332,7 @@ export interface NexusGenFieldTypeNames {
     locations: 'Location'
     messages: 'Message'
     user: 'User'
-    users: 'World'
+    users: 'User'
     world: 'World'
     worlds: 'World'
   }
@@ -380,6 +382,10 @@ export interface NexusGenArgTypes {
     }
     articles: { // args
       worldId?: string | null; // String
+    }
+    channelActivity: { // args
+      channelId: string; // String!
+      maxAgeSeconds?: number | null; // Int
     }
     character: { // args
       id: string; // String!

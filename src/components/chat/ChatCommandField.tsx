@@ -23,6 +23,7 @@ const ChatCommandField = ({ channelId }: { channelId: string }) => {
   };
 
   const handleSendCommand = async () => {
+    notifyActivityHandler.cancel();
     if (command.trim().length > 0) {
       await postMessage(channelId, command.trim());
       setCommand("");

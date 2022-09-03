@@ -11,7 +11,9 @@ describe("components", () => {
 
     it("renders a list of users", async () => {
       render(
-        <ChatUsers users={[userFixture(null, 1), userFixture(null, 2)]} />
+        <ChatUsers
+          users={[userFixture(undefined, 1), userFixture(undefined, 2)]}
+        />
       );
 
       const user0 = await screen.findByTestId("user-name-0");
@@ -27,7 +29,9 @@ describe("components", () => {
     it("renders a list of users (small screen)", async () => {
       setWindowWidth(600);
       render(
-        <ChatUsers users={[userFixture(null, 1), userFixture(null, 2)]} />
+        <ChatUsers
+          users={[userFixture(undefined, 1), userFixture(undefined, 2)]}
+        />
       );
 
       expect(screen.queryByText("User Name 1")).toBeNull();

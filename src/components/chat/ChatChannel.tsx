@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material";
-import theme from "src/theme";
 import { NexusGenRootTypes } from "src/nexus-typegen";
+import theme from "src/theme";
 import ChatCommandField from "./ChatCommandField";
 import ChatHistory from "./ChatHistory";
 import ChatStatusBar from "./ChatStatusBar";
@@ -39,7 +39,7 @@ const ChatChannel = ({
           <Box pt={1}>
             <ChatCommandField channelId={channel.id} />
           </Box>
-          <ChatStatusBar />
+          <ChatStatusBar channelId={channel.id} />
         </>
       )}
     </Box>
