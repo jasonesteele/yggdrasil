@@ -2,7 +2,7 @@ import { ApolloError, gql, useMutation } from "@apollo/client";
 import { useMemo } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 
-const POST_MESSAGE = gql`
+export const POST_MESSAGE = gql`
   mutation PostMessage($channelId: String!, $text: String!) {
     postMessage(channelId: $channelId, text: $text) {
       id

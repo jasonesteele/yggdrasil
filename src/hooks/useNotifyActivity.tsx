@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useMemo } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 
-const NOTIFY_ACTIVITY = gql`
+export const NOTIFY_ACTIVITY = gql`
   mutation NotifyActivity($channelId: String) {
     notifyActivity(channelId: $channelId) {
       success
