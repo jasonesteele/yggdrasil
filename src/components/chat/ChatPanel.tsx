@@ -4,7 +4,7 @@ import { SyntheticEvent, useState } from "react";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import ChatChannel from "./ChatChannel";
 
-const GET_GLOBAL_CHANNEL = gql`
+export const GET_GLOBAL_CHANNEL = gql`
   query GetGlobalChannel {
     globalChannel {
       id

@@ -1,6 +1,6 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render } from "@testing-library/react";
-import { fail, setWindowWidth } from "../../util/test-utils";
+import { render, screen } from "@testing-library/react";
+import { setWindowWidth } from "../../util/test-utils";
 import ChatChannel from "./ChatChannel";
 
 describe("components", () => {
@@ -9,14 +9,19 @@ describe("components", () => {
       setWindowWidth(1024);
     });
 
-    it("renders a channel", () => {
+    it("renders a channel", async () => {
       render(
         <MockedProvider mocks={[]}>
           <ChatChannel channelId="test-channel-id" />
         </MockedProvider>
       );
 
-      fail("not implemented");
+      expect(screen.getByTestId("chat-history")).toBeInTheDocument();
+      expect(screen.getByTestId("user-list")).toBeInTheDocument();
+      expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("chat-status-disconnected")
+      ).toBeInTheDocument();
     });
   });
 });
