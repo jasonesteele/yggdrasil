@@ -32,13 +32,13 @@ const someMessages = {
           user: { id: "user-1", name: "User1", image: null },
           sequence: 0,
           text: "Message number one",
-          createdAt: moment("2020-01-01T12:34:56Z").toDate(),
+          createdAt: moment("2020-01-01T12:34:56").toDate(),
         },
         {
           user: { id: "user-2", name: "User2", image: null },
           sequence: 1,
           text: "Message number two",
-          createdAt: moment("2020-01-01T12:36:14Z").toDate(),
+          createdAt: moment("2020-01-01T12:36:14").toDate(),
         },
       ],
     },
@@ -89,11 +89,11 @@ describe("components", () => {
         ).not.toBeInTheDocument()
       );
       expect(screen.getByText("User1")).toBeInTheDocument();
-      expect(screen.getByText("7:34 AM")).toBeInTheDocument();
+      expect(screen.getByText("12:34 PM")).toBeInTheDocument();
       expect(screen.getByText("Message number one")).toBeInTheDocument();
 
       expect(screen.getByText("User2")).toBeInTheDocument();
-      expect(screen.getByText("7:36 AM")).toBeInTheDocument();
+      expect(screen.getByText("12:36 PM")).toBeInTheDocument();
       expect(screen.getByText("Message number two")).toBeInTheDocument();
     });
 
