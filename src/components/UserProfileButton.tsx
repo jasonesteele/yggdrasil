@@ -14,10 +14,8 @@ const drawerWidth = 250;
 const avatarSize = 128;
 
 const UserProfileButton = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [openProfile, setOpenProfile] = useState(false);
-
-  if (status === "loading") return null;
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -37,7 +35,7 @@ const UserProfileButton = () => {
       size="large"
       aria-label="User Profile"
       onClick={toggleDrawer(!openProfile)}
-      data-cy="user-profile-button"
+      data-testid="user-profile-button"
     >
       <Avatar
         alt={session?.user?.name || "User"}
@@ -70,7 +68,11 @@ const UserProfileButton = () => {
               <Typography variant="h6">{session?.user?.name}</Typography>
             </Grid>
             <Grid item>
-              <Button variant="outlined" onClick={() => signOut()}>
+              <Button
+                variant="outlined"
+                data-testid="logout-button"
+                onClick={() => signOut()}
+              >
                 Logout
               </Button>
             </Grid>

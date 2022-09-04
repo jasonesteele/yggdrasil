@@ -40,6 +40,7 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
                   size="small"
                   color="inherit"
                   aria-label="login"
+                  data-testid="discord-login-button"
                   sx={{ mr: 2 }}
                   onClick={() => signIn("discord")}
                 >

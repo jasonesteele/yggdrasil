@@ -1,5 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import userFixture from "fixtures/userFixture";
+import moment from "moment";
+import { SessionProvider } from "next-auth/react";
 import { fail, setWindowWidth } from "../util/test-utils";
 import UserProfileButton from "./UserProfileButton";
 
@@ -9,14 +12,24 @@ describe("components", () => {
       setWindowWidth(1024);
     });
 
-    it("renders", () => {
+    it("renders", async () => {
       render(
-        <MockedProvider mocks={[]}>
-          <UserProfileButton />
-        </MockedProvider>
+        <SessionProvider
+          session={{
+            user: userFixture({}, 0),
+            expires: moment().add(1, "days").toISOString(),
+          }}
+        >
+          <MockedProvider mocks={[]}>
+            <UserProfileButton />
+          </MockedProvider>
+        </SessionProvider>
       );
 
-      fail("not implemented");
+      const profileButton = await screen.findByTestId("user-profile-button");
+      fireEvent.click(profileButton);
+      expect(await screen.findByTestId("logout-button")).toBeInTheDocument();
+      fireEvent.keyPress(profileButton, { type: "keydown", key: "Tab" });
     });
   });
 });
