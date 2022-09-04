@@ -59,7 +59,7 @@ describe("components", () => {
           screen.queryByTestId("user-list-loading")
         ).not.toBeInTheDocument();
       });
-      expect(await screen.getByTestId("user-list")).toBeEmptyDOMElement();
+      expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
     });
 
     it("renders a list of users", async () => {
@@ -82,11 +82,6 @@ describe("components", () => {
 
     it("renders a list of users (small screen)", async () => {
       setWindowWidth(600);
-      render(
-        <MockedProvider mocks={[]}>
-          <ChatUsers channelId="test-channel-id" />
-        </MockedProvider>
-      );
 
       render(
         <MockedProvider mocks={[userList]}>

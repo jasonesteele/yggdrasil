@@ -50,16 +50,16 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
         height: "100%",
       }}
     >
-      <List sx={{ p: 0 }}>
+      <List data-testid="chat-history" sx={{ p: 0 }}>
         {loading && (
-          <ListItem key="progress">
+          <ListItem data-testid="chat-history-loading" key="progress">
             <Typography variant="caption">Loading...</Typography>
             <LinearProgress />
           </ListItem>
         )}
 
         {!loading && error && (
-          <ListItem key="error">
+          <ListItem data-testid="chat-history-error" key="error">
             <Box width="100%">
               <ApolloErrorAlert title="Error loading messages" error={error} />
             </Box>
@@ -67,7 +67,11 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
         )}
         {data?.channelMessages.map(
           (message: NexusGenRootTypes["Message"], idx: number) => (
-            <ListItem key={`message-${idx}`} sx={{ p: 0.5, pt: 0, pb: 0 }}>
+            <ListItem
+              data-testid={`chat-message-${idx}`}
+              key={`message-${idx}`}
+              sx={{ p: 0.5, pt: 0, pb: 0 }}
+            >
               <Box
                 display="flex"
                 sx={{ width: "100%" }}
