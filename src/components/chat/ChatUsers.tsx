@@ -43,24 +43,29 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
 
   return (
     <Card sx={{ overflow: "auto", height: "100%" }}>
-      <List sx={{ p: 0 }}>
+      <List data-testid="user-list" sx={{ p: 0 }}>
         {loading && (
-          <ListItem key="progress">
+          <ListItem data-testid="user-list-loading" key="progress">
             <Typography variant="caption">Loading...</Typography>
             <LinearProgress />
           </ListItem>
         )}
 
         {!loading && error && (
-          <ListItem key="error">
+          <ListItem data-testid="user-list-error" key="error">
             <Box width="100%">
               <ApolloErrorAlert title="Error loading users" error={error} />
             </Box>
           </ListItem>
         )}
+
         {data?.channelUsers.map(
           (user: NexusGenRootTypes["User"], idx: number) => (
-            <ListItem key={`user-${idx}`} sx={{ p: 0.5 }}>
+            <ListItem
+              data-testid={`user-list-${idx}`}
+              key={`user-${idx}`}
+              sx={{ p: 0.5 }}
+            >
               <Avatar
                 data-testid={`user-avatar-${idx}`}
                 sx={{ width: "32px", height: "32px", mr: 1 }}

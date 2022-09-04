@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import { render, screen } from "@testing-library/react";
 import { GraphQLError } from "graphql";
-import { fail, setWindowWidth } from "../util/test-utils";
+import { setWindowWidth } from "../util/test-utils";
 import ApolloErrorAlert from "./ApolloErrorAlert";
 
 describe("components", () => {

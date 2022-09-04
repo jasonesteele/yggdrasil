@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import userFixture from "fixtures/userFixture";
 import moment from "moment";
 import { SessionProvider } from "next-auth/react";
-import { fail, setWindowWidth } from "../util/test-utils";
+import { setWindowWidth } from "../util/test-utils";
 import UserProfileButton from "./UserProfileButton";
 
 describe("components", () => {
