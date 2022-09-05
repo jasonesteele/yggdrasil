@@ -190,6 +190,12 @@ type Query {
     maxAgeSeconds: Int
   ): [User]
 
+  """Retrieves all active messages on a channel"""
+  channelMessages(channelId: String!): [Message]
+
+  """Retrieves users on a channel"""
+  channelUsers(channelId: String!): [User]
+
   """Retrieves all message channels on the server"""
   channels: [Channel]
 
@@ -210,9 +216,6 @@ type Query {
 
   """Retrieves a list of locations in a world"""
   locations(worldId: String!): [Location]
-
-  """Retrieves all active messages on a channel"""
-  messages(channel: String!, sinceSequence: String): [Message]
 
   """Retrieves a user by ID"""
   user(id: String!): User

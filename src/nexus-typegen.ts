@@ -213,6 +213,8 @@ export interface NexusGenFieldTypes {
     article: NexusGenRootTypes['Article'] | null; // Article
     articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
     channelActivity: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    channelMessages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
+    channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     character: NexusGenRootTypes['Character'] | null; // Character
     charactersInLocation: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
@@ -220,7 +222,6 @@ export interface NexusGenFieldTypes {
     globalChannel: NexusGenRootTypes['Channel'] | null; // Channel
     location: NexusGenRootTypes['Location'] | null; // Location
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
-    messages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     world: NexusGenRootTypes['World'] | null; // World
@@ -323,6 +324,8 @@ export interface NexusGenFieldTypeNames {
     article: 'Article'
     articles: 'Article'
     channelActivity: 'User'
+    channelMessages: 'Message'
+    channelUsers: 'User'
     channels: 'Channel'
     character: 'Character'
     charactersInLocation: 'Character'
@@ -330,7 +333,6 @@ export interface NexusGenFieldTypeNames {
     globalChannel: 'Channel'
     location: 'Location'
     locations: 'Location'
-    messages: 'Message'
     user: 'User'
     users: 'User'
     world: 'World'
@@ -387,6 +389,12 @@ export interface NexusGenArgTypes {
       channelId: string; // String!
       maxAgeSeconds?: number | null; // Int
     }
+    channelMessages: { // args
+      channelId: string; // String!
+    }
+    channelUsers: { // args
+      channelId: string; // String!
+    }
     character: { // args
       id: string; // String!
     }
@@ -401,10 +409,6 @@ export interface NexusGenArgTypes {
     }
     locations: { // args
       worldId: string; // String!
-    }
-    messages: { // args
-      channel: string; // String!
-      sinceSequence?: string | null; // String
     }
     user: { // args
       id: string; // String!

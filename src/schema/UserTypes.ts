@@ -104,6 +104,27 @@ export const Query = extendType({
       },
     });
 
+    t.list.field("channelUsers", {
+      type: User,
+      description: "Retrieves users on a channel",
+      args: {
+        channelId: nonNull(stringArg())
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      resolve: async (_root, args, ctx) => {
+       const channel = await ctx.prisma.channel.findUnique({
+          where: {
+            id: args.channelId
+          },
+          include: {
+            users: true,
+          },
+        });
+
+        return channel?.users || [];
+      },
+    });
+
     t.list.field("channelActivity", {
       type: User,
       description: "Retrieves active users on a channel",

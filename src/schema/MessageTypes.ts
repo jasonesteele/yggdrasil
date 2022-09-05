@@ -32,21 +32,17 @@ export const Message = objectType({
 export const Query = extendType({
   type: "Query",
   definition(t) {
-    t.list.field("messages", {
+    t.list.field("channelMessages", {
       type: "Message",
       args: {
-        channel: nonNull(stringArg()),
-        sinceSequence: stringArg(),
+        channelId: nonNull(stringArg())
       },
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       description: "Retrieves all active messages on a channel",
       resolve: (_root, args, ctx) => {
         return ctx.prisma.message.findMany({
           where: {
-            channelId: args.channel,
-            sequence: {
-              gte: BigInt(args.sinceSequence || 0),
-            },
+            channelId: args.channelId
           },
           include: {
             user: true,

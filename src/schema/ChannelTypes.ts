@@ -63,6 +63,7 @@ export const Query = extendType({
         });
       },
     });
+
     t.list.field("channels", {
       type: Channel,
       description: "Retrieves all message channels on the server",
