@@ -60,7 +60,7 @@ const ChatPanel = () => {
     >
       {loading && (
         <>
-          <Alert severity="info">Loading global chat</Alert>;
+          <Alert severity="info">Loading global chat</Alert>
           <LinearProgress />
         </>
       )}
