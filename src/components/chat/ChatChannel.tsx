@@ -10,12 +10,13 @@ const ChatChannel = ({ channelId }: { channelId: string }) => {
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box display="flex" flexGrow={1}>
-        <Box flexGrow={1} flexShrink={0}>
+      <Box display="flex" flexGrow={1} minHeight="100px">
+        <Box minHeight={0} flexGrow={1}>
           <ChatHistory channelId={channelId} />
         </Box>
         <Box
           sx={{
+            minHeight: 0,
             pl: 1,
             width: mdBreakpoint ? "200px" : "48px",
           }}
@@ -24,10 +25,10 @@ const ChatChannel = ({ channelId }: { channelId: string }) => {
           <ChatUsers channelId={channelId} />
         </Box>
       </Box>
-      <Box pt={1}>
+      <Box m={0} p={0} pt={1}>
         <ChatCommandField channelId={channelId} />
+        <ChatStatusBar channelId={channelId} />
       </Box>
-      <ChatStatusBar channelId={channelId} />
     </Box>
   );
 };
