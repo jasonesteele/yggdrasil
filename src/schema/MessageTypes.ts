@@ -1,4 +1,3 @@
-import { UserInputError } from "apollo-server-micro";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "src/util/context";
 import { object, string } from "yup";
@@ -35,14 +34,14 @@ export const Query = extendType({
     t.list.field("channelMessages", {
       type: "Message",
       args: {
-        channelId: nonNull(stringArg())
+        channelId: nonNull(stringArg()),
       },
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       description: "Retrieves all active messages on a channel",
       resolve: (_root, args, ctx) => {
         return ctx.prisma.message.findMany({
           where: {
-            channelId: args.channelId
+            channelId: args.channelId,
           },
           include: {
             user: true,
@@ -69,7 +68,7 @@ const validatePostMessage = (schema: any, obj: any) => {
     return schema.validateSync(obj);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    throw new UserInputError(error);
+    throw new Error(error);
   }
 };
 

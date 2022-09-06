@@ -1,19 +1,7 @@
-import Cors from "micro-cors";
-import { ApolloServer } from "apollo-server-micro";
-import { PageConfig } from "next";
+import { createServer } from "@graphql-yoga/node";
+import { NextApiRequest, NextApiResponse, PageConfig } from "next";
 import schema from "../../schema";
 import { createContext } from "../../util/context";
-
-const cors = Cors({
-  origin: process.env.BASE_URL,
-  allowCredentials: true,
-});
-
-const server = new ApolloServer({
-  schema,
-  context: createContext,
-});
-const startServer = server.start();
 
 export const config: PageConfig = {
   api: {
@@ -21,12 +9,7 @@ export const config: PageConfig = {
   },
 };
 
-export default cors(async (req, res) => {
-  if (req.method === "OPTIONS") {
-    res.end();
-    return false;
-  }
-
-  await startServer;
-  await server.createHandler({ path: "/api/graphql" })(req, res);
+export default createServer<{ req: NextApiRequest; res: NextApiResponse }>({
+  schema,
+  context: createContext,
 });
