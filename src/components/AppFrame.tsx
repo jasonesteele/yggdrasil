@@ -22,9 +22,14 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
   if (status === "loading") return null;
 
   return (
-    <Box height="100vh" display="flex" flexDirection="column">
+    <Box
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      sx={{ minHeight: 0 }}
+    >
       <AppBar position="absolute">
-        <Toolbar>
+        <Toolbar sx={{ height: "60px" }}>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <YggdrasilIcon width="48" />
@@ -51,8 +56,8 @@ const AppFrame = ({ children, title }: AppFrameProps) => {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Toolbar />
-      <Box flexGrow={1} p={2} pb={4}>
+      <Toolbar sx={{ height: "60px" }} />
+      <Box flexGrow={1} sx={{ minHeight: 0 }} p={0.5} bgcolor="rgba(0,0,0,0.1)">
         {children}
       </Box>
     </Box>

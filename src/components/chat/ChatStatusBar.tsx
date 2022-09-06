@@ -52,7 +52,7 @@ const ChatStatusBar = ({ channelId }: { channelId: string }) => {
   };
 
   return (
-    <Box p={0.5} display="flex">
+    <Box display="flex">
       <Typography
         flexGrow={1}
         data-testid="chat-status-activity"

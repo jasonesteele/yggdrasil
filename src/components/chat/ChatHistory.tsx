@@ -46,11 +46,16 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
   return (
     <Card
       sx={{
-        overflow: "auto",
+        display: "flex",
+        flexDirection: "column",
         height: "100%",
+        minHeight: 0,
       }}
     >
-      <List data-testid="chat-history" sx={{ p: 0 }}>
+      <List
+        data-testid="chat-history"
+        sx={{ p: 0, overflowY: "auto", minHeight: 0 }}
+      >
         {loading && (
           <ListItem data-testid="chat-history-loading" key="progress">
             <Typography variant="caption">Loading...</Typography>
@@ -70,7 +75,7 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
             <ListItem
               data-testid={`chat-message-${idx}`}
               key={`message-${idx}`}
-              sx={{ p: 0.5, pt: 0, pb: 0 }}
+              sx={{ p: 0, m: 0 }}
             >
               <Box
                 display="flex"

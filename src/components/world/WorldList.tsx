@@ -3,11 +3,11 @@ import { Close, Search } from "@mui/icons-material";
 import {
   Alert,
   Box,
+  Card,
   CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
-  Paper,
   TextField,
   Typography,
   useMediaQuery,
@@ -69,8 +69,8 @@ const WorldList = () => {
     ) || [];
 
   return (
-    <Paper sx={{ p: 1, backgroundColor: "rgba(0,0,0,0.05)" }} elevation={5}>
-      <Grid container>
+    <Card sx={{ height: "100%", minHeight: 0 }}>
+      <Grid container sx={{ p: 1 }}>
         <Grid item xs={12} sm={4}>
           <Box
             sx={{ display: "flex", flexGrow: 1 }}
@@ -124,14 +124,7 @@ const WorldList = () => {
             <ApolloErrorAlert title="Error retrieving worlds" error={error} />
           </Grid>
         )}
-        <Grid
-          item
-          container
-          spacing={2}
-          mt={1}
-          xs={12}
-          sx={{ maxHeight: "400px", overflow: "auto" }}
-        >
+        <Grid item container spacing={2} mt={1} xs={12}>
           {filteredWorlds.length > 0 ? (
             filteredWorlds.map((world, idx: number) => (
               <Grid key={`grid-${idx}`} item xs={12} md={6}>
@@ -149,7 +142,7 @@ const WorldList = () => {
           )}
         </Grid>
       </Grid>
-    </Paper>
+    </Card>
   );
 };
 export default WorldList;

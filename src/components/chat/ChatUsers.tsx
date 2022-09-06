@@ -42,8 +42,18 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
   }, [startPolling, stopPolling]);
 
   return (
-    <Card sx={{ overflow: "auto", height: "100%" }}>
-      <List data-testid="user-list" sx={{ p: 0 }}>
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        minHeight: 0,
+      }}
+    >
+      <List
+        data-testid="user-list"
+        sx={{ overflowY: "auto", minHeight: 0, p: 0 }}
+      >
         {loading && (
           <ListItem data-testid="user-list-loading" key="progress">
             <Typography variant="caption">Loading...</Typography>

@@ -1,8 +1,21 @@
 import { gql, useQuery } from "@apollo/client";
-import { Alert, Box, LinearProgress, Paper, Tab, Tabs } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Card,
+  LinearProgress,
+  Tab,
+  Tabs,
+  useMediaQuery,
+} from "@mui/material";
 import { SyntheticEvent, useState } from "react";
+import theme from "src/theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
-import ChatChannel from "./ChatChannel";
+import { a11yProps, TabPanel } from "../TabPanel";
+import ChatCommandField from "./ChatCommandField";
+import ChatHistory from "./ChatHistory";
+import ChatStatusBar from "./ChatStatusBar";
+import ChatUsers from "./ChatUsers";
 
 export const GET_GLOBAL_CHANNEL = gql`
   query GetGlobalChannel {
@@ -13,35 +26,8 @@ export const GET_GLOBAL_CHANNEL = gql`
   }
 `;
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      style={{ height: "100%" }}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 1, height: "100%" }}>{children}</Box>}
-    </div>
-  );
-};
-
-const a11yProps = (index: number) => ({
-  id: `simple-tab-${index}`,
-  "aria-controls": `simple-tabpanel-${index}`,
-});
-
 const ChatPanel = () => {
+  const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
   const [value, setValue] = useState(0);
   const { loading, data, error } = useQuery(GET_GLOBAL_CHANNEL);
 
@@ -49,15 +35,10 @@ const ChatPanel = () => {
     setValue(newValue);
   };
 
+  console.log(data);
+
   return (
-    <Paper
-      sx={{
-        p: 1,
-        backgroundColor: "rgba(0,0,0,0.05)",
-        height: "100%",
-      }}
-      elevation={5}
-    >
+    <>
       {loading && (
         <>
           <Alert severity="info">Loading global chat</Alert>
@@ -70,26 +51,54 @@ const ChatPanel = () => {
       {!loading && !error && !data?.globalChannel && (
         <Alert severity="warning">No global channel found</Alert>
       )}
+
       {data?.globalChannel && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          flexGrow={1}
-          sx={{ height: "100%" }}
-        >
-          <Tabs value={value} onChange={handleChange} aria-label="chat channel">
-            {data?.globalChannel && (
-              <Tab label={data?.globalChannel?.name} {...a11yProps(0)}></Tab>
-            )}
-          </Tabs>
-          {data?.globalChannel && (
-            <TabPanel value={value} index={0}>
-              <ChatChannel channelId={data.globalChannel.id} />
-            </TabPanel>
-          )}
-        </Box>
+        <Card sx={{ height: "100%", minHeight: 0 }}>
+          <Box
+            p={0.5}
+            height="100%"
+            minHeight="0"
+            display="flex"
+            flexDirection="column"
+          >
+            <Box flexGrow={0}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="chat-channel"
+              >
+                <Tab label="Global" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <Box minHeight={0} flexGrow={1}>
+              <TabPanel value={1} index={1}>
+                <Box display="flex" flexDirection="column" height="100%">
+                  <Box display="flex" flexGrow={1} minHeight="100px">
+                    <Box minHeight={0} flexGrow={1}>
+                      <ChatHistory channelId={data?.globalChannel.id} />
+                    </Box>
+                    <Box
+                      sx={{
+                        minHeight: 0,
+                        pl: 1,
+                        width: mdBreakpoint ? "200px" : "48px",
+                      }}
+                      justifyContent="flex-end"
+                    >
+                      <ChatUsers channelId={data?.globalChannel.id} />
+                    </Box>
+                  </Box>
+                  <Box m={0} p={0} pt={1}>
+                    <ChatCommandField channelId={data?.globalChannel.id} />
+                    <ChatStatusBar channelId={data?.globalChannel.id} />
+                  </Box>
+                </Box>
+              </TabPanel>
+            </Box>
+          </Box>
+        </Card>
       )}
-    </Paper>
+    </>
   );
 };
 export default ChatPanel;

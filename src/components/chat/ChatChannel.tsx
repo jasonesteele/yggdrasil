@@ -18,7 +18,6 @@ const ChatChannel = ({ channelId }: { channelId: string }) => {
           sx={{
             pl: 1,
             width: mdBreakpoint ? "200px" : "48px",
-            height: "100%",
           }}
           justifyContent="flex-end"
         >
