@@ -69,7 +69,7 @@ const WorldList = () => {
     ) || [];
 
   return (
-    <Card sx={{ height: "100%", minHeight: 0 }}>
+    <Card sx={{ height: "100%", minHeight: 0, overflow: "auto" }}>
       <Grid container sx={{ p: 1 }}>
         <Grid item xs={12} sm={4}>
           <Box
