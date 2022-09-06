@@ -8,7 +8,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 import theme from "src/theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
@@ -29,6 +29,7 @@ export const GET_CHANNEL_MESSAGES = gql`
 
 const ChatHistory = ({ channelId }: { channelId: string }) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
+  const lastMessageRef = useRef<HTMLDivElement>(null);
   const { data, loading, error, startPolling, stopPolling } = useQuery(
     GET_CHANNEL_MESSAGES,
     {
@@ -42,6 +43,12 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
       stopPolling();
     };
   }, [startPolling, stopPolling]);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [data]);
 
   return (
     <Card
@@ -112,6 +119,7 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
             </ListItem>
           )
         )}
+        <div ref={lastMessageRef} />
       </List>
     </Card>
   );

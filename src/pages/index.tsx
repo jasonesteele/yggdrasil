@@ -24,7 +24,7 @@ const Home: NextPage<HomeProps> = ({ appTitle }) => {
       </Head>
       <AppFrame title="Testing" user={session?.user as User}>
         <Stack display="flex" flexDirection="column" spacing={1} height="100%">
-          <Box flex="0 1 auto" minHeight="0" p={0.5}>
+          <Box flex="0 0 auto" height="50%" minHeight="0" p={0.5}>
             <WorldList />
           </Box>
           <Box flex="1 1 auto" minHeight="0" p={0.5}>
