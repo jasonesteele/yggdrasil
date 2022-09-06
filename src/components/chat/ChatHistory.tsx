@@ -45,7 +45,7 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
   }, [startPolling, stopPolling]);
 
   useEffect(() => {
-    if (lastMessageRef.current) {
+    if (lastMessageRef.current?.scrollIntoView) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [data]);
