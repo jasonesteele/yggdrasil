@@ -8,9 +8,8 @@ import {
   List,
   ListItem,
   Typography,
-  useMediaQuery,
+  useMediaQuery
 } from "@mui/material";
-import { useEffect } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 import theme from "src/theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
@@ -27,19 +26,9 @@ export const GET_CHANNEL_USERS = gql`
 
 const ChatUsers = ({ channelId }: { channelId: string }) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
-  const { data, loading, error, startPolling, stopPolling } = useQuery(
-    GET_CHANNEL_USERS,
-    {
-      variables: { channelId },
-    }
-  );
-
-  useEffect(() => {
-    startPolling(1000);
-    return () => {
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
+  const { data, loading, error } = useQuery(GET_CHANNEL_USERS, {
+    variables: { channelId },
+  });
 
   return (
     <Card

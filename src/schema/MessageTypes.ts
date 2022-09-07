@@ -1,4 +1,11 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { filter, pipe } from "graphql-yoga";
+import {
+  extendType,
+  nonNull,
+  objectType,
+  stringArg,
+  subscriptionType,
+} from "nexus";
 import { Context } from "src/util/context";
 import { object, string } from "yup";
 import { MAX_MESSAGE_LENGTH } from "../util/constants";
@@ -21,6 +28,7 @@ export const Message = objectType({
       type: "User",
       description: "User who created this message ",
     });
+    t.string("channelId", { description: "Channel ID" });
     t.field("channel", {
       type: "Channel",
       description: "Channel this message was sent in",
@@ -84,14 +92,37 @@ export const Mutation = extendType({
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
-        return ctx.prisma.message.create({
+        const message = await ctx.prisma.message.create({
           data: {
             channel: { connect: { id: args.channelId } },
             text,
             user: { connect: { id: ctx.token.sub } },
           },
+          include: {
+            user: true,
+          },
         });
+        ctx.pubSub.publish("message:channelMessages", message);
+        return message;
       },
+    });
+  },
+});
+
+export const MessageSubscription = subscriptionType({
+  definition(t) {
+    t.field("channelMessages", {
+      type: Message,
+      args: {
+        channelId: nonNull(stringArg()),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      subscribe: (_root, args, ctx) =>
+        pipe(
+          ctx.pubSub.subscribe("message:channelMessages"),
+          filter((message) => message.channelId === args.channelId)
+        ),
+      resolve: (payload) => payload,
     });
   },
 });

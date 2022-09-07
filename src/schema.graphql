@@ -143,6 +143,9 @@ type Message {
   """Channel this message was sent in"""
   channel: Channel
 
+  """Channel ID"""
+  channelId: String
+
   """Timestamp of message creation"""
   createdAt: DateTime
 
@@ -228,6 +231,10 @@ type Query {
 
   """Retrieves a list of worlds from the server"""
   worlds: [World]
+}
+
+type Subscription {
+  channelMessages(channelId: String!): Message
 }
 
 """Application user"""

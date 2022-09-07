@@ -12,7 +12,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NexusGenObjects } from "src/nexus-typegen";
 import theme from "src/theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
@@ -35,17 +35,9 @@ export const GET_WORLDS = gql`
 `;
 
 const WorldList = () => {
-  const { loading, error, data, startPolling, stopPolling } =
-    useQuery(GET_WORLDS);
+  const { loading, error, data } = useQuery(GET_WORLDS);
   const [searchFilter, setSearchFilter] = useState("");
   const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
-
-  useEffect(() => {
-    startPolling(10000);
-    return () => {
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
 
   const handleSelectWorld = (worldId: string) => {
     console.log(`Selected ${worldId}...`);

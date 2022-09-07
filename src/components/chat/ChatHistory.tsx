@@ -6,7 +6,7 @@ import {
   List,
   ListItem,
   Typography,
-  useMediaQuery,
+  useMediaQuery
 } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
@@ -27,10 +27,25 @@ export const GET_CHANNEL_MESSAGES = gql`
   }
 `;
 
+export const SUBSCRIBE_CHANNEL_MESSAGES = gql`
+  subscription SubscribeChannelMessages($channelId: String!) {
+    channelMessages(channelId: $channelId) {
+      id
+      text
+      createdAt
+      user {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+
 const ChatHistory = ({ channelId }: { channelId: string }) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
   const lastMessageRef = useRef<HTMLDivElement>(null);
-  const { data, loading, error, startPolling, stopPolling } = useQuery(
+  const { data, loading, error, subscribeToMore } = useQuery(
     GET_CHANNEL_MESSAGES,
     {
       variables: { channelId },
@@ -38,11 +53,19 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
   );
 
   useEffect(() => {
-    startPolling(1000);
-    return () => {
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
+    subscribeToMore({
+      document: SUBSCRIBE_CHANNEL_MESSAGES,
+      variables: { channelId },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newMessage = subscriptionData.data.channelMessages;
+        return Object.assign({}, prev, {
+          channelMessages: [...prev.channelMessages, newMessage],
+        });
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [channelId]);
 
   useEffect(() => {
     if (lastMessageRef.current?.scrollIntoView) {

@@ -3,7 +3,6 @@ import { WifiTethering, WifiTetheringError } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import converter from "number-to-words";
-import { useEffect } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 
 export const GET_CHANNEL_ACTIVITY = gql`
@@ -18,25 +17,15 @@ export const GET_CHANNEL_ACTIVITY = gql`
 `;
 
 const ChatStatusBar = ({ channelId }: { channelId: string }) => {
-  const { data, loading, error, startPolling, stopPolling } = useQuery(
-    GET_CHANNEL_ACTIVITY,
-    {
-      variables: { channelId },
-    }
-  );
+  const { data, loading, error } = useQuery(GET_CHANNEL_ACTIVITY, {
+    variables: { channelId },
+  });
 
   const activity =
     data?.channelActivity?.filter(
       (user: NexusGenRootTypes["User"]) =>
         moment().diff(moment(user.lastActivity), "seconds") < 5
     ) || [];
-
-  useEffect(() => {
-    startPolling(500);
-    return () => {
-      stopPolling();
-    };
-  }, [startPolling, stopPolling]);
 
   const formatActivityMessage = () => {
     if (activity.length === 0) return " ";

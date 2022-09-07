@@ -95,6 +95,7 @@ export interface NexusGenObjects {
   }
   Message: { // root type
     channel?: NexusGenRootTypes['Channel'] | null; // Channel
+    channelId?: string | null; // String
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id?: string | null; // ID
     sequence?: NexusGenScalars['BigInt'] | null; // BigInt
@@ -106,6 +107,7 @@ export interface NexusGenObjects {
     success?: boolean | null; // Boolean
   }
   Query: {};
+  Subscription: {};
   User: { // root type
     activeChannel?: NexusGenRootTypes['Channel'] | null; // Channel
     channels?: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
@@ -196,6 +198,7 @@ export interface NexusGenFieldTypes {
   }
   Message: { // field return type
     channel: NexusGenRootTypes['Channel'] | null; // Channel
+    channelId: string | null; // String
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: string | null; // ID
     sequence: NexusGenScalars['BigInt'] | null; // BigInt
@@ -226,6 +229,9 @@ export interface NexusGenFieldTypes {
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     world: NexusGenRootTypes['World'] | null; // World
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+  }
+  Subscription: { // field return type
+    channelMessages: NexusGenRootTypes['Message'] | null; // Message
   }
   User: { // field return type
     activeChannel: NexusGenRootTypes['Channel'] | null; // Channel
@@ -307,6 +313,7 @@ export interface NexusGenFieldTypeNames {
   }
   Message: { // field return type name
     channel: 'Channel'
+    channelId: 'String'
     createdAt: 'DateTime'
     id: 'ID'
     sequence: 'BigInt'
@@ -337,6 +344,9 @@ export interface NexusGenFieldTypeNames {
     users: 'User'
     world: 'World'
     worlds: 'World'
+  }
+  Subscription: { // field return type name
+    channelMessages: 'Message'
   }
   User: { // field return type name
     activeChannel: 'Channel'
@@ -415,6 +425,11 @@ export interface NexusGenArgTypes {
     }
     world: { // args
       id: string; // String!
+    }
+  }
+  Subscription: {
+    channelMessages: { // args
+      channelId: string; // String!
     }
   }
 }
