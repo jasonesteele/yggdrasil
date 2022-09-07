@@ -6,7 +6,7 @@ import {
   List,
   ListItem,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { NexusGenRootTypes } from "src/nexus-typegen";
@@ -42,7 +42,13 @@ export const SUBSCRIBE_CHANNEL_MESSAGES = gql`
   }
 `;
 
-const ChatHistory = ({ channelId }: { channelId: string }) => {
+const ChatHistory = ({
+  channelId,
+  onConnect,
+}: {
+  channelId: string;
+  onConnect?: (connected: boolean) => void;
+}) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { data, loading, error, subscribeToMore } = useQuery(
@@ -53,10 +59,19 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
   );
 
   useEffect(() => {
-    subscribeToMore({
+    if (onConnect) onConnect(true);
+    const unsubscribe = subscribeToMore({
       document: SUBSCRIBE_CHANNEL_MESSAGES,
       variables: { channelId },
+      onError: (error) => {
+        if (onConnect) onConnect(false);
+        console.error(
+          `Error occured with channel ${channelId} subscription`,
+          error
+        );
+      },
       updateQuery: (prev, { subscriptionData }) => {
+        console.log("....");
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.channelMessages;
         return Object.assign({}, prev, {
@@ -64,6 +79,10 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
         });
       },
     });
+    return () => {
+      if (onConnect) onConnect(false);
+      unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channelId]);
 

@@ -6,6 +6,7 @@ import {
   stringArg,
   subscriptionType,
 } from "nexus";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 import { Context } from "src/util/context";
 import { object, string } from "yup";
 import { MAX_MESSAGE_LENGTH } from "../util/constants";
@@ -122,7 +123,7 @@ export const MessageSubscription = subscriptionType({
           ctx.pubSub.subscribe("message:channelMessages"),
           filter((message) => message.channelId === args.channelId)
         ),
-      resolve: (payload) => payload,
+      resolve: (payload: Promise<NexusGenRootTypes["Message"]>) => payload,
     });
   },
 });

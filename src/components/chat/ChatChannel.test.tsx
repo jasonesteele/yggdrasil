@@ -19,9 +19,7 @@ describe("components", () => {
       expect(screen.getByTestId("chat-history")).toBeInTheDocument();
       expect(screen.getByTestId("user-list")).toBeInTheDocument();
       expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
-      expect(
-        screen.getByTestId("chat-status-disconnected")
-      ).toBeInTheDocument();
+      expect(screen.getByTestId("chat-status-connected")).toBeInTheDocument();
     });
   });
 });
