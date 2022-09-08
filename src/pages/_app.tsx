@@ -10,6 +10,7 @@ import {
   Operation,
   split,
 } from "@apollo/client";
+import { RetryLink } from "@apollo/client/link/retry";
 import { onError } from "@apollo/client/link/error";
 import { ThemeProvider } from "@mui/material";
 import { getOperationAST, print } from "graphql";
@@ -52,12 +53,14 @@ class SSELink extends ApolloLink {
       eventsource.onerror = function (error) {
         sink.error(error);
       };
-      return () => eventsource.close();
+      return () => {
+        eventsource.close();
+      };
     });
   }
 }
 
-const uri = "http://localhost:3000/api/graphql";
+const uri = `${process.env.BASE_URL}/api/graphql`;
 const sseLink = new SSELink({ uri, withCredentials: true });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -77,6 +80,20 @@ const httpLink = createHttpLink({
   credentials: "same-origin",
 });
 
+const retryLink = new RetryLink({
+  delay: {
+    initial: 300,
+    max: Infinity,
+    jitter: true,
+  },
+  attempts: {
+    max: Infinity,
+    retryIf: (error, operation) => {
+      return !!error && operation.operationName === "SubscribeChannelMessages";
+    },
+  },
+});
+
 const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
@@ -93,6 +110,7 @@ const client = new ApolloClient({
   }),
   link: from([
     errorLink,
+    retryLink,
     split(
       ({ query, operationName }) => {
         const definition = getOperationAST(query, operationName);
