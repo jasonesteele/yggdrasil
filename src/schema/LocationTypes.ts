@@ -1,5 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { Context } from "src/util/context";
+import { objectType } from "nexus";
 import { Channel } from "./ChannelTypes";
 import { World } from "./WorldTypes";
 
@@ -56,44 +55,6 @@ export const Location = objectType({
     t.field("exits", {
       type: LocationConnection,
       description: "Exits from this location to other locations",
-    });
-  },
-});
-
-export const Query = extendType({
-  type: "Query",
-  definition(t) {
-    t.field("location", {
-      type: Location,
-      description: "Retrieves a location by ID",
-      args: {
-        id: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.location.findUnique({
-          where: {
-            id: args.id,
-          },
-        });
-      },
-    });
-
-    t.list.field("locations", {
-      type: Location,
-      description: "Retrieves a list of locations in a world",
-      args: {
-        worldId: nonNull(stringArg()),
-      },
-
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.location.findMany({
-          where: {
-            worldId: args.worldId,
-          },
-        });
-      },
     });
   },
 });

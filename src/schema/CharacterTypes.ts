@@ -1,5 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { Context } from "src/util/context";
+import { objectType } from "nexus";
 import { Location } from "./LocationTypes";
 import { User } from "./UserTypes";
 import { World } from "./WorldTypes";
@@ -29,76 +28,6 @@ export const Character = objectType({
     t.field("location", {
       type: Location,
       description: "Current location of the character",
-    });
-  },
-});
-
-export const Query = extendType({
-  type: "Query",
-  definition(t) {
-    t.field("character", {
-      type: Character,
-      description: "Retrieves a character by ID",
-      args: {
-        id: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.character.findUnique({
-          where: {
-            id: args.id,
-          },
-          include: {
-            world: true,
-            user: true,
-            location: true,
-          },
-        });
-      },
-    });
-
-    t.list.field("charactersInWorld", {
-      type: Character,
-      description: "Retrieves a list of characters in a world",
-      args: {
-        worldId: nonNull(stringArg()),
-      },
-
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.character.findMany({
-          where: {
-            worldId: args.worldId,
-          },
-          include: {
-            world: true,
-            user: true,
-            location: true,
-          },
-        });
-      },
-    });
-
-    t.list.field("charactersInLocation", {
-      type: Character,
-      description: "Retrieves a list of characters in a location",
-      args: {
-        locationId: stringArg(),
-      },
-
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.character.findMany({
-          where: {
-            locationId: args.locationId,
-          },
-          include: {
-            world: true,
-            user: true,
-            location: true,
-          },
-        });
-      },
     });
   },
 });

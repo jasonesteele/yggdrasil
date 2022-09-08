@@ -4,7 +4,7 @@ import {
   nonNull,
   objectType,
   stringArg,
-  subscriptionType,
+  subscriptionField,
 } from "nexus";
 import { NexusGenRootTypes } from "src/nexus-typegen";
 import { Context } from "src/util/context";
@@ -87,8 +87,10 @@ export const Mutation = extendType({
     t.field("postMessage", {
       type: Message,
       args: {
-        channelId: nonNull(stringArg()),
-        text: nonNull(stringArg()),
+        channelId: nonNull(
+          stringArg({ description: "Channel ID to post message on" })
+        ),
+        text: nonNull(stringArg({ description: "Message text" })),
       },
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       async resolve(_root, args, ctx) {
@@ -110,20 +112,16 @@ export const Mutation = extendType({
   },
 });
 
-export const MessageSubscription = subscriptionType({
-  definition(t) {
-    t.field("channelMessages", {
-      type: Message,
-      args: {
-        channelId: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      subscribe: (_root, args, ctx) =>
-        pipe(
-          ctx.pubSub.subscribe("message:channelMessages"),
-          filter((message) => message.channelId === args.channelId)
-        ),
-      resolve: (payload: Promise<NexusGenRootTypes["Message"]>) => payload,
-    });
+export const UserActivitySubscription = subscriptionField("channelMessages", {
+  type: Message,
+  args: {
+    channelId: nonNull(stringArg()),
   },
+  authorize: (_root, _args, ctx: Context) => !!ctx.token,
+  subscribe: (_root, args, ctx) =>
+    pipe(
+      ctx.pubSub.subscribe("message:channelMessages"),
+      filter((message) => message.channelId === args.channelId)
+    ),
+  resolve: (payload: Promise<NexusGenRootTypes["Message"]>) => payload,
 });

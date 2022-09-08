@@ -1,5 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { Context } from "src/util/context";
+import { objectType } from "nexus";
 import { User } from "./UserTypes";
 import { World } from "./WorldTypes";
 
@@ -29,54 +28,6 @@ export const Article = objectType({
     t.field("updatedBy", {
       description: "User that last updated this article",
       type: User,
-    });
-  },
-});
-
-export const Query = extendType({
-  type: "Query",
-  definition(t) {
-    t.field("article", {
-      type: Article,
-      description: "Retrieves an article by ID",
-      args: {
-        id: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.article.findUnique({
-          where: {
-            id: args.id,
-          },
-          include: {
-            world: true,
-            createdByUser: true,
-            updatedByUser: true,
-          },
-        });
-      },
-    });
-
-    t.list.field("articles", {
-      type: Article,
-      description: "Retrieves a list of articles from the server",
-      args: {
-        worldId: stringArg(),
-      },
-
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.article.findMany({
-          where: {
-            worldId: args.worldId,
-          },
-          include: {
-            world: true,
-            createdByUser: true,
-            updatedByUser: true,
-          },
-        });
-      },
     });
   },
 });

@@ -38,8 +38,6 @@ export const Channel = objectType({
   },
 });
 
-// TODO: User activity
-
 export const Query = extendType({
   type: "Query",
   definition(t) {
@@ -52,24 +50,6 @@ export const Query = extendType({
           where: {
             global: true,
           },
-          include: {
-            users: true,
-            messages: {
-              include: {
-                user: true,
-              },
-            },
-          },
-        });
-      },
-    });
-
-    t.list.field("channels", {
-      type: Channel,
-      description: "Retrieves all message channels on the server",
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, _args, ctx) => {
-        return ctx.prisma.channel.findMany({
           include: {
             users: true,
             messages: {

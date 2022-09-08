@@ -54,9 +54,6 @@ model User {
   characters      Character[]
   channels        Channel[]
   messages        Message[]
-  activeChannelId String?     @map(name: "active_channel_id")
-  activeChannel   Channel?    @relation("activeChannelId", fields: [activeChannelId], references: [id])
-  lastActivity    DateTime?   @map(name: "last_activity")
   ownedWorlds     World[]     @relation("worldOwner")
   World           World[]
 }
@@ -141,16 +138,15 @@ model LocationConnection {
 }
 
 model Channel {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  global      Boolean   @default(false)
-  createdAt   DateTime  @default(now()) @map(name: "created_at")
-  updatedAt   DateTime  @default(now()) @map(name: "updated_at")
-  users       User[]
-  messages    Message[]
-  world       World?    @relation("worldChannelId")
-  location    Location? @relation("locationChannelId")
-  activeUsers User[]    @relation("activeChannelId")
+  id        String    @id @default(cuid())
+  name      String    @unique
+  global    Boolean   @default(false)
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  users     User[]
+  messages  Message[]
+  world     World?    @relation("worldChannelId")
+  location  Location? @relation("locationChannelId")
 }
 
 model Message {

@@ -1,6 +1,11 @@
-import moment from "moment";
-import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
-import { DEFAULT_MAX_AGE_SECONDS } from "../util/constants";
+import {
+  extendType,
+  nonNull,
+  objectType,
+  stringArg,
+  subscriptionField,
+} from "nexus";
+import { NexusGenRootTypes } from "src/nexus-typegen";
 import { Context } from "src/util/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
@@ -38,17 +43,25 @@ export const User = objectType({
       description: "Articles this user has created",
       type: Article,
     });
-    t.field("lastActivity", {
-      description: "Timestamp of last user activity",
-      type: "DateTime",
-    });
-    t.field("activeChannel", {
-      description: "Message channel user is currently active in",
-      type: Channel,
-    });
     t.field("online", {
       description: "True if user is currently online",
       type: "Boolean",
+    });
+  },
+});
+
+export const UserActivity = objectType({
+  name: "UserActivity",
+  description: "A notification of user activity in a channel",
+  definition(t) {
+    t.field("user", { type: User, description: "User who performed activity" });
+    t.field("channel", {
+      type: Channel,
+      description: "Channel activity was performed in",
+    });
+    t.field("timestamp", {
+      type: "DateTime",
+      description: "Time stamp of activity",
     });
   },
 });
@@ -81,7 +94,6 @@ export const Query = extendType({
             characters: true,
             channels: true,
             messages: true,
-            activeChannel: true,
           },
         });
       },
@@ -98,7 +110,6 @@ export const Query = extendType({
             characters: true,
             channels: true,
             messages: true,
-            activeChannel: true,
           },
         });
       },
@@ -108,13 +119,13 @@ export const Query = extendType({
       type: User,
       description: "Retrieves users on a channel",
       args: {
-        channelId: nonNull(stringArg())
+        channelId: nonNull(stringArg()),
       },
       authorize: (_root, _args, ctx: Context) => !!ctx.token,
       resolve: async (_root, args, ctx) => {
-       const channel = await ctx.prisma.channel.findUnique({
+        const channel = await ctx.prisma.channel.findUnique({
           where: {
-            id: args.channelId
+            id: args.channelId,
           },
           include: {
             users: true,
@@ -122,33 +133,6 @@ export const Query = extendType({
         });
 
         return channel?.users || [];
-      },
-    });
-
-    t.list.field("channelActivity", {
-      type: User,
-      description: "Retrieves active users on a channel",
-      args: {
-        channelId: nonNull(stringArg({ description: "Channel identifier" })),
-        maxAgeSeconds: intArg({
-          description: "Maximum period for recent activity (in seconds)",
-        }),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.user.findMany({
-          where: {
-            activeChannelId: args.channelId,
-            lastActivity: {
-              gte: moment()
-                .subtract(
-                  args.maxAgeSeconds || DEFAULT_MAX_AGE_SECONDS,
-                  "seconds"
-                )
-                .toDate(),
-            },
-          },
-        });
       },
     });
   },
@@ -167,19 +151,38 @@ export const Mutation = extendType({
         }),
       },
       async resolve(_root, args, ctx) {
-        await ctx.prisma.user.update({
+        const user = await ctx.prisma.user.findUnique({
           where: {
             id: ctx.token.sub,
           },
-          data: {
-            activeChannel: args.channelId
-              ? { connect: { id: args.channelId } }
-              : { disconnect: true },
-            lastActivity: args.channelId ? moment().toDate() : null,
-          },
         });
+        const channel = args.channelId
+          ? await ctx.prisma.channel.findUnique({
+              where: {
+                id: args.channelId,
+              },
+              include: {
+                users: true,
+              },
+            })
+          : null;
+
+        ctx.pubSub.publish("message:userActivity", {
+          user,
+          channel,
+          timestamp: new Date(),
+        });
+
         return { success: true };
       },
     });
   },
+});
+
+export const UserActivitySubscription = subscriptionField("userActivity", {
+  type: UserActivity,
+  authorize: (_root, _args, ctx: Context) => !!ctx.token,
+  subscribe: (_root, _args, ctx) =>
+    ctx.pubSub.subscribe("message:userActivity"),
+  resolve: (payload: Promise<NexusGenRootTypes["UserActivity"]>) => payload,
 });

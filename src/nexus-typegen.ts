@@ -109,18 +109,21 @@ export interface NexusGenObjects {
   Query: {};
   Subscription: {};
   User: { // root type
-    activeChannel?: NexusGenRootTypes['Channel'] | null; // Channel
     channels?: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     characters?: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     createdArticles?: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     id?: string | null; // ID
     image?: string | null; // String
-    lastActivity?: NexusGenScalars['DateTime'] | null; // DateTime
     name?: string | null; // String
     online?: boolean | null; // Boolean
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     worlds?: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+  }
+  UserActivity: { // root type
+    channel?: NexusGenRootTypes['Channel'] | null; // Channel
+    timestamp?: NexusGenScalars['DateTime'] | null; // DateTime
+    user?: NexusGenRootTypes['User'] | null; // User
   }
   World: { // root type
     articles?: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
@@ -213,18 +216,9 @@ export interface NexusGenFieldTypes {
     success: boolean | null; // Boolean
   }
   Query: { // field return type
-    article: NexusGenRootTypes['Article'] | null; // Article
-    articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
-    channelActivity: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     channelMessages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
     channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
-    channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
-    character: NexusGenRootTypes['Character'] | null; // Character
-    charactersInLocation: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
-    charactersInWorld: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     globalChannel: NexusGenRootTypes['Channel'] | null; // Channel
-    location: NexusGenRootTypes['Location'] | null; // Location
-    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     world: NexusGenRootTypes['World'] | null; // World
@@ -232,20 +226,24 @@ export interface NexusGenFieldTypes {
   }
   Subscription: { // field return type
     channelMessages: NexusGenRootTypes['Message'] | null; // Message
+    userActivity: NexusGenRootTypes['UserActivity'] | null; // UserActivity
   }
   User: { // field return type
-    activeChannel: NexusGenRootTypes['Channel'] | null; // Channel
     channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
     characters: Array<NexusGenRootTypes['Character'] | null> | null; // [Character]
     createdArticles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     id: string | null; // ID
     image: string | null; // String
-    lastActivity: NexusGenScalars['DateTime'] | null; // DateTime
     name: string | null; // String
     online: boolean | null; // Boolean
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+  }
+  UserActivity: { // field return type
+    channel: NexusGenRootTypes['Channel'] | null; // Channel
+    timestamp: NexusGenScalars['DateTime'] | null; // DateTime
+    user: NexusGenRootTypes['User'] | null; // User
   }
   World: { // field return type
     articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
@@ -328,18 +326,9 @@ export interface NexusGenFieldTypeNames {
     success: 'Boolean'
   }
   Query: { // field return type name
-    article: 'Article'
-    articles: 'Article'
-    channelActivity: 'User'
     channelMessages: 'Message'
     channelUsers: 'User'
-    channels: 'Channel'
-    character: 'Character'
-    charactersInLocation: 'Character'
-    charactersInWorld: 'Character'
     globalChannel: 'Channel'
-    location: 'Location'
-    locations: 'Location'
     user: 'User'
     users: 'User'
     world: 'World'
@@ -347,20 +336,24 @@ export interface NexusGenFieldTypeNames {
   }
   Subscription: { // field return type name
     channelMessages: 'Message'
+    userActivity: 'UserActivity'
   }
   User: { // field return type name
-    activeChannel: 'Channel'
     channels: 'Channel'
     characters: 'Character'
     createdArticles: 'Article'
     createdAt: 'DateTime'
     id: 'ID'
     image: 'String'
-    lastActivity: 'DateTime'
     name: 'String'
     online: 'Boolean'
     updatedAt: 'DateTime'
     worlds: 'World'
+  }
+  UserActivity: { // field return type name
+    channel: 'Channel'
+    timestamp: 'DateTime'
+    user: 'User'
   }
   World: { // field return type name
     articles: 'Article'
@@ -389,36 +382,11 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    article: { // args
-      id: string; // String!
-    }
-    articles: { // args
-      worldId?: string | null; // String
-    }
-    channelActivity: { // args
-      channelId: string; // String!
-      maxAgeSeconds?: number | null; // Int
-    }
     channelMessages: { // args
       channelId: string; // String!
     }
     channelUsers: { // args
       channelId: string; // String!
-    }
-    character: { // args
-      id: string; // String!
-    }
-    charactersInLocation: { // args
-      locationId?: string | null; // String
-    }
-    charactersInWorld: { // args
-      worldId: string; // String!
-    }
-    location: { // args
-      id: string; // String!
-    }
-    locations: { // args
-      worldId: string; // String!
     }
     user: { // args
       id: string; // String!

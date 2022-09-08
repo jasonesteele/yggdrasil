@@ -7,6 +7,7 @@ import { prisma } from "./prisma";
 
 const pubSub = createPubSub<{
   "message:channelMessages": [message: NexusGenRootTypes["Message"]];
+  "message:userActivity": [message: NexusGenRootTypes["UserActivity"]];
 }>();
 
 export interface Context {
