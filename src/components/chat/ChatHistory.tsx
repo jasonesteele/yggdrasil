@@ -71,7 +71,6 @@ const ChatHistory = ({
         );
       },
       updateQuery: (prev, { subscriptionData }) => {
-        console.log("....");
         if (!subscriptionData.data) return prev;
         const newMessage = subscriptionData.data.channelMessages;
         return Object.assign({}, prev, {

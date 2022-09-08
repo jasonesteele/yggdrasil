@@ -60,8 +60,14 @@ class SSELink extends ApolloLink {
   }
 }
 
-const uri = `${process.env.BASE_URL}/api/graphql`;
-const sseLink = new SSELink({ uri, withCredentials: true });
+const sseLink = new SSELink({
+  uri: `${
+    typeof window !== "undefined"
+      ? window.location.origin
+      : process.env.BASE_URL
+  }/api/graphql`,
+  withCredentials: true,
+});
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
@@ -76,7 +82,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = createHttpLink({
-  uri,
+  uri: "/api/graphql",
   credentials: "same-origin",
 });
 
