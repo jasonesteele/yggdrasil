@@ -1,19 +1,19 @@
-import { createPubSub } from "@graphql-yoga/node";
 import { PrismaClient } from "@prisma/client";
+import { Server } from "http";
 import { NextApiRequest } from "next";
 import { getToken, JWT } from "next-auth/jwt";
-import { NexusGenRootTypes } from "src/nexus-typegen";
 import { prisma } from "./prisma";
+import { io } from "./websocket";
 
-const pubSub = createPubSub<{
-  "message:channelMessages": [message: NexusGenRootTypes["Message"]];
-  "message:userActivity": [message: NexusGenRootTypes["UserActivity"]];
-}>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 export interface Context {
   prisma: PrismaClient;
   token: JWT;
-  pubSub: typeof pubSub;
+  io: Server;
 }
 
 export const createContext = async ({ req }: { req: NextApiRequest }) => {
@@ -22,6 +22,6 @@ export const createContext = async ({ req }: { req: NextApiRequest }) => {
   return {
     prisma,
     token,
-    pubSub,
+    io,
   };
 };

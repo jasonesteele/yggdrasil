@@ -1,12 +1,4 @@
-import { filter, pipe } from "graphql-yoga";
-import {
-  extendType,
-  nonNull,
-  objectType,
-  stringArg,
-  subscriptionField,
-} from "nexus";
-import { NexusGenRootTypes } from "src/nexus-typegen";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "src/util/context";
 import { object, string } from "yup";
 import { MAX_MESSAGE_LENGTH } from "../util/constants";
@@ -105,23 +97,16 @@ export const Mutation = extendType({
             user: true,
           },
         });
-        ctx.pubSub.publish("message:channelMessages", message);
+
+        const { user, userId, ...rest } = message;
+
+        ctx.io.emit("message:newMessage", {
+          ...rest,
+          user: { id: userId, name: user.name, image: user.image },
+        });
+
         return message;
       },
     });
   },
-});
-
-export const UserActivitySubscription = subscriptionField("channelMessages", {
-  type: Message,
-  args: {
-    channelId: nonNull(stringArg()),
-  },
-  authorize: (_root, _args, ctx: Context) => !!ctx.token,
-  subscribe: (_root, args, ctx) =>
-    pipe(
-      ctx.pubSub.subscribe("message:channelMessages"),
-      filter((message) => message.channelId === args.channelId)
-    ),
-  resolve: (payload: Promise<NexusGenRootTypes["Message"]>) => payload,
 });

@@ -1,11 +1,4 @@
-import {
-  extendType,
-  nonNull,
-  objectType,
-  stringArg,
-  subscriptionField,
-} from "nexus";
-import { NexusGenRootTypes } from "src/nexus-typegen";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "src/util/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
@@ -167,9 +160,11 @@ export const Mutation = extendType({
             })
           : null;
 
-        ctx.pubSub.publish("message:userActivity", {
-          user,
-          channel,
+        ctx.io.emit("message:userActivity", {
+          user: user
+            ? { id: user.id, name: user.name, image: user.image }
+            : null,
+          channel: channel ? { id: channel.id, name: channel.name } : null,
           timestamp: new Date(),
         });
 
@@ -177,12 +172,4 @@ export const Mutation = extendType({
       },
     });
   },
-});
-
-export const UserActivitySubscription = subscriptionField("userActivity", {
-  type: UserActivity,
-  authorize: (_root, _args, ctx: Context) => !!ctx.token,
-  subscribe: (_root, _args, ctx) =>
-    ctx.pubSub.subscribe("message:userActivity"),
-  resolve: (payload: Promise<NexusGenRootTypes["UserActivity"]>) => payload,
 });
