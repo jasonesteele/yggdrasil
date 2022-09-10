@@ -1,0 +1,11 @@
+.nyc_output
+build
+coverage
+tmp
+
+package-lock.json
+.next
+dist
+
+src/nexus-typegen.ts
+src/schema.graphql

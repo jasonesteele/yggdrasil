@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+
+    "sourceMap": true,
+
+    "allowJs": true,
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    "incremental": true,
+
+    "target": "eS6",
+
+    "outDir": "dist"
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", "cypress", "client"]
+}
