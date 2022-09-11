@@ -1,7 +1,12 @@
+import dotenv from "dotenv";
+import logger from "../util/logger";
+
 const setupEnv = () => {
-  dotenv.config({ path: "./.env" });
-  dotenv.config({ path: `./.env.${process.env.NODE_ENV || "development"}` });
-  dotenv.config({ path: "./.env.local" });
+  dotenv.config({ path: ".env" });
+  dotenv.config({ path: `.env.${process.env.NODE_ENV || "development"}` });
+  dotenv.config({ path: ".env.local" });
+
+  JSON.stringify(process.env, undefined, 2);
 
   if (!process.env.API_PORT) {
     logger.error("Error: API_PORT not defined");

@@ -1,4 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
@@ -57,7 +58,7 @@ export const Query = extendType({
       args: {
         id: nonNull(stringArg()),
       },
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.world.findUnique({
           where: {
@@ -78,7 +79,7 @@ export const Query = extendType({
     t.list.field("worlds", {
       type: World,
       description: "Retrieves a list of worlds from the server",
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: (_root, _args, ctx) => {
         return ctx.prisma.world.findMany({
           include: {

@@ -1,5 +1,6 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { object, string } from "yup";
+import { Context } from "../src/context";
 
 const MAX_MESSAGE_LENGTH = 1500;
 
@@ -37,7 +38,7 @@ export const Query = extendType({
       args: {
         channelId: nonNull(stringArg()),
       },
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       description: "Retrieves all active messages on a channel",
       resolve: (_root, args, ctx) => {
         return ctx.prisma.message.findMany({
@@ -84,14 +85,14 @@ export const Mutation = extendType({
         ),
         text: nonNull(stringArg({ description: "Message text" })),
       },
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
         const message = await ctx.prisma.message.create({
           data: {
             channel: { connect: { id: args.channelId } },
             text,
-            user: { connect: { id: ctx.token.sub } },
+            user: { connect: { id: ctx.user.id || "" } }, // TODO: fix context type
           },
           include: {
             user: true,

@@ -1,5 +1,5 @@
 import { extendType, objectType } from "nexus";
-import logger from "../src/logger";
+import { Context } from "../src/context";
 import { Location } from "./LocationTypes";
 import { Message } from "./MessageTypes";
 import { User } from "./UserTypes";
@@ -44,10 +44,9 @@ export const Query = extendType({
     t.field("globalChannel", {
       type: Channel,
       description: "Retrieves the global chat channel",
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
-      resolve: async (_root, _args, ctx) => {
-        logger.warn({ message: "got here!", env: process.env });
-        const channel = await ctx.prisma.channel.findFirst({
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: async (_root, _args, ctx) =>
+        ctx.prisma.channel.findFirst({
           where: {
             global: true,
           },
@@ -59,10 +58,7 @@ export const Query = extendType({
               },
             },
           },
-        });
-        logger.warn({ message: "got here!", channel });
-        return channel;
-      },
+        }),
     });
   },
 });

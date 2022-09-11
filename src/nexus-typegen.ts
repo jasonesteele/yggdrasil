@@ -4,7 +4,7 @@
  */
 
 
-import type { Context } from "./context"
+import type { Context } from "./context/index"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
 import type { core } from "nexus"
 declare global {

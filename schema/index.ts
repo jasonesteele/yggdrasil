@@ -31,7 +31,7 @@ const schema = makeSchema({
     schema: path.join(process.cwd(), "src/schema.graphql"),
   },
   contextType: {
-    module: path.join(process.cwd(), "src/context.ts"),
+    module: path.join(process.cwd(), "src/context/index.ts"),
     export: "Context",
   },
 });

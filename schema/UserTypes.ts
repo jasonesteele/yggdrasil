@@ -1,4 +1,5 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
@@ -75,7 +76,7 @@ export const Query = extendType({
       args: {
         id: nonNull(stringArg()),
       },
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: (_root, args, ctx) => {
         return ctx.prisma.user.findUnique({
           where: {
@@ -94,8 +95,9 @@ export const Query = extendType({
     t.list.field("users", {
       type: User,
       description: "Retrieves users on the server",
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: (_root, _args, ctx) => {
+        console.log(ctx);
         return ctx.prisma.user.findMany({
           include: {
             createdArticles: true,
@@ -113,7 +115,7 @@ export const Query = extendType({
       args: {
         channelId: nonNull(stringArg()),
       },
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: async (_root, args, ctx) => {
         const channel = await ctx.prisma.channel.findUnique({
           where: {
@@ -135,7 +137,7 @@ export const Mutation = extendType({
   definition(t) {
     t.field("notifyActivity", {
       type: OperationResponse,
-      // authorize: (_root, _args, ctx: Context) => !!ctx.token,
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
       description: "Notifies the server of user activity in a chat window",
       args: {
         channelId: stringArg({
@@ -145,7 +147,7 @@ export const Mutation = extendType({
       async resolve(_root, args, ctx) {
         const user = await ctx.prisma.user.findUnique({
           where: {
-            id: ctx.token.sub,
+            id: ctx.user.id || "", // TODO: fix context user type
           },
         });
         const channel = args.channelId

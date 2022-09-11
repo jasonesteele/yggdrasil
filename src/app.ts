@@ -1,44 +1,33 @@
-import {
-  ApolloServerPluginDrainHttpServer,
-  ApolloServerPluginLandingPageLocalDefault,
-} from "apollo-server-core";
-import { ApolloServer } from "apollo-server-express";
+import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-import http from "http";
-import schema from "../schema";
-import { createContext } from "./context";
-import setupEnv from "./env";
-import logger, { accessLogger } from "./logger";
+import setupEnv from "./setup/env";
+import setupGraphQL from "./setup/graphql";
+import setupPassport from "./setup/passport";
+import { sessionMiddleware } from "./setup/session";
+import logger, { accessLogger } from "./util/logger";
 
 setupEnv();
 
-const app = express();
-const httpServer = http.createServer(app);
+const main = async () => {
+  const app = express();
 
-app.use(accessLogger);
-app.use(cors({ origin: process.env.BASE_URL }));
+  app.use(accessLogger);
+  app.use(cors({ origin: process.env.BASE_URL }));
+  app.use(bodyParser.json());
+  app.use(sessionMiddleware);
 
-// Same ApolloServer initialization as before, plus the drain plugin
-// for our httpServer.
-const server = new ApolloServer({
-  schema,
-  context: createContext,
-  csrfPrevention: true,
-  cache: "bounded",
-  plugins: [
-    ApolloServerPluginDrainHttpServer({ httpServer }),
-    ApolloServerPluginLandingPageLocalDefault({ embed: true }),
-  ],
-});
+  setupPassport(app);
+  await setupGraphQL(app);
 
-server.start().then(() => {
-  server.applyMiddleware({
-    app,
-    path: "/graphql",
+  app.get("/", (req, res) => {
+    logger.info({ message: "request", session: req.session });
+    res.status(200).send("hello world");
   });
 
   app.listen(process.env.API_PORT, () => {
-    logger.info(`Example app listening on port ${process.env.API_PORT}`);
+    logger.info(`GraphQL listening on port ${process.env.API_PORT}`);
   });
-});
+};
+
+main();

@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
-import logger from "./logger";
+import { sessionMiddleware } from "../setup/session";
+import logger from "../util/logger";
 
 const createWebSocket = () => {
   logger.info(
@@ -12,8 +13,18 @@ const createWebSocket = () => {
     },
   });
 
-  io.on("connection", (socket) => {
-    logger.info(`new connection for ${socket.id}`);
+  // TODO: fix the casting here
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request as any, {} as any, next as any);
+  }).on("connection", (socket) => {
+    const user = (socket.request as any)?.session.passport?.user;
+    if (!user) {
+      socket.disconnect();
+    }
+    logger.info({
+      message: `new connection for ${socket.id}`,
+      user,
+    });
     socket.on("disconnect", (reason) => {
       logger.info(`disconnect ${socket.id}: ${reason}`);
     });
