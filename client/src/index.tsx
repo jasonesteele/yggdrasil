@@ -1,5 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import client from "./apollo-client";
@@ -13,13 +14,14 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <ApolloProvider client={client}>
-        <SessionProvider>
+    <ApolloProvider client={client}>
+      <SessionProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <App />
-        </SessionProvider>
-      </ApolloProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </SessionProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );
 

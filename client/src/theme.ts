@@ -12,15 +12,15 @@ import { createTheme } from "@mui/material";
 //   message?: FontOptions;
 // };
 
-declare module "@mui/material/styles" {
-  // interface Theme {
-  //   chat: ChatThemeOptions;
-  // }
-  // // allow configuration using `createTheme`
-  // interface ThemeOptions {
-  //   chat?: ChatThemeOptions;
-  // }
-}
+// declare module "@mui/material/styles" {
+// interface Theme {
+//   chat: ChatThemeOptions;
+// }
+// // allow configuration using `createTheme`
+// interface ThemeOptions {
+//   chat?: ChatThemeOptions;
+// }
+// }
 
 const theme = createTheme({});
 
