@@ -20,8 +20,7 @@ const main = async () => {
   setupPassport(app);
   await setupGraphQL(app);
 
-  app.get("/", (req, res) => {
-    logger.info({ message: "request", session: req.session });
+  app.get("/", (_req, res) => {
     res.status(200).send("hello world");
   });
 

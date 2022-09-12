@@ -23,18 +23,24 @@ const createWebSocket = () => {
   }).on("connection", (socket) => {
     const user = socket.request.session.passport?.user;
     if (!user) {
-      socket.disconnect();
+      logger.info(
+        `unauthenticated connection denied for socket id ${socket.id}`
+      );
+    } else {
+      logger.info({
+        msg: `new connection on socket id ${socket.id}`,
+        user: {
+          id: user.id,
+          name: user.name,
+        },
+      });
+      socket.on("disconnect", (reason) => {
+        logger.info(`disconnect socket id ${socket.id}: ${reason}`);
+      });
+      socket.on("disconnecting", (reason) => {
+        logger.info(`disconnecting socket id ${socket.id}: ${reason}`);
+      });
     }
-    logger.info({
-      message: `new connection for ${socket.id}`,
-      user,
-    });
-    socket.on("disconnect", (reason) => {
-      logger.info(`disconnect ${socket.id}: ${reason}`);
-    });
-    socket.on("disconnecting", (reason) => {
-      logger.info(`disconnecting ${socket.id}: ${reason}`);
-    });
   });
   return io;
 };
