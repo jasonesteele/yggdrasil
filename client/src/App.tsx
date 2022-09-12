@@ -1,13 +1,4 @@
-import {
-  Alert,
-  AlertTitle,
-  AppBar,
-  Box,
-  Button,
-  Grid,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import DiscordIcon from "./components/icons/DiscordIcon";
@@ -15,11 +6,7 @@ import YggdrasilIcon from "./components/icons/YggdrasilIcon";
 import PageNotFound from "./components/PageNotFound";
 import Signin from "./components/Signin";
 import UserProfileButton from "./components/UserProfileButton";
-import {
-  handleLogin,
-  handleLogout,
-  useSessionContext,
-} from "./providers/SessionProvider";
+import { handleLogin, useSessionContext } from "./providers/SessionProvider";
 
 const App = () => {
   const { user } = useSessionContext();
