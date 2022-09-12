@@ -10,7 +10,7 @@ const createWebSocket = () => {
 
   const io = new Server(Number(process.env.WEBSOCKET_PORT), {
     cors: {
-      origin: process.env.BASE_URL,
+      origin: process.env.APP_URL,
     },
   });
 
@@ -26,6 +26,7 @@ const createWebSocket = () => {
       logger.info(
         `unauthenticated connection denied for socket id ${socket.id}`
       );
+      socket.disconnect();
     } else {
       logger.info({
         msg: `new connection on socket id ${socket.id}`,

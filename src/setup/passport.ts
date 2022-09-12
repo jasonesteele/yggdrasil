@@ -54,7 +54,7 @@ const setupAuthentication = (app: Express) => {
       {
         clientID: process.env.DISCORD_ID || "discord-id",
         clientSecret: process.env.DISCORD_SECRET || "discord-secret",
-        callbackURL: `${process.env.BASE_URL}/auth/discord/callback`,
+        callbackURL: `${process.env.APP_URL}/auth/discord/callback`,
         scope: ["identify", "email"],
       },
       async (_accessToken, _refreshToken, profile, cb) => {

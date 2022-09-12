@@ -23,6 +23,6 @@
 
     "outDir": "dist"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "client/src/setupProxy.js"],
   "exclude": ["node_modules", "dist", "cypress", "client"]
 }
