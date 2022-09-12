@@ -1,15 +1,25 @@
+import { ApolloProvider } from "@apollo/client";
+import { ThemeProvider } from "@emotion/react";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import client from "./apollo-client";
 import App from "./App";
+import SessionProvider from "./providers/SessionProvider";
 import reportWebVitals from "./reportWebVitals";
+import theme from "./theme";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <ApolloProvider client={client}>
+        <SessionProvider>
+          <App />
+        </SessionProvider>
+      </ApolloProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 
