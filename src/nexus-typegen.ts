@@ -217,6 +217,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     channelMessages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
     channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    currentUser: NexusGenRootTypes['User'] | null; // User
     globalChannel: NexusGenRootTypes['Channel'] | null; // Channel
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
@@ -323,6 +324,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     channelMessages: 'Message'
     channelUsers: 'User'
+    currentUser: 'User'
     globalChannel: 'Channel'
     user: 'User'
     users: 'User'

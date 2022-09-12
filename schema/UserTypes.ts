@@ -70,6 +70,25 @@ export const OperationResponse = objectType({
 export const Query = extendType({
   type: "Query",
   definition(t) {
+    t.field("currentUser", {
+      type: User,
+      description: "Retrieves the current user",
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: (_root, _args, ctx) => {
+        return ctx.prisma.user.findUnique({
+          where: {
+            id: ctx.user.id,
+          },
+          include: {
+            createdArticles: true,
+            characters: true,
+            channels: true,
+            messages: true,
+          },
+        });
+      },
+    });
+
     t.field("user", {
       type: User,
       description: "Retrieves a user by ID",

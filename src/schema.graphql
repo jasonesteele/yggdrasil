@@ -190,6 +190,9 @@ type Query {
   """Retrieves users on a channel"""
   channelUsers(channelId: String!): [User]
 
+  """Retrieves the current user"""
+  currentUser: User
+
   """Retrieves the global chat channel"""
   globalChannel: Channel
 

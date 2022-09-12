@@ -3,6 +3,7 @@ import moment from "moment";
 import passport from "passport";
 import { Profile, Strategy as DiscordStrategy } from "passport-discord";
 import { prisma } from "../context/prisma";
+import logger from "../util/logger";
 
 const createOrUpdateAccount = async (profile: Profile) => {
   return prisma.account.upsert({
@@ -77,10 +78,30 @@ const setupAuthentication = (app: Express) => {
     passport.authenticate("discord", {
       failureRedirect: "/",
     }),
-    function (_req, res) {
+    function (req, res) {
+      const user = req.session.passport?.user;
+      logger.info({
+        msg: "Logging in",
+        user: { id: user?.id, name: user?.name },
+      });
       res.redirect("/"); // Successful auth
     }
   );
+  app.post("/auth/logout", (req, res, next) => {
+    const user = req.session.passport?.user;
+    if (user) {
+      logger.info({
+        msg: "Logging out",
+        user: { id: user?.id, name: user?.name },
+      });
+      req.logout((err) => {
+        if (err) {
+          return next(err);
+        }
+      });
+    }
+    res.redirect("/");
+  });
 };
 
 const setupPassport = (app: Express) => {
