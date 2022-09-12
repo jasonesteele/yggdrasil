@@ -59,19 +59,15 @@ export const Query = extendType({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postMessageSchema: any = object({
+const postMessageSchema = object({
   text: string().required().min(1).max(MAX_MESSAGE_LENGTH),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const validatePostMessage = (schema: any, obj: any) => {
-  try {
-    return schema.validateSync(obj);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    throw new Error(error);
-  }
+const validatePostMessage = (
+  schema: typeof postMessageSchema,
+  obj: { channelId: string; text: string }
+) => {
+  return schema.validateSync(obj);
 };
 
 export const Mutation = extendType({
@@ -92,7 +88,7 @@ export const Mutation = extendType({
           data: {
             channel: { connect: { id: args.channelId } },
             text,
-            user: { connect: { id: ctx.user.id || "" } }, // TODO: fix context type
+            user: { connect: { id: ctx.user.id } },
           },
           include: {
             user: true,

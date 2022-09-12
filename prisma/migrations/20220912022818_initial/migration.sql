@@ -12,10 +12,10 @@ CREATE TABLE "Session" (
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
-    "descriminator" TEXT NOT NULL,
-    "avatar" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "emailVerified" BOOLEAN NOT NULL,
+    "discriminator" TEXT NOT NULL,
+    "avatar" TEXT,
+    "email" TEXT,
+    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

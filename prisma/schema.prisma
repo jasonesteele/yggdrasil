@@ -18,9 +18,9 @@ model Account {
   id            String   @unique
   username      String
   discriminator String
-  avatar        String
-  email         String
-  emailVerified Boolean
+  avatar        String?
+  email         String?
+  emailVerified Boolean  @default(false)
   User          User?    @relation()
   createdAt     DateTime @default(now()) @map(name: "created_at")
   updatedAt     DateTime @default(now()) @map(name: "updated_at")

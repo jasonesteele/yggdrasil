@@ -1,6 +1,20 @@
-import { PrismaClient } from "@prisma/client";
-import session, { SessionData, Store } from "express-session";
+import { PrismaClient, User } from "@prisma/client";
+import session, { Session, SessionData, Store } from "express-session";
 import moment from "moment";
+
+declare module "http" {
+  interface IncomingMessage {
+    session: Session & Partial<SessionData>;
+  }
+}
+
+declare module "express-session" {
+  interface SessionData {
+    passport: {
+      user: User;
+    };
+  }
+}
 
 interface SessionOptions {
   ttl: number;
@@ -23,7 +37,7 @@ export class SessionStore extends Store {
 
   async get(
     sid: string,
-    callback: (err: any, session?: SessionData) => void
+    callback: (err: unknown, session?: SessionData) => void
   ): Promise<void> {
     try {
       const session = await this.prisma.session.findUnique({ where: { sid } });
@@ -36,7 +50,7 @@ export class SessionStore extends Store {
   async set(
     sid: string,
     sessionData: SessionData,
-    callback?: ((err?: any) => void) | undefined
+    callback?: ((err?: unknown) => void) | undefined
   ): Promise<void> {
     try {
       const session = await this.prisma.session.findUnique({ where: { sid } });
@@ -67,7 +81,7 @@ export class SessionStore extends Store {
 
   async destroy(
     sid: string,
-    callback?: ((err?: any) => void) | undefined
+    callback?: ((err?: unknown) => void) | undefined
   ): Promise<void> {
     try {
       await this.prisma.session.deleteMany({ where: { sid } });

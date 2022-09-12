@@ -1,69 +1,50 @@
 import { Express } from "express-serve-static-core";
 import moment from "moment";
 import passport from "passport";
-import { Strategy as DiscordStrategy } from "passport-discord";
+import { Profile, Strategy as DiscordStrategy } from "passport-discord";
 import { prisma } from "../context/prisma";
-import logger from "../util/logger";
 
-const createOrUpdateAccount = async (profile: any) => {
-  logger.info({ profile });
-  let account = await prisma.account.findUnique({
+const createOrUpdateAccount = async (profile: Profile) => {
+  return prisma.account.upsert({
     where: { id: profile.id },
+    update: {
+      username: profile.username,
+      discriminator: profile.discriminator,
+      avatar: profile.avatar,
+      email: profile.email,
+      emailVerified: profile.verified,
+    },
+    create: {
+      id: profile.id,
+      username: profile.username,
+      discriminator: profile.discriminator,
+      avatar: profile.avatar,
+      email: profile.email,
+      emailVerified: profile.verified,
+      updatedAt: moment().toDate(),
+    },
   });
-  if (account) {
-    account = await prisma.account.update({
-      where: { id: profile.id },
-      data: {
-        username: profile.username,
-        discriminator: profile.discriminator,
-        avatar: profile.avatar,
-        email: profile.email,
-        emailVerified: profile.verified,
-        updatedAt: moment().toDate(),
-      },
-    });
-  } else {
-    account = await prisma.account.create({
-      data: {
-        id: profile.id,
-        username: profile.username,
-        discriminator: profile.discriminator,
-        avatar: profile.avatar,
-        email: profile.email,
-        emailVerified: profile.verified,
-      },
-    });
-  }
-  return account;
 };
 
-const createOrUpdateUser = async (profile: any) => {
+const createOrUpdateUser = async (profile: Profile) => {
   const account = await createOrUpdateAccount(profile);
-  let user = await prisma.user.findUnique({ where: { accountId: profile.id } });
-  if (user) {
-    user = await prisma.user.update({
-      where: {
-        accountId: account.id,
-      },
-      data: {
-        name: `${profile.username}#${profile.discriminator}`,
-        image: profile.avatar
-          ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-          : undefined,
-      },
-    });
-  } else {
-    user = await prisma.user.create({
-      data: {
-        name: `${profile.username}#${profile.discriminator}`,
-        image: profile.avatar
-          ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-          : undefined,
-        account: { connect: { id: account.id } },
-      },
-    });
-  }
-  return user;
+  return prisma.user.upsert({
+    where: { accountId: profile.id },
+    update: {
+      name: `${profile.username}#${profile.discriminator}`,
+      image: profile.avatar
+        ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+        : undefined,
+      updatedAt: moment().toDate(),
+    },
+    create: {
+      name: `${profile.username}#${profile.discriminator}`,
+      image: profile.avatar
+        ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+        : undefined,
+      account: { connect: { id: account.id } },
+    },
+  });
 };
 
 const setupAuthentication = (app: Express) => {
@@ -78,7 +59,7 @@ const setupAuthentication = (app: Express) => {
       async (_accessToken, _refreshToken, profile, cb) => {
         const user = await createOrUpdateUser(profile);
 
-        return cb(undefined, user as Express.User);
+        return cb(undefined, user);
       }
     )
   );
@@ -91,14 +72,13 @@ const setupAuthentication = (app: Express) => {
 
   app.get("/auth/discord", passport.authenticate("discord"));
 
-  // TODO: fix redirects
   app.get(
     "/auth/discord/callback",
     passport.authenticate("discord", {
-      failureRedirect: "/error",
+      failureRedirect: "/",
     }),
     function (_req, res) {
-      res.redirect("/secretstuff"); // Successful auth
+      res.redirect("/"); // Successful auth
     }
   );
 };

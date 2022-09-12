@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import { Server } from "socket.io";
 import { sessionMiddleware } from "../setup/session";
 import logger from "../util/logger";
@@ -13,11 +14,14 @@ const createWebSocket = () => {
     },
   });
 
-  // TODO: fix the casting here
   io.use((socket, next) => {
-    sessionMiddleware(socket.request as any, {} as any, next as any);
+    sessionMiddleware(
+      socket.request as Request,
+      {} as Response,
+      next as NextFunction
+    );
   }).on("connection", (socket) => {
-    const user = (socket.request as any)?.session.passport?.user;
+    const user = socket.request.session.passport?.user;
     if (!user) {
       socket.disconnect();
     }

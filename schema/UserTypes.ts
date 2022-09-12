@@ -147,7 +147,7 @@ export const Mutation = extendType({
       async resolve(_root, args, ctx) {
         const user = await ctx.prisma.user.findUnique({
           where: {
-            id: ctx.user.id || "", // TODO: fix context user type
+            id: ctx.user.id,
           },
         });
         const channel = args.channelId
