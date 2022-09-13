@@ -208,7 +208,6 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
-    notifyActivity: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   OperationResponse: { // field return type
@@ -218,11 +217,7 @@ export interface NexusGenFieldTypes {
     channelMessages: Array<NexusGenRootTypes['Message'] | null> | null; // [Message]
     channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     currentUser: NexusGenRootTypes['User'] | null; // User
-    globalChannel: NexusGenRootTypes['Channel'] | null; // Channel
-    user: NexusGenRootTypes['User'] | null; // User
-    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
-    world: NexusGenRootTypes['World'] | null; // World
-    worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
+    subscribedChannels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
   }
   User: { // field return type
     channels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
@@ -315,7 +310,6 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
-    notifyActivity: 'OperationResponse'
     postMessage: 'Message'
   }
   OperationResponse: { // field return type name
@@ -325,11 +319,7 @@ export interface NexusGenFieldTypeNames {
     channelMessages: 'Message'
     channelUsers: 'User'
     currentUser: 'User'
-    globalChannel: 'Channel'
-    user: 'User'
-    users: 'User'
-    world: 'World'
-    worlds: 'World'
+    subscribedChannels: 'Channel'
   }
   User: { // field return type name
     channels: 'Channel'
@@ -366,9 +356,6 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    notifyActivity: { // args
-      channelId?: string | null; // String
-    }
     postMessage: { // args
       channelId: string; // String!
       text: string; // String!
@@ -380,12 +367,6 @@ export interface NexusGenArgTypes {
     }
     channelUsers: { // args
       channelId: string; // String!
-    }
-    user: { // args
-      id: string; // String!
-    }
-    world: { // args
-      id: string; // String!
     }
   }
 }

@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Card,
   CardContent,
@@ -9,13 +11,24 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 import { handleLogin } from "../providers/SessionProvider";
 
 const Signin = () => {
+  const [searchParams] = useSearchParams();
+
   return (
-    <Box p={1} pt={5}>
+    <Box pt={5}>
       <Container maxWidth="sm">
         <Grid container spacing={2} p={2}>
+          {searchParams.get("error") && (
+            <Grid item xs={12}>
+              <Alert severity="error">
+                <AlertTitle>Login Error</AlertTitle>
+                Failed to login
+              </Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card>
               <CardContent>

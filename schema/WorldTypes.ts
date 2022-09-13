@@ -1,5 +1,4 @@
-import { extendType, nonNull, objectType, stringArg } from "nexus";
-import { Context } from "../src/context";
+import { objectType } from "nexus";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
@@ -45,53 +44,6 @@ export const World = objectType({
     t.field("channel", {
       type: Channel,
       description: "Global channel for this world",
-    });
-  },
-});
-
-export const Query = extendType({
-  type: "Query",
-  definition(t) {
-    t.field("world", {
-      type: World,
-      description: "Retrieves a world by ID",
-      args: {
-        id: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.world.findUnique({
-          where: {
-            id: args.id,
-          },
-          include: {
-            owner: true,
-            articles: true,
-            characters: true,
-            users: true,
-            locations: true,
-            channel: true,
-          },
-        });
-      },
-    });
-
-    t.list.field("worlds", {
-      type: World,
-      description: "Retrieves a list of worlds from the server",
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: (_root, _args, ctx) => {
-        return ctx.prisma.world.findMany({
-          include: {
-            owner: true,
-            articles: true,
-            characters: true,
-            users: true,
-            locations: true,
-            channel: true,
-          },
-        });
-      },
     });
   },
 });

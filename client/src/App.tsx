@@ -19,13 +19,13 @@ const App = () => {
       sx={{ minHeight: 0, bgcolor: "ghostwhite" }}
     >
       <AppBar position="absolute">
-        <Toolbar>
+        <Toolbar sx={{ height: "64px" }}>
           <Box display="flex" alignItems="center" width="100%">
-            <Box display={{ xs: "none", sm: "block" }}>
-              <YggdrasilIcon width="48" />
+            <Box flexShrink={0}>
+              <YggdrasilIcon width="48" display="block" />
             </Box>
             <Box flexGrow={1} p={1}>
-              <Typography component="span" variant="h6">
+              <Typography component="span" variant="h5">
                 Yggdrasil
               </Typography>
             </Box>
@@ -47,8 +47,8 @@ const App = () => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Toolbar />
-      <Box flexGrow={1} sx={{ minHeight: 0 }} p={0.5}>
+      <Toolbar sx={{ height: "64px" }} />
+      <Box flexGrow={1} sx={{ minHeight: 0 }} p={0.5} pt={1.5}>
         <Router>
           <Routes>
             <Route path="/" element={user ? <Dashboard /> : <Signin />} />

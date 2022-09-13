@@ -23,10 +23,10 @@ const createWebSocket = () => {
   }).on("connection", (socket) => {
     const user = socket.request.session.passport?.user;
     if (!user) {
-      logger.info(
-        `unauthenticated connection denied for socket id ${socket.id}`
-      );
-      socket.disconnect();
+      // logger.info(
+      //   `unauthenticated connection denied for socket id ${socket.id}`
+      // );
+      // socket.disconnect();
     } else {
       logger.info({
         msg: `new connection on socket id ${socket.id}`,
@@ -40,6 +40,15 @@ const createWebSocket = () => {
       });
       socket.on("disconnecting", (reason) => {
         logger.info(`disconnecting socket id ${socket.id}: ${reason}`);
+      });
+
+      socket.on("chat:activity", (event) => {
+        // TODO: validate that user is a member of the channel?
+        io.emit("chat:activity", {
+          ...event,
+          user: { id: user.id, name: user.name },
+          timestamp: new Date(),
+        });
       });
     }
   });

@@ -41,24 +41,21 @@ export const Channel = objectType({
 export const Query = extendType({
   type: "Query",
   definition(t) {
-    t.field("globalChannel", {
+    t.list.field("subscribedChannels", {
       type: Channel,
-      description: "Retrieves the global chat channel",
+      description: "Retrieves the current user's subscribed channels",
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: async (_root, _args, ctx) =>
-        ctx.prisma.channel.findFirst({
+      resolve: async (_root, _args, ctx) => {
+        const user = await ctx.prisma.user.findUnique({
           where: {
-            global: true,
+            id: ctx.user.id,
           },
           include: {
-            users: true,
-            messages: {
-              include: {
-                user: true,
-              },
-            },
+            channels: true,
           },
-        }),
+        });
+        return user?.channels || [];
+      },
     });
   },
 });

@@ -79,51 +79,6 @@ export const Query = extendType({
           where: {
             id: ctx.user.id,
           },
-          include: {
-            createdArticles: true,
-            characters: true,
-            channels: true,
-            messages: true,
-          },
-        });
-      },
-    });
-
-    t.field("user", {
-      type: User,
-      description: "Retrieves a user by ID",
-      args: {
-        id: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: (_root, args, ctx) => {
-        return ctx.prisma.user.findUnique({
-          where: {
-            id: args.id,
-          },
-          include: {
-            createdArticles: true,
-            characters: true,
-            channels: true,
-            messages: true,
-          },
-        });
-      },
-    });
-
-    t.list.field("users", {
-      type: User,
-      description: "Retrieves users on the server",
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: (_root, _args, ctx) => {
-        console.log(ctx);
-        return ctx.prisma.user.findMany({
-          include: {
-            createdArticles: true,
-            characters: true,
-            channels: true,
-            messages: true,
-          },
         });
       },
     });
@@ -146,49 +101,6 @@ export const Query = extendType({
         });
 
         return channel?.users || [];
-      },
-    });
-  },
-});
-
-export const Mutation = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("notifyActivity", {
-      type: OperationResponse,
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      description: "Notifies the server of user activity in a chat window",
-      args: {
-        channelId: stringArg({
-          description: "ID of channel user is active in",
-        }),
-      },
-      async resolve(_root, args, ctx) {
-        const user = await ctx.prisma.user.findUnique({
-          where: {
-            id: ctx.user.id,
-          },
-        });
-        const channel = args.channelId
-          ? await ctx.prisma.channel.findUnique({
-              where: {
-                id: args.channelId,
-              },
-              include: {
-                users: true,
-              },
-            })
-          : undefined;
-
-        ctx.io.emit("message:userActivity", {
-          user: user
-            ? { id: user.id, name: user.name, image: user.image }
-            : undefined,
-          channel: channel ? { id: channel.id, name: channel.name } : undefined,
-          timestamp: new Date(),
-        });
-
-        return { success: true };
       },
     });
   },

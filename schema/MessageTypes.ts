@@ -59,15 +59,17 @@ export const Query = extendType({
   },
 });
 
-const postMessageSchema = object({
+const postMessageSchema: any = object({
   text: string().required().min(1).max(MAX_MESSAGE_LENGTH),
 });
 
-const validatePostMessage = (
-  schema: typeof postMessageSchema,
-  obj: { channelId: string; text: string }
-) => {
-  return schema.validateSync(obj);
+const validatePostMessage = (schema: any, obj: any) => {
+  try {
+    return schema.validateSync(obj);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    throw new Error(error);
+  }
 };
 
 export const Mutation = extendType({
@@ -84,7 +86,7 @@ export const Mutation = extendType({
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
-        const message = await ctx.prisma.message.create({
+        return ctx.prisma.message.create({
           data: {
             channel: { connect: { id: args.channelId } },
             text,
@@ -94,15 +96,6 @@ export const Mutation = extendType({
             user: true,
           },
         });
-
-        const { user, userId, ...rest } = message;
-
-        ctx.io.emit("message:newMessage", {
-          ...rest,
-          user: { id: userId, name: user.name, image: user.image },
-        });
-
-        return message;
       },
     });
   },

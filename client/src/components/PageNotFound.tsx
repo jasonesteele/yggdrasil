@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
   return (
-    <Box p={1} pt={5}>
+    <Box pt={5}>
       <Container maxWidth="sm">
         <Alert severity="error">
           <AlertTitle>Page not found</AlertTitle>

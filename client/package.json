@@ -19,6 +19,8 @@
     "@types/react-dom": "^18.0.6",
     "cross-fetch": "^3.1.5",
     "http-proxy-middleware": "^2.0.6",
+    "lodash": "^4.17.21",
+    "number-to-words": "^1.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
@@ -53,6 +55,7 @@
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",
+    "@types/number-to-words": "^1.2.1",
     "cross-env": "^7.0.3",
     "css-mediaquery": "^0.1.2"
   }

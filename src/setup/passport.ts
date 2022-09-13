@@ -29,6 +29,11 @@ const createOrUpdateAccount = async (profile: Profile) => {
 
 const createOrUpdateUser = async (profile: Profile) => {
   const account = await createOrUpdateAccount(profile);
+
+  const globalChannels = await prisma.channel.findMany({
+    where: { global: true },
+  });
+
   return prisma.user.upsert({
     where: { accountId: profile.id },
     update: {
@@ -37,6 +42,7 @@ const createOrUpdateUser = async (profile: Profile) => {
         ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         : undefined,
       updatedAt: moment().toDate(),
+      channels: { connect: globalChannels.map(({ id }) => ({ id })) },
     },
     create: {
       name: `${profile.username}#${profile.discriminator}`,
@@ -44,6 +50,7 @@ const createOrUpdateUser = async (profile: Profile) => {
         ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         : undefined,
       account: { connect: { id: account.id } },
+      channels: { connect: globalChannels.map(({ id }) => ({ id })) },
     },
   });
 };
@@ -76,7 +83,7 @@ const setupAuthentication = (app: Express) => {
   app.get(
     "/auth/discord/callback",
     passport.authenticate("discord", {
-      failureRedirect: "/",
+      failureRedirect: "/?error=access_denied",
     }),
     function (req, res) {
       const user = req.session.passport?.user;

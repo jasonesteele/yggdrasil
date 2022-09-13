@@ -163,11 +163,6 @@ type Message {
 }
 
 type Mutation {
-  """Notifies the server of user activity in a chat window"""
-  notifyActivity(
-    """ID of channel user is active in"""
-    channelId: String
-  ): OperationResponse
   postMessage(
     """Channel ID to post message on"""
     channelId: String!
@@ -193,20 +188,8 @@ type Query {
   """Retrieves the current user"""
   currentUser: User
 
-  """Retrieves the global chat channel"""
-  globalChannel: Channel
-
-  """Retrieves a user by ID"""
-  user(id: String!): User
-
-  """Retrieves users on the server"""
-  users: [User]
-
-  """Retrieves a world by ID"""
-  world(id: String!): World
-
-  """Retrieves a list of worlds from the server"""
-  worlds: [World]
+  """Retrieves the current user's subscribed channels"""
+  subscribedChannels: [Channel]
 }
 
 """Application user"""

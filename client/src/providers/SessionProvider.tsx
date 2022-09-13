@@ -1,4 +1,4 @@
-import { ApolloError, gql, useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import { createContext, useContext } from "react";
 
 export const GET_CURRENT_USER = gql`
@@ -10,17 +10,6 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `;
-
-type User = {
-  id: string;
-  name: string;
-  image?: string;
-};
-
-type Session = {
-  user?: User;
-  error?: ApolloError;
-};
 
 const SessionContext = createContext<Session>({});
 
