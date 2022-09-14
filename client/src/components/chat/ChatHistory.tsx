@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Alert,
   Box,
@@ -10,6 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useEffect, useRef } from "react";
+import useWebSocket from "../../hooks/useWebSocket";
 import theme from "../../theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 
@@ -32,6 +33,14 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const { data, loading, error } = useQuery(GET_CHANNEL_MESSAGES, {
     variables: { channelId },
+  });
+  const client = useApolloClient();
+  useWebSocket(`chat:message:${channelId}`, (event: Message) => {
+    client.writeQuery({
+      query: GET_CHANNEL_MESSAGES,
+      data: { channelMessages: [{ ...event, __typename: "Message" }] },
+      variables: { channelId },
+    });
   });
 
   useEffect(() => {

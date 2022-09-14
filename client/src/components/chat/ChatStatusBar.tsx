@@ -2,7 +2,7 @@ import { WifiTethering, WifiTetheringError } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import converter from "number-to-words";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useInterval from "../../hooks/useInterval";
 import useWebSocket from "../../hooks/useWebSocket";
 
@@ -23,7 +23,15 @@ const formatActivityMessage = (names: string[]) => {
 
 const ChatStatusBar = ({ channelId }: { channelId: string }) => {
   const [activities, setActivities] = useState<ActivityNotification[]>([]);
-  const { isConnected, socket } = useWebSocket();
+  const { isConnected } = useWebSocket(
+    "chat:activity",
+    (event: ActivityNotification) => {
+      setActivities([
+        ...activities.filter((activity) => activity.user.id !== event.user.id),
+        ...(event.active ? [event] : []),
+      ]);
+    }
+  );
 
   useInterval(async () => {
     const freshActivities = activities.filter(
@@ -34,21 +42,6 @@ const ChatStatusBar = ({ channelId }: { channelId: string }) => {
       setActivities(freshActivities);
     }
   }, 1000);
-
-  useEffect(() => {
-    const activityHandler = (event: ActivityNotification) => {
-      setActivities([
-        ...activities.filter((activity) => activity.user.id !== event.user.id),
-        ...(event.active ? [event] : []),
-      ]);
-    };
-    socket.on("chat:activity", activityHandler);
-
-    return () => {
-      socket.off("chat:activity", activityHandler);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, socket]);
 
   return (
     <Box display="flex" alignItems="center">

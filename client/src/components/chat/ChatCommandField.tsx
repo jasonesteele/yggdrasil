@@ -24,19 +24,19 @@ export const POST_MESSAGE = gql`
 const ChatCommandField = ({ channelId }: { channelId: string }) => {
   const [command, setCommand] = useState<string>("");
   const [postMessage, { loading: posting, error }] = useMutation(POST_MESSAGE);
-  const { socket } = useWebSocket();
+  const { sendEvent } = useWebSocket("chat:activity");
 
   const notifyActivityHandler = useMemo(
     () =>
       throttle(() => {
-        socket.emit("chat:activity", { channelId, active: true });
+        sendEvent({ channelId, active: true });
       }, 3000),
-    [channelId, socket]
+    [channelId, sendEvent]
   );
 
   const cancelActivity = () => {
     notifyActivityHandler.cancel();
-    socket.emit("chat:activity", { channelId, active: false });
+    sendEvent({ channelId, active: false });
   };
 
   const handleSendCommand = async () => {

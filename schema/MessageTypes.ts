@@ -86,7 +86,7 @@ export const Mutation = extendType({
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       async resolve(_root, args, ctx) {
         const { text } = validatePostMessage(postMessageSchema, args);
-        return ctx.prisma.message.create({
+        const message = await ctx.prisma.message.create({
           data: {
             channel: { connect: { id: args.channelId } },
             text,
@@ -96,6 +96,8 @@ export const Mutation = extendType({
             user: true,
           },
         });
+        ctx.io.emit(`chat:message:${args.channelId}`, message);
+        return message;
       },
     });
   },

@@ -26,7 +26,19 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          channelMessages: {
+            merge(existing = [], incoming: any[]) {
+              return [...existing, ...incoming];
+            },
+          },
+        },
+      },
+    },
+  }),
   link: from([errorLink, httpLink]),
 });
 export default client;
