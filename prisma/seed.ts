@@ -6,6 +6,7 @@ async function flushDatabase() {
   await prisma.world.deleteMany();
   await prisma.channel.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.session.deleteMany();
 }
 
 async function main() {

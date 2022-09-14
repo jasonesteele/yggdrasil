@@ -29,12 +29,16 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
   const { data, loading, error } = useQuery(GET_CHANNEL_USERS, {
     variables: { channelId },
   });
-    const client = useApolloClient();
+  const client = useApolloClient();
 
   useWebSocket("user:online", (event: UserOnlineNotification) => {
     client.writeQuery({
       query: GET_CHANNEL_USERS,
-      data: { channelUsers: [{ ...event.user, online: event.online, __typename: "User" }] },
+      data: {
+        channelUsers: [
+          { ...event.user, online: event.online, __typename: "User" },
+        ],
+      },
       variables: { channelId },
     });
   });
