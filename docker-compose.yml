@@ -1,19 +1,35 @@
 version: "3.8"
 services:
-  app: 
-    build: .
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    profiles: ["integration"]
     restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - "api"
+  api: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    profiles: ["integration"]
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb?schema=public
       - APP_URL=http://localhost:3000
-      - DISCORD_ID=976196243950805012
-      - DISCORD_SECRET=x07Z6KIy-yxN7nA_iXX2xcP3HN-eDXci
+      - DISCORD_ID=${DISCORD_ID}
+      - DISCORD_SECRET=${DISCORD_SECRET}
     ports:
       - "3010:3010"
       - "4000:4000"
+    depends_on:
+      - "db"
   db:
     image: postgres:14.1-alpine
     restart: always
+    profiles: ["dev", "integration"]
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -24,6 +40,7 @@ services:
   db-test:
     image: postgres:14.1-alpine
     restart: always
+    profiles: ["dev"]
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
