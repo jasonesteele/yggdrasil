@@ -1,5 +1,16 @@
 version: "3.8"
 services:
+  app: 
+    build: .
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb?schema=public
+      - APP_URL=http://localhost:3000
+      - DISCORD_ID=976196243950805012
+      - DISCORD_SECRET=x07Z6KIy-yxN7nA_iXX2xcP3HN-eDXci
+    ports:
+      - "3010:3010"
+      - "4000:4000"
   db:
     image: postgres:14.1-alpine
     restart: always

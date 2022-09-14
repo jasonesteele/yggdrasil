@@ -7,7 +7,6 @@ import { sessionMiddleware } from "./setup/session";
 import logger, { accessLogger } from "./util/logger";
 import "./setup/env";
 
-
 const EXPRESS_PORT = Number(process.env.API_PORT) || 3010;
 
 const main = async () => {
@@ -20,10 +19,6 @@ const main = async () => {
 
   setupPassport(app);
   await setupGraphQL(app);
-
-  app.get("/", (_req, res) => {
-    res.status(200).send("hello world");
-  });
 
   app.listen(EXPRESS_PORT, () => {
     logger.info(`express listening on port ${EXPRESS_PORT}`);

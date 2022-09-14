@@ -57,6 +57,7 @@
   },
   "devDependencies": {
     "@apollo/react-testing": "^4.0.0",
+    "@types/lodash": "^4.14.185",
     "@types/number-to-words": "^1.2.1",
     "cross-env": "^7.0.3",
     "css-mediaquery": "^0.1.2"

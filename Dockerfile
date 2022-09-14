@@ -1,4 +1,4 @@
-FROM node:16.15.1-alpine as builder
+FROM node:16.15.1-alpine as express-builder
 
 WORKDIR /app
 
@@ -28,13 +28,36 @@ RUN npm run lint
 #RUN npm test
 RUN npm run build
 
-FROM node:16.15.1-alpine as deploy
+FROM node:16.15.1-alpine as react-builder
 
 WORKDIR /app
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/schema ./schema
-COPY --from=builder /app/dist ./
+ENV PATH /app/node_modules/.bin:$PATH
+
+COPY client/package.json ./
+COPY client/package-lock.json ./
+
+RUN npm ci
+
+COPY client/src ./src
+COPY client/public ./public
+COPY client/tsconfig.json ./
+
+# RUN npm test
+RUN npm run build
+
+FROM node:16.15.1-alpine as deploy
+
+RUN adduser -D -u 10001 yggdrasil
+USER yggdrasil
+
+WORKDIR /app
+
+COPY --from=express-builder /app/node_modules ./node_modules
+COPY --from=express-builder /app/schema ./schema
+COPY --from=express-builder /app/dist ./
+
+COPY --from=react-builder /app/build ./public
 
 ENV NODE_ENV=production
 
