@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Card,
+  Divider,
   LinearProgress,
   List,
   ListItem,
@@ -31,17 +32,31 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
   });
   const client = useApolloClient();
 
-  useWebSocket("user:online", (event: UserOnlineNotification) => {
-    client.writeQuery({
-      query: GET_CHANNEL_USERS,
-      data: {
-        channelUsers: [
-          { ...event.user, online: event.online, __typename: "User" },
-        ],
-      },
-      variables: { channelId },
-    });
-  });
+  const { isConnected } = useWebSocket(
+    "user:online",
+    (event: UserOnlineNotification) => {
+      client.writeQuery({
+        query: GET_CHANNEL_USERS,
+        data: {
+          channelUsers: [
+            { ...event.user, online: event.online, __typename: "User" },
+          ],
+        },
+        variables: { channelId },
+      });
+    }
+  );
+
+  const userSort = (a: User, b: User) => {
+    if (a.online && !b.online) return -1;
+    if (!a.online && b.online) return 1;
+    return a.name.localeCompare(b.name);
+  };
+  const users = data?.channelUsers ? [...data.channelUsers].sort(userSort) : [];
+  const idx = users.findIndex((user) => !user.online);
+  if (idx > 0 && idx < users.length) {
+    users.splice(idx, 0, undefined);
+  }
 
   return (
     <Card
@@ -73,39 +88,43 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
           </ListItem>
         )}
 
-        {data?.channelUsers.map((user: User, idx: number) => (
-          <ListItem
-            data-testid={`user-list-${idx}`}
-            key={`user-${idx}`}
-            sx={{ p: 0.5 }}
-          >
-            <Avatar
-              data-testid={`user-avatar-${idx}`}
-              sx={{
-                width: "32px",
-                height: "32px",
-                mr: 1,
-                ...(user.online
-                  ? {}
-                  : {
-                      opacity: 0.4,
-                      filter: "alpha(opacity=40)",
-                    }),
-              }}
-              alt={user.name || ""}
-              src={user.image || ""}
-            />
-            {mdBreakpoint && (
-              <Typography
-                color={user.online ? "inherit" : "lightGrey"}
-                data-testid={`user-name-${idx}`}
-                variant="subtitle2"
-              >
-                {user.name}
-              </Typography>
-            )}
-          </ListItem>
-        ))}
+        {users.map((user: User, idx: number) =>
+          user ? (
+            <ListItem
+              data-testid={`user-list-${idx}`}
+              key={`user-${idx}`}
+              sx={{ p: 0.5 }}
+            >
+              <Avatar
+                data-testid={`user-avatar-${idx}`}
+                sx={{
+                  width: "32px",
+                  height: "32px",
+                  mr: 1,
+                  ...(isConnected && user.online
+                    ? {}
+                    : {
+                        opacity: 0.4,
+                        filter: "alpha(opacity=40)",
+                      }),
+                }}
+                alt={user.name || ""}
+                src={user.image || ""}
+              />
+              {mdBreakpoint && (
+                <Typography
+                  color={isConnected && user.online ? "inherit" : "lightGrey"}
+                  data-testid={`user-name-${idx}`}
+                  variant="subtitle2"
+                >
+                  {user.name}
+                </Typography>
+              )}
+            </ListItem>
+          ) : (
+            <Divider key={`divider-${idx}`} sx={{ p: 0.5, mb: 1 }} />
+          )
+        )}
       </List>
     </Card>
   );
