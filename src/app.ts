@@ -1,13 +1,14 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-import setupEnv from "./setup/env";
 import setupGraphQL from "./setup/graphql";
 import setupPassport from "./setup/passport";
 import { sessionMiddleware } from "./setup/session";
 import logger, { accessLogger } from "./util/logger";
+import "./setup/env";
 
-setupEnv();
+
+const EXPRESS_PORT = Number(process.env.API_PORT) || 3010;
 
 const main = async () => {
   const app = express();
@@ -24,8 +25,8 @@ const main = async () => {
     res.status(200).send("hello world");
   });
 
-  app.listen(process.env.API_PORT, () => {
-    logger.info(`GraphQL listening on port ${process.env.API_PORT}`);
+  app.listen(EXPRESS_PORT, () => {
+    logger.info(`express listening on port ${EXPRESS_PORT}`);
   });
 };
 

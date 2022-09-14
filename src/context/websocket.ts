@@ -3,6 +3,8 @@ import { Server } from "socket.io";
 import { sessionMiddleware } from "../setup/session";
 import logger from "../util/logger";
 
+const WEBSOCKET_PORT = Number(process.env.WEBSOCKET_PORT) || 4000;
+
 declare global {
   // eslint-disable-next-line no-var
   var io: Server;
@@ -15,11 +17,9 @@ export const connectedUsers = global.connectedUsers
   : (global.connectedUsers = {});
 
 const createWebSocket = () => {
-  logger.info(
-    `Creating websocket server on port ${process.env.WEBSOCKET_PORT}`
-  );
+  logger.info(`creating websocket server on port ${WEBSOCKET_PORT}`);
 
-  const io = new Server(Number(process.env.WEBSOCKET_PORT), {
+  const io = new Server(WEBSOCKET_PORT, {
     cors: {
       origin: process.env.APP_URL,
     },

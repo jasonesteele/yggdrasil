@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import session, { Session, SessionData, Store } from "express-session";
 import moment from "moment";
+import { prisma } from "../context/prisma";
 
 declare module "http" {
   interface IncomingMessage {
