@@ -100,7 +100,10 @@ export const Query = extendType({
           },
         });
 
-        return channel?.users || [];
+        return (channel?.users || []).map((user) => ({
+          ...user,
+          online: connectedUsers[user.id]?.length > 0,
+        }));
       },
     });
   },

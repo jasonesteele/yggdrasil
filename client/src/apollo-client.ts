@@ -32,7 +32,31 @@ const client = new ApolloClient({
         fields: {
           channelMessages: {
             merge(existing = [], incoming: any[]) {
-              return [...existing, ...incoming];
+              return [
+                ...existing,
+                ...incoming.filter(
+                  (incomingItem) =>
+                    !existing.find(
+                      (existingItem: any) =>
+                        existingItem.__ref === incomingItem.__ref
+                    )
+                ),
+              ];
+            },
+          },
+          channelUsers: {
+            merge(existing = [], incoming: any[]) {
+              console.log({ existing, incoming });
+              return [
+                ...existing,
+                ...incoming.filter(
+                  (incomingItem) =>
+                    !existing.find(
+                      (existingItem: any) =>
+                        existingItem.__ref === incomingItem.__ref
+                    )
+                ),
+              ];
             },
           },
         },

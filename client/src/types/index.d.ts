@@ -2,6 +2,7 @@ type User = {
   id: string;
   name: string;
   image?: string;
+  online: boolean;
 };
 
 type Session = {
@@ -25,4 +26,9 @@ type ActivityNotification = {
   active: boolean;
   user: User;
   timestamp: date;
+};
+
+type UserOnlineNotification = {
+  user: User;
+  online: boolean;
 };
