@@ -23,7 +23,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier -w .",
-    "prettier:check": "prettier --check ."
+    "prettier:check": "prettier --check .",
+    "clean": "rm -rf dist && cd client && npm run clean",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
