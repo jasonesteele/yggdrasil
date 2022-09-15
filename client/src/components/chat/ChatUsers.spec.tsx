@@ -77,7 +77,7 @@ describe("components", () => {
       expect(screen.getByText("User Name 0")).toBeInTheDocument();
       expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
       expect(screen.getByText("User Name 1")).toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
+      expect(screen.getByTestId("user-avatar-1")).toBeInTheDocument();
     });
 
     it("renders a list of users (small screen)", async () => {
@@ -97,7 +97,7 @@ describe("components", () => {
       expect(screen.queryByText("User Name 0")).not.toBeInTheDocument();
       expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
       expect(screen.queryByText("User Name 1")).not.toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
+      expect(screen.getByTestId("user-avatar-1")).toBeInTheDocument();
     });
 
     it("shows an error", async () => {
