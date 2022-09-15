@@ -100,6 +100,11 @@ describe("components", () => {
       expect(screen.getByTestId("user-avatar-1")).toBeInTheDocument();
     });
 
+    it.todo("sorts offline users to the bottom");
+    it.todo("adds a user dynamically");
+    it.todo("removes a user dynamically");
+    it.todo("changes a user's online status dynamically");
+
     it("shows an error", async () => {
       render(
         <MockedProvider mocks={[errorResponse]}>
