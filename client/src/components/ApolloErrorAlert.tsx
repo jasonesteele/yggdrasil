@@ -8,8 +8,6 @@ const ApolloErrorAlert = ({
   title: string;
   error: ApolloError;
 }) => {
-  console.error(error);
-
   return (
     <Alert
       severity="error"

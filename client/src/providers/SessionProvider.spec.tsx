@@ -26,7 +26,7 @@ const noCurrentUser = {
   },
   result: {
     data: {
-      currentUser: undefined,
+      currentUser: null,
     },
   },
 };

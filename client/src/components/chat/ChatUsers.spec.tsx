@@ -1,5 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatUsers, { GET_CHANNEL_USERS } from "./ChatUsers";
@@ -27,7 +27,11 @@ const userList = {
   },
   result: {
     data: {
-      channelUsers: [userFixture(undefined, 0), userFixture(undefined, 1)],
+      channelUsers: [
+        userFixture(undefined, 0),
+        userFixture({ online: true }, 1),
+        userFixture(undefined, 2),
+      ],
     },
   },
 };
@@ -74,10 +78,27 @@ describe("components", () => {
           screen.queryByTestId("user-list-loading")
         ).not.toBeInTheDocument();
       });
-      expect(screen.getByText("User Name 0")).toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
-      expect(screen.getByText("User Name 1")).toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-1")).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId("user-list-0")).getByText("User Name 1")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-0")).getByAltText("User Name 1")
+      ).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId("user-list-2")).getByText("User Name 0")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-2")).getByAltText("User Name 0")
+      ).toBeInTheDocument();
+
+      expect(
+        within(screen.getByTestId("user-list-3")).getByText("User Name 2")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-3")).getByAltText("User Name 2")
+      ).toBeInTheDocument();
     });
 
     it("renders a list of users (small screen)", async () => {
@@ -94,16 +115,31 @@ describe("components", () => {
           screen.queryByTestId("user-list-loading")
         ).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("User Name 0")).not.toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-0")).toBeInTheDocument();
-      expect(screen.queryByText("User Name 1")).not.toBeInTheDocument();
-      expect(screen.getByTestId("user-avatar-1")).toBeInTheDocument();
-    });
 
-    it.todo("sorts offline users to the bottom");
-    it.todo("adds a user dynamically");
-    it.todo("removes a user dynamically");
-    it.todo("changes a user's online status dynamically");
+      expect(
+        // eslint-disable-next-line testing-library/prefer-presence-queries
+        within(screen.getByTestId("user-list-0")).queryByText("User Name 1")
+      ).not.toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-0")).getByAltText("User Name 1")
+      ).toBeInTheDocument();
+
+      expect(
+        // eslint-disable-next-line testing-library/prefer-presence-queries
+        within(screen.getByTestId("user-list-2")).queryByText("User Name 0")
+      ).not.toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-2")).getByAltText("User Name 0")
+      ).toBeInTheDocument();
+
+      expect(
+        // eslint-disable-next-line testing-library/prefer-presence-queries
+        within(screen.getByTestId("user-list-3")).queryByText("User Name 2")
+      ).not.toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-3")).getByAltText("User Name 2")
+      ).toBeInTheDocument();
+    });
 
     it("shows an error", async () => {
       render(
@@ -119,5 +155,9 @@ describe("components", () => {
       });
       expect(screen.getByText("An error occurred!")).toBeInTheDocument();
     });
+
+    it.todo("adds a user dynamically");
+    it.todo("removes a user dynamically");
+    it.todo("changes a user's online status dynamically");
   });
 });
