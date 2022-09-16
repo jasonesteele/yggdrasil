@@ -3,7 +3,7 @@ import { Alert, Box, LinearProgress, Tab, Tabs } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
 import ChatChannel from "./ChatChannel";
 import ApolloErrorAlert from "../ApolloErrorAlert";
-import { a11yProps } from "../TabPanel";
+import { a11yProps } from "../../util/react-utils";
 
 export const GET_SUBSCRIBED_CHANNELS = gql`
   query GetGlobalChannel {
