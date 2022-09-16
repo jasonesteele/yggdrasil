@@ -42,7 +42,7 @@
     "@types/express-pino-logger": "^4.0.3",
     "@types/express-session": "^1.17.5",
     "@types/node": "^18.7.16",
-    "@types/passport": "^1.0.10",
+    "@types/passport": "^1.0.11",
     "@types/passport-discord": "^0.1.6",
     "@typescript-eslint/eslint-plugin": "^5.36.2",
     "cross-env": "^7.0.3",
