@@ -1,8 +1,12 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor, within } from "@testing-library/react";
+import { act } from "react-dom/test-utils";
 import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatUsers, { GET_CHANNEL_USERS } from "./ChatUsers";
+import { cache } from "../../apollo-client";
+
+jest.mock("../../hooks/useWebSocket");
 
 const noUsers = {
   request: {
@@ -48,8 +52,9 @@ const errorResponse = {
 
 describe("components", () => {
   describe("ChatUsers", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       setWindowWidth(1024);
+      cache.reset();
     });
 
     it("renders an empty list of users", async () => {
@@ -156,8 +161,85 @@ describe("components", () => {
       expect(screen.getByText("An error occurred!")).toBeInTheDocument();
     });
 
-    it.todo("adds a user dynamically");
+    it("adds a user dynamically", async () => {
+      render(
+        <MockedProvider mocks={[noUsers]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
+      );
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId("user-list-loading")
+        ).not.toBeInTheDocument();
+      });
+
+      expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
+
+      await act(async () => {
+        if (__onEvent)
+          __onEvent({
+            user: {
+              id: "abc123",
+              name: "test-user",
+              image: null,
+              online: true,
+            },
+            online: true,
+          });
+      });
+
+      expect(
+        within(screen.getByTestId("user-list-0")).getByText("test-user")
+      ).toBeInTheDocument();
+    });
+
+    it("changes a user's online status dynamically", async () => {
+      render(
+        <MockedProvider cache={cache} mocks={[userList]}>
+          <ChatUsers channelId="test-channel-id" />
+        </MockedProvider>
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.queryByTestId("user-list-loading")
+        ).not.toBeInTheDocument();
+      });
+
+      expect(
+        within(screen.getByTestId("user-list-0")).getByText("User Name 1")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-2")).getByText("User Name 0")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-3")).getByText("User Name 2")
+      ).toBeInTheDocument();
+
+      await act(async () => {
+        if (__onEvent)
+          __onEvent({
+            user: {
+              id: "user-id-1",
+              name: "User Name 1",
+              image: "http://example.com/image-1.png",
+              online: false,
+            },
+            online: false,
+          });
+      });
+
+      expect(
+        within(screen.getByTestId("user-list-0")).getByText("User Name 0")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-1")).getByText("User Name 1")
+      ).toBeInTheDocument();
+      expect(
+        within(screen.getByTestId("user-list-2")).getByText("User Name 2")
+      ).toBeInTheDocument();
+    });
+
     it.todo("removes a user dynamically");
-    it.todo("changes a user's online status dynamically");
   });
 });

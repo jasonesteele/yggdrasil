@@ -35,21 +35,23 @@ const union = (existing = [], incoming: any[] = []) => [
   ),
 ];
 
-const client = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          channelMessages: {
-            merge: union,
-          },
-          channelUsers: {
-            merge: union,
-          },
+export const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        channelMessages: {
+          merge: union,
+        },
+        channelUsers: {
+          merge: union,
         },
       },
     },
-  }),
+  },
+});
+
+const client = new ApolloClient({
+  cache,
   link: from([errorLink, httpLink]),
 });
 export default client;
