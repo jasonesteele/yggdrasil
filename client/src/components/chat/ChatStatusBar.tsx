@@ -23,15 +23,40 @@ const formatActivityMessage = (names: string[]) => {
 
 const ChatStatusBar = ({ channelId }: { channelId: string }) => {
   const [activities, setActivities] = useState<ActivityNotification[]>([]);
-  const { isConnected } = useWebSocket(
-    "chat:activity",
-    (event: ActivityNotification) => {
-      setActivities([
-        ...activities.filter((activity) => activity.user.id !== event.user.id),
-        ...(event.active ? [event] : []),
-      ]);
-    }
-  );
+
+  /* Bit of extra handling of transient state required to handle
+   * potentially multiple notifications arriving in the same
+   *  component render cycle.
+   */
+  let pendingActive: ActivityNotification[] = [];
+  let pendingInactive: ActivityNotification[] = [];
+
+  const handleEvent = (event: ActivityNotification) => {
+    if (event.channelId !== channelId) return;
+
+    pendingActive = [
+      ...pendingActive.filter((activity) => activity.user.id !== event.user.id),
+      ...(event.active ? [event] : []),
+    ];
+    pendingInactive = [
+      ...pendingInactive.filter(
+        (activity) => activity.user.id !== event.user.id
+      ),
+      ...(event.active ? [] : [event]),
+    ];
+
+    setActivities([
+      ...activities.filter(
+        (activity) =>
+          !pendingInactive.find(
+            (inactive) => activity.user.id === inactive.user.id
+          ) &&
+          !pendingActive.find((active) => activity.user.id === active.user.id)
+      ),
+      ...pendingActive,
+    ]);
+  };
+  const { isConnected } = useWebSocket("chat:activity", handleEvent);
 
   useInterval(async () => {
     const freshActivities = activities.filter(
@@ -56,11 +81,7 @@ const ChatStatusBar = ({ channelId }: { channelId: string }) => {
       </Typography>
       <IconButton disabled={true}>
         {isConnected ? (
-          <WifiTethering
-            data-channelid={channelId}
-            color="success"
-            data-testid="chat-status-connected"
-          />
+          <WifiTethering color="success" data-testid="chat-status-connected" />
         ) : (
           <WifiTetheringError
             color="error"

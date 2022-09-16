@@ -61,7 +61,6 @@
     "@types/react-dom": "^18.0.6",
     "cross-env": "^7.0.3",
     "css-mediaquery": "^0.1.2",
-    "jest-dom": "^4.0.0",
     "react-scripts": "5.0.1",
     "setimmediate": "^1.0.5",
     "sinon": "^14.0.0"
