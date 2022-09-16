@@ -1,5 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import session, { Session, SessionData, Store } from "express-session";
+import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import { prisma } from "../context/prisma";
 
@@ -94,7 +95,7 @@ export class SessionStore extends Store {
 }
 
 export const sessionMiddleware = session({
-  secret: process.env.SESSION_SECRET || "secret",
+  secret: process.env.SESSION_SECRET || uuidv4(),
   resave: true,
   saveUninitialized: true,
   cookie: { maxAge: 60 * 60 * 1000 },
