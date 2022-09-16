@@ -17,6 +17,8 @@ const UserProfileButton = () => {
   const { user } = useSessionContext();
   const [openProfile, setOpenProfile] = useState(false);
 
+  if (!user) return null;
+
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -37,7 +39,7 @@ const UserProfileButton = () => {
       onClick={toggleDrawer(!openProfile)}
       data-testid="user-profile-button"
     >
-      <Avatar alt={user?.name || "User"} src={user?.image || ""} />
+      <Avatar alt={user.name || "User"} src={user.image || ""} />
       <Drawer
         anchor="right"
         open={openProfile}
@@ -51,6 +53,7 @@ const UserProfileButton = () => {
         }}
       >
         <Box
+          data-testid="user-profile-container"
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
@@ -60,9 +63,9 @@ const UserProfileButton = () => {
             <Grid container direction="column" item alignItems="center">
               <Avatar
                 sx={{ width: avatarSize, height: avatarSize }}
-                src={user?.image || ""}
+                src={user.image || ""}
               />
-              <Typography variant="h6">{user?.name}</Typography>
+              <Typography variant="h6">{user.name}</Typography>
             </Grid>
             <Grid item>
               <Button

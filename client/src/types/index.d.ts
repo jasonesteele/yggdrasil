@@ -6,11 +6,6 @@ type User = {
   online: boolean;
 };
 
-type Session = {
-  user?: User;
-  error?: ApolloError;
-};
-
 type Channel = {
   __typename: "Channel";
   id: string;
@@ -22,6 +17,11 @@ type Message = {
   text: string;
   createdAt: date;
   user: User;
+};
+
+type Session = {
+  user?: User;
+  error?: ApolloError;
 };
 
 type ActivityNotification = {

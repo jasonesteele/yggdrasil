@@ -17,7 +17,7 @@
     "db:migrate:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma migrate dev",
     "db:seed:test": "cross-env DATABASE_URL=postgresql://postgres:postgres@localhost:5433/mydb?schema=public prisma db seed",
     "nexus:typegen": "ts-node --transpile-only schema",
-    "test": "echo 'No tests configured'",
+    "test": "cd client && npm run test",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier -w .",
@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/jasonesteele/yggdrasil#readme",
   "devDependencies": {
+    "@testing-library/user-event": "^14.4.3",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/express-pino-logger": "^4.0.3",
