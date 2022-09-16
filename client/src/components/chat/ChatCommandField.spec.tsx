@@ -2,7 +2,7 @@ import { setWindowWidth } from "../../util/test-utils";
 
 describe("components", () => {
   describe("ChatCommandField", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       setWindowWidth(1024);
     });
 

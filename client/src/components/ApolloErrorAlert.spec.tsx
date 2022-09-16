@@ -6,7 +6,7 @@ import ApolloErrorAlert from "./ApolloErrorAlert";
 
 describe("components", () => {
   describe("ApolloErrorAlert", () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
       setWindowWidth(1024);
     });
 

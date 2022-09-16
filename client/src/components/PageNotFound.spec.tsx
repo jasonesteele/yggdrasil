@@ -5,7 +5,7 @@ import PageNotFound from "./PageNotFound";
 
 describe("components", () => {
   describe("PageNotFound", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       setWindowWidth(1024);
     });
 

@@ -2,7 +2,7 @@ import { setWindowWidth } from "../util/test-utils";
 
 describe("components", () => {
   describe("Dashboard", () => {
-    beforeAll(() => {
+    beforeEach(() => {
       setWindowWidth(1024);
     });
 
