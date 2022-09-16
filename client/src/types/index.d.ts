@@ -7,7 +7,6 @@ type User = {
 };
 
 type Session = {
-  __typename: "Session";
   user?: User;
   error?: ApolloError;
 };
