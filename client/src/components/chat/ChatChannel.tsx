@@ -10,7 +10,7 @@ const ChatChannel = ({ channelId }: { channelId: string }) => {
 
   return (
     <Box
-      data-testid="chat-channel"
+      data-testid={`chat-channel-${channelId}`}
       display="flex"
       flexDirection="column"
       height="100%"

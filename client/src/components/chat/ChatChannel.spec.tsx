@@ -24,7 +24,7 @@ describe("components", () => {
         </MockedProvider>
       );
 
-      expect(screen.getByTestId("chat-channel")).toBeInTheDocument();
+      expect(screen.getByTestId("chat-channel-test-id")).toBeInTheDocument();
       expect(screen.getByTestId("chat-history")).toBeInTheDocument();
       expect(screen.getByTestId("user-list")).toBeInTheDocument();
       expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
