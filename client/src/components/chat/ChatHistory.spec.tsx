@@ -141,8 +141,8 @@ describe("components", () => {
       expect(screen.queryByTestId("chat-message-0")).not.toBeInTheDocument();
 
       await act(async () => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             __typename: "Message",
             id: "message-0",
             text: "A wild message appears",
@@ -154,7 +154,7 @@ describe("components", () => {
               online: true,
             },
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             __typename: "Message",
             id: "message-1",
             text: "It was super effective",
