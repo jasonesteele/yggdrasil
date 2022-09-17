@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
+import { cache } from "../../apollo-client";
 import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatUsers, { GET_CHANNEL_USERS } from "./ChatUsers";
-import { cache } from "../../apollo-client";
 
 jest.mock("../../hooks/useWebSocket");
 

@@ -14,6 +14,7 @@ type Channel = {
 
 type Message = {
   __typename: "Message";
+  id: string;
   text: string;
   createdAt: date;
   user: User;
