@@ -63,7 +63,7 @@ describe("components", () => {
         expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
       });
 
-      global.__sendEvent = jest.fn();
+      global.__useWebSocket_sendEvent = jest.fn();
 
       userEvent.type(
         screen.getByTestId("chat-command-input"),
@@ -71,7 +71,7 @@ describe("components", () => {
       );
       await waitFor(() => expect(mocks[0].newData).toHaveBeenCalled());
 
-      expect(__sendEvent).toHaveBeenCalledWith({
+      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
         channelId: "test-channel",
         active: true,
       });
@@ -90,14 +90,14 @@ describe("components", () => {
         expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
       });
 
-      global.__sendEvent = jest.fn();
+      global.__useWebSocket_sendEvent = jest.fn();
 
       userEvent.type(
         screen.getByTestId("chat-command-input"),
         "Sample Message"
       );
 
-      expect(__sendEvent).toHaveBeenCalledWith({
+      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
         channelId: "test-channel",
         active: true,
       });
@@ -107,7 +107,7 @@ describe("components", () => {
         "{selectall}{del}"
       );
 
-      expect(__sendEvent).toHaveBeenCalledWith({
+      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
         channelId: "test-channel",
         active: false,
       });

@@ -1,4 +1,5 @@
-import { WifiTethering, WifiTetheringError } from "@mui/icons-material";
+import WifiTethering from "@mui/icons-material/WifiTethering";
+import WifiTetheringError from "@mui/icons-material/WifiTetheringError";
 import { Box, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import converter from "number-to-words";

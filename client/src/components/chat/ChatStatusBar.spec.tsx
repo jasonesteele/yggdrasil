@@ -3,13 +3,15 @@ import moment from "moment";
 import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatStatusBar from "./ChatStatusBar";
+
 jest.mock("../../hooks/useWebSocket");
+jest.mock("../../hooks/useInterval");
 
 describe("components", () => {
   describe("ChatStatusBar", () => {
     beforeEach(() => {
       setWindowWidth(1024);
-      global.__isConnected = true;
+      global.__useWebSocket_isConnected = true;
     });
 
     it("shows no active users", async () => {
@@ -24,8 +26,8 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
@@ -45,14 +47,14 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 1),
@@ -72,14 +74,14 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "other-channel",
             active: true,
             user: userFixture({ online: true }, 1),
@@ -99,20 +101,20 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 1),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: false,
             user: userFixture({ online: true }, 0),
@@ -132,20 +134,23 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
             timestamp: moment().subtract(1, "minutes").toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 1),
             timestamp: moment().toDate(),
           });
         }
+      });
+      act(() => {
+        __useInterval_callback();
       });
 
       await waitFor(() => {
@@ -159,20 +164,20 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
-          __onEvent({
+        if (__useWebSocket_onEvent) {
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 0),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 1),
             timestamp: moment().toDate(),
           });
-          __onEvent({
+          __useWebSocket_onEvent({
             channelId: "test-channel",
             active: true,
             user: userFixture({ online: true }, 2),
@@ -194,9 +199,9 @@ describe("components", () => {
       render(<ChatStatusBar channelId="test-channel" />);
 
       act(() => {
-        if (__onEvent) {
+        if (__useWebSocket_onEvent) {
           for (let i = 0; i < 10; i++) {
-            __onEvent({
+            __useWebSocket_onEvent({
               channelId: "test-channel",
               active: true,
               user: userFixture({ online: true }, i),
@@ -216,7 +221,7 @@ describe("components", () => {
     });
 
     it("shows a connection problem", async () => {
-      global.__isConnected = false;
+      global.__useWebSocket_isConnected = false;
 
       render(<ChatStatusBar channelId="test-channel" />);
 

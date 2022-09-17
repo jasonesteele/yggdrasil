@@ -176,8 +176,8 @@ describe("components", () => {
       expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
 
       await act(async () => {
-        if (__onEvent)
-          __onEvent({
+        if (__useWebSocket_onEvent)
+          __useWebSocket_onEvent({
             user: {
               id: "abc123",
               name: "test-user",
@@ -217,8 +217,8 @@ describe("components", () => {
       ).toBeInTheDocument();
 
       await act(async () => {
-        if (__onEvent)
-          __onEvent({
+        if (__useWebSocket_onEvent)
+          __useWebSocket_onEvent({
             user: {
               id: "user-id-1",
               name: "User Name 1",
