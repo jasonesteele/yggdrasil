@@ -42,9 +42,13 @@ const ChatCommandField = ({ channelId }: { channelId: string }) => {
   const handleSendCommand = async () => {
     notifyActivityHandler.cancel();
     if (command.trim().length > 0) {
-      await postMessage({ variables: { channelId, text: command.trim() } });
-      setCommand("");
-      cancelActivity();
+      try {
+        await postMessage({ variables: { channelId, text: command.trim() } });
+        setCommand("");
+        cancelActivity();
+      } catch (error) {
+        // intentionally blank - error is handled through useMutation hook
+      }
     }
   };
 
