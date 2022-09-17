@@ -88,104 +88,106 @@ const verifyMessage = (
 };
 
 describe("components", () => {
-  describe("ChatHistory", () => {
-    beforeEach(() => {
-      setWindowWidth(1024);
-      cache.reset();
-    });
-
-    it("renders an empty channel", async () => {
-      render(
-        <MockedProvider cache={cache} mocks={[noMessages]}>
-          <ChatHistory channelId="test-channel-id" />
-        </MockedProvider>
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("chat-history-loading")
-        ).not.toBeInTheDocument();
-      });
-      expect(screen.queryByTestId("chat-message-0")).not.toBeInTheDocument();
-    });
-
-    it("renders a channel with some messages", async () => {
-      render(
-        <MockedProvider cache={cache} mocks={[someMessages]}>
-          <ChatHistory channelId="test-channel-id" />
-        </MockedProvider>
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("chat-history-loading")
-        ).not.toBeInTheDocument();
+  describe("chat", () => {
+    describe("ChatHistory", () => {
+      beforeEach(() => {
+        setWindowWidth(1024);
+        cache.reset();
       });
 
-      verifyMessage(0, "Hello there", "User Name 0", "1:23 PM");
-      verifyMessage(1, "Message Two", "User Name 1", "1:24 PM");
-      verifyMessage(2, "Last chance", "User Name 0", "3:59 AM");
-    });
-
-    it("dyanmically adds a new message", async () => {
-      render(
-        <MockedProvider cache={cache} mocks={[noMessages]}>
-          <ChatHistory channelId="test-channel-id" />
-        </MockedProvider>
-      );
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("chat-history-loading")
-        ).not.toBeInTheDocument();
-      });
-      expect(screen.queryByTestId("chat-message-0")).not.toBeInTheDocument();
-
-      await act(async () => {
-        if (__useWebSocket_onEvent) {
-          __useWebSocket_onEvent({
-            __typename: "Message",
-            id: "message-0",
-            text: "A wild message appears",
-            createdAt: moment("2022-02-28T23:59:59").toDate(),
-            user: {
-              id: "abc123",
-              name: "User Name 0",
-              image: null,
-              online: true,
-            },
-          });
-          __useWebSocket_onEvent({
-            __typename: "Message",
-            id: "message-1",
-            text: "It was super effective",
-            createdAt: moment("2022-03-01T00:01:30").toDate(),
-            user: {
-              id: "abc124",
-              name: "User Name 1",
-              image: null,
-              online: true,
-            },
-          });
-        }
+      it("renders an empty channel", async () => {
+        render(
+          <MockedProvider cache={cache} mocks={[noMessages]}>
+            <ChatHistory channelId="test-channel-id" />
+          </MockedProvider>
+        );
+        await waitFor(() => {
+          expect(
+            screen.queryByTestId("chat-history-loading")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.queryByTestId("chat-message-0")).not.toBeInTheDocument();
       });
 
-      verifyMessage(0, "A wild message appears", "User Name 0", "11:59 PM");
-      verifyMessage(1, "It was super effective", "User Name 1", "12:01 AM");
-    });
+      it("renders a channel with some messages", async () => {
+        render(
+          <MockedProvider cache={cache} mocks={[someMessages]}>
+            <ChatHistory channelId="test-channel-id" />
+          </MockedProvider>
+        );
+        await waitFor(() => {
+          expect(
+            screen.queryByTestId("chat-history-loading")
+          ).not.toBeInTheDocument();
+        });
 
-    it("displays an error", async () => {
-      render(
-        <MockedProvider cache={cache} mocks={[errorResponse]}>
-          <ChatHistory channelId="test-channel-id" />
-        </MockedProvider>
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("chat-history-loading")
-        ).not.toBeInTheDocument();
+        verifyMessage(0, "Hello there", "User Name 0", "1:23 PM");
+        verifyMessage(1, "Message Two", "User Name 1", "1:24 PM");
+        verifyMessage(2, "Last chance", "User Name 0", "3:59 AM");
       });
-      expect(screen.getByText("An error occurred!")).toBeInTheDocument();
-    });
 
-    it.todo("rolls off old messages");
+      it("dyanmically adds a new message", async () => {
+        render(
+          <MockedProvider cache={cache} mocks={[noMessages]}>
+            <ChatHistory channelId="test-channel-id" />
+          </MockedProvider>
+        );
+        await waitFor(() => {
+          expect(
+            screen.queryByTestId("chat-history-loading")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.queryByTestId("chat-message-0")).not.toBeInTheDocument();
+
+        await act(async () => {
+          if (__useWebSocket_onEvent) {
+            __useWebSocket_onEvent({
+              __typename: "Message",
+              id: "message-0",
+              text: "A wild message appears",
+              createdAt: moment("2022-02-28T23:59:59").toDate(),
+              user: {
+                id: "abc123",
+                name: "User Name 0",
+                image: null,
+                online: true,
+              },
+            });
+            __useWebSocket_onEvent({
+              __typename: "Message",
+              id: "message-1",
+              text: "It was super effective",
+              createdAt: moment("2022-03-01T00:01:30").toDate(),
+              user: {
+                id: "abc124",
+                name: "User Name 1",
+                image: null,
+                online: true,
+              },
+            });
+          }
+        });
+
+        verifyMessage(0, "A wild message appears", "User Name 0", "11:59 PM");
+        verifyMessage(1, "It was super effective", "User Name 1", "12:01 AM");
+      });
+
+      it("displays an error", async () => {
+        render(
+          <MockedProvider cache={cache} mocks={[errorResponse]}>
+            <ChatHistory channelId="test-channel-id" />
+          </MockedProvider>
+        );
+
+        await waitFor(() => {
+          expect(
+            screen.queryByTestId("chat-history-loading")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("An error occurred!")).toBeInTheDocument();
+      });
+
+      it.todo("rolls off old messages");
+    });
   });
 });

@@ -43,94 +43,96 @@ const errorMocks = [
 ];
 
 describe("components", () => {
-  describe("ChatCommandField", () => {
-    beforeEach(() => {
-      setWindowWidth(1024);
-    });
-
-    it("sends a chat message on the channel", async () => {
-      render(
-        <MockedProvider mocks={mocks}>
-          <SessionProvider>
-            <ChatCommandField channelId="test-channel" />
-          </SessionProvider>
-        </MockedProvider>
-      );
-
-      await waitFor(() => {
-        expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+  describe("chat", () => {
+    describe("ChatCommandField", () => {
+      beforeEach(() => {
+        setWindowWidth(1024);
       });
 
-      global.__useWebSocket_sendEvent = jest.fn();
+      it("sends a chat message on the channel", async () => {
+        render(
+          <MockedProvider mocks={mocks}>
+            <SessionProvider>
+              <ChatCommandField channelId="test-channel" />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      userEvent.type(
-        screen.getByTestId("chat-command-input"),
-        "Sample Message{Enter}"
-      );
-      await waitFor(() => expect(mocks[0].newData).toHaveBeenCalled());
+        await waitFor(() => {
+          expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+        });
 
-      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
-        channelId: "test-channel",
-        active: true,
-      });
-    });
+        global.__useWebSocket_sendEvent = jest.fn();
 
-    it("clears activity notification when input cleared", async () => {
-      render(
-        <MockedProvider mocks={mocks}>
-          <SessionProvider>
-            <ChatCommandField channelId="test-channel" />
-          </SessionProvider>
-        </MockedProvider>
-      );
+        userEvent.type(
+          screen.getByTestId("chat-command-input"),
+          "Sample Message{Enter}"
+        );
+        await waitFor(() => expect(mocks[0].newData).toHaveBeenCalled());
 
-      await waitFor(() => {
-        expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
-      });
-
-      global.__useWebSocket_sendEvent = jest.fn();
-
-      userEvent.type(
-        screen.getByTestId("chat-command-input"),
-        "Sample Message"
-      );
-
-      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
-        channelId: "test-channel",
-        active: true,
+        expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
+          channelId: "test-channel",
+          active: true,
+        });
       });
 
-      userEvent.type(
-        screen.getByTestId("chat-command-input"),
-        "{selectall}{del}"
-      );
+      it("clears activity notification when input cleared", async () => {
+        render(
+          <MockedProvider mocks={mocks}>
+            <SessionProvider>
+              <ChatCommandField channelId="test-channel" />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
-        channelId: "test-channel",
-        active: false,
+        await waitFor(() => {
+          expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+        });
+
+        global.__useWebSocket_sendEvent = jest.fn();
+
+        userEvent.type(
+          screen.getByTestId("chat-command-input"),
+          "Sample Message"
+        );
+
+        expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
+          channelId: "test-channel",
+          active: true,
+        });
+
+        userEvent.type(
+          screen.getByTestId("chat-command-input"),
+          "{selectall}{del}"
+        );
+
+        expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
+          channelId: "test-channel",
+          active: false,
+        });
       });
-    });
 
-    it("shows error indicator when message fails to post", async () => {
-      render(
-        <MockedProvider mocks={errorMocks}>
-          <SessionProvider>
-            <ChatCommandField channelId="test-channel" />
-          </SessionProvider>
-        </MockedProvider>
-      );
+      it("shows error indicator when message fails to post", async () => {
+        render(
+          <MockedProvider mocks={errorMocks}>
+            <SessionProvider>
+              <ChatCommandField channelId="test-channel" />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      await waitFor(() => {
-        expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
-      });
+        await waitFor(() => {
+          expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+        });
 
-      userEvent.type(
-        screen.getByTestId("chat-command-input"),
-        "Sample Message{Enter}"
-      );
+        userEvent.type(
+          screen.getByTestId("chat-command-input"),
+          "Sample Message{Enter}"
+        );
 
-      await waitFor(() => {
-        expect(screen.getByText("An error occurred!")).toBeInTheDocument();
+        await waitFor(() => {
+          expect(screen.getByText("An error occurred!")).toBeInTheDocument();
+        });
       });
     });
   });

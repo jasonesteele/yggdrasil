@@ -1,4 +1,5 @@
-import { objectType } from "nexus";
+import { extendType, objectType } from "nexus";
+import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
@@ -44,6 +45,19 @@ export const World = objectType({
     t.field("channel", {
       type: Channel,
       description: "Global channel for this world",
+    });
+  },
+});
+
+export const Query = extendType({
+  type: "Query",
+  definition(t) {
+    t.list.field("worlds", {
+      type: World,
+      description: "Retrieves all worlds visible to the current user",
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: async (_root, _args, ctx) =>
+        ctx.prisma.world.findMany({ include: { owner: true } }),
     });
   },
 });

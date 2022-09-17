@@ -30,8 +30,8 @@ model User {
   id              String      @id @default(cuid())
   name            String      @unique
   image           String?
-  accountId       String      @unique
-  account         Account     @relation(fields: [accountId], references: [id])
+  accountId       String?     @unique
+  account         Account?    @relation(fields: [accountId], references: [id])
   createdAt       DateTime    @default(now()) @map(name: "created_at")
   updatedAt       DateTime    @default(now()) @map(name: "updated_at")
   createdArticles Article[]   @relation("createdById")

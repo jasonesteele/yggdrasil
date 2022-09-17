@@ -12,6 +12,15 @@ type Channel = {
   name: string;
 };
 
+type World = {
+  __typename: "World";
+  id: string;
+  name: string;
+  description: string;
+  image?: string;
+  owner: User;
+};
+
 type Message = {
   __typename: "Message";
   id: string;

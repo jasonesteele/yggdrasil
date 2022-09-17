@@ -7,25 +7,27 @@ import ChatChannel from "./ChatChannel";
 const mocks: any[] = [];
 
 describe("components", () => {
-  describe("ChatChannel", () => {
-    beforeEach(() => {
-      setWindowWidth(1024);
-    });
+  describe("chat", () => {
+    describe("ChatChannel", () => {
+      beforeEach(() => {
+        setWindowWidth(1024);
+      });
 
-    it("renders the component", async () => {
-      render(
-        <MockedProvider mocks={mocks}>
-          <SessionProvider>
-            <ChatChannel channelId="test-id" />
-          </SessionProvider>
-        </MockedProvider>
-      );
+      it("renders the component", async () => {
+        render(
+          <MockedProvider mocks={mocks}>
+            <SessionProvider>
+              <ChatChannel channelId="test-id" />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      expect(screen.getByTestId("chat-channel-test-id")).toBeInTheDocument();
-      expect(screen.getByTestId("chat-history")).toBeInTheDocument();
-      expect(screen.getByTestId("user-list")).toBeInTheDocument();
-      expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
-      expect(screen.getByTestId("chat-status-activity")).toBeInTheDocument();
+        expect(screen.getByTestId("chat-channel-test-id")).toBeInTheDocument();
+        expect(screen.getByTestId("chat-history")).toBeInTheDocument();
+        expect(screen.getByTestId("user-list")).toBeInTheDocument();
+        expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
+        expect(screen.getByTestId("chat-status-activity")).toBeInTheDocument();
+      });
     });
   });
 });

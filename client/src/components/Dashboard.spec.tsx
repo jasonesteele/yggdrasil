@@ -21,6 +21,7 @@ describe("components", () => {
         </MockedProvider>
       );
 
+      expect(screen.getByTestId("worlds-panel")).toBeInTheDocument();
       expect(screen.getByTestId("chat-panel")).toBeInTheDocument();
     });
   });

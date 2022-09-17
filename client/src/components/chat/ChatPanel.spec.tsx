@@ -72,98 +72,106 @@ const errorResponse = [
 ];
 
 describe("components", () => {
-  describe("ChatPanel", () => {
-    beforeEach(() => {
-      setWindowWidth(1024);
-    });
+  describe("chat", () => {
+    describe("ChatPanel", () => {
+      beforeEach(() => {
+        setWindowWidth(1024);
+      });
 
-    it("renders the chat panel with no channels", async () => {
-      render(
-        <MockedProvider mocks={noChannels}>
-          <SessionProvider>
-            <ChatPanel />
-          </SessionProvider>
-        </MockedProvider>
-      );
+      it("renders the chat panel with no channels", async () => {
+        render(
+          <MockedProvider mocks={noChannels}>
+            <SessionProvider>
+              <ChatPanel />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      await waitFor(() => {
+        await waitFor(() => {
+          expect(
+            screen.queryByText("Loading chat channels...")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("No subscribed channels")).toBeInTheDocument();
+      });
+
+      it("renders the chat panel with one channel", async () => {
+        render(
+          <MockedProvider mocks={oneChannel}>
+            <SessionProvider>
+              <ChatPanel />
+            </SessionProvider>
+          </MockedProvider>
+        );
+
+        await waitFor(() => {
+          expect(
+            screen.queryByText("Loading chat channels...")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("Channel 1")).toBeInTheDocument();
         expect(
-          screen.queryByText("Loading chat channels...")
+          screen.getByTestId("chat-channel-channel-1")
+        ).toBeInTheDocument();
+      });
+
+      it("renders the chat panel with many channels", async () => {
+        render(
+          <MockedProvider mocks={threeChannels}>
+            <SessionProvider>
+              <ChatPanel />
+            </SessionProvider>
+          </MockedProvider>
+        );
+
+        await waitFor(() => {
+          expect(
+            screen.queryByText("Loading chat channels...")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("Channel 1")).toBeInTheDocument();
+        expect(screen.getByText("Channel 2")).toBeInTheDocument();
+        expect(screen.getByText("Channel 3")).toBeInTheDocument();
+
+        expect(
+          screen.getByTestId("chat-channel-channel-1")
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByTestId("chat-channel-channel-2")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.queryByTestId("chat-channel-channel-3")
+        ).not.toBeInTheDocument();
+
+        userEvent.click(screen.getByText("Channel 2"));
+
+        expect(
+          screen.queryByTestId("chat-channel-channel-1")
+        ).not.toBeInTheDocument();
+        expect(
+          screen.getByTestId("chat-channel-channel-2")
+        ).toBeInTheDocument();
+        expect(
+          screen.queryByTestId("chat-channel-channel-3")
         ).not.toBeInTheDocument();
       });
-      expect(screen.getByText("No subscribed channels")).toBeInTheDocument();
-    });
 
-    it("renders the chat panel with one channel", async () => {
-      render(
-        <MockedProvider mocks={oneChannel}>
-          <SessionProvider>
-            <ChatPanel />
-          </SessionProvider>
-        </MockedProvider>
-      );
+      it("handles an error", async () => {
+        render(
+          <MockedProvider mocks={errorResponse}>
+            <SessionProvider>
+              <ChatPanel />
+            </SessionProvider>
+          </MockedProvider>
+        );
 
-      await waitFor(() => {
-        expect(
-          screen.queryByText("Loading chat channels...")
-        ).not.toBeInTheDocument();
+        await waitFor(() => {
+          expect(
+            screen.queryByText("Loading chat channels...")
+          ).not.toBeInTheDocument();
+        });
+        expect(screen.getByText("An error occurred!")).toBeInTheDocument();
       });
-      expect(screen.getByText("Channel 1")).toBeInTheDocument();
-      expect(screen.getByTestId("chat-channel-channel-1")).toBeInTheDocument();
-    });
-
-    it("renders the chat panel with many channels", async () => {
-      render(
-        <MockedProvider mocks={threeChannels}>
-          <SessionProvider>
-            <ChatPanel />
-          </SessionProvider>
-        </MockedProvider>
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.queryByText("Loading chat channels...")
-        ).not.toBeInTheDocument();
-      });
-      expect(screen.getByText("Channel 1")).toBeInTheDocument();
-      expect(screen.getByText("Channel 2")).toBeInTheDocument();
-      expect(screen.getByText("Channel 3")).toBeInTheDocument();
-
-      expect(screen.getByTestId("chat-channel-channel-1")).toBeInTheDocument();
-      expect(
-        screen.queryByTestId("chat-channel-channel-2")
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByTestId("chat-channel-channel-3")
-      ).not.toBeInTheDocument();
-
-      userEvent.click(screen.getByText("Channel 2"));
-
-      expect(
-        screen.queryByTestId("chat-channel-channel-1")
-      ).not.toBeInTheDocument();
-      expect(screen.getByTestId("chat-channel-channel-2")).toBeInTheDocument();
-      expect(
-        screen.queryByTestId("chat-channel-channel-3")
-      ).not.toBeInTheDocument();
-    });
-
-    it("handles an error", async () => {
-      render(
-        <MockedProvider mocks={errorResponse}>
-          <SessionProvider>
-            <ChatPanel />
-          </SessionProvider>
-        </MockedProvider>
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.queryByText("Loading chat channels...")
-        ).not.toBeInTheDocument();
-      });
-      expect(screen.getByText("An error occurred!")).toBeInTheDocument();
     });
   });
 });

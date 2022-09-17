@@ -1,6 +1,7 @@
 import { Box, Card, Stack } from "@mui/material";
 import { SxProps, Theme } from "@mui/system";
 import ChatPanel from "./chat/ChatPanel";
+import WorldBrowser from "./world/WorldBrowser";
 
 const DashBoardWidget = ({
   children,
@@ -19,10 +20,12 @@ const DashBoardWidget = ({
 const Dashboard = () => {
   return (
     <Stack display="flex" flexDirection="column" spacing={2} height="100%">
-      <DashBoardWidget sx={{ flexGrow: 0, height: "50%" }}>
-        World list
+      <DashBoardWidget
+        sx={{ flexGrow: 0, flexShrink: 1, minHeight: "150px", height: "50%" }}
+      >
+        <WorldBrowser />
       </DashBoardWidget>
-      <DashBoardWidget sx={{ flexGrow: 1, minHeight: 0 }}>
+      <DashBoardWidget sx={{ flexGrow: 1, flexShrink: 0, minHeight: "50px" }}>
         <ChatPanel />
       </DashBoardWidget>
     </Stack>

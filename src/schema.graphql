@@ -190,6 +190,9 @@ type Query {
 
   """Retrieves the current user's subscribed channels"""
   subscribedChannels: [Channel]
+
+  """Retrieves all worlds visible to the current user"""
+  worlds: [World]
 }
 
 """Application user"""
