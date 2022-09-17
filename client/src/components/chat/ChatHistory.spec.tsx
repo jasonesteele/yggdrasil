@@ -7,8 +7,6 @@ import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatHistory, { GET_CHANNEL_MESSAGES } from "./ChatHistory";
 
-jest.mock("../../hooks/useWebSocket");
-
 const noMessages = {
   request: {
     query: GET_CHANNEL_MESSAGES,

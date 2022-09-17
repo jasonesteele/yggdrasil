@@ -1,12 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatPanel, { GET_SUBSCRIBED_CHANNELS } from "./ChatPanel";
-
-jest.mock("../../hooks/useWebSocket");
-jest.mock("../../hooks/useInterval");
 
 const noChannels = [
   {

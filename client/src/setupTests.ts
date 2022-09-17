@@ -4,3 +4,6 @@
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 import "setimmediate";
+
+jest.mock("./hooks/useWebSocket");
+jest.mock("./hooks/useInterval");

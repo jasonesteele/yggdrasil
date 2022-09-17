@@ -28,7 +28,13 @@ const ChatPanel = () => {
       : undefined;
 
   return (
-    <Box height="100%" minHeight="0" display="flex" flexDirection="column">
+    <Box
+      height="100%"
+      minHeight="0"
+      display="flex"
+      flexDirection="column"
+      data-testid="chat-panel"
+    >
       <Box flexGrow={0}>
         {!data?.subscribedChannels?.length ? (
           <>

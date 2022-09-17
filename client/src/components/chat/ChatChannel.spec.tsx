@@ -4,9 +4,6 @@ import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatChannel from "./ChatChannel";
 
-jest.mock("../../hooks/useWebSocket");
-jest.mock("../../hooks/useInterval");
-
 const mocks: any[] = [];
 
 describe("components", () => {

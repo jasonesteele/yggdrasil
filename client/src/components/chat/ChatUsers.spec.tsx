@@ -6,8 +6,6 @@ import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatUsers, { GET_CHANNEL_USERS } from "./ChatUsers";
 
-jest.mock("../../hooks/useWebSocket");
-
 const noUsers = {
   request: {
     query: GET_CHANNEL_USERS,

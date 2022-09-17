@@ -4,9 +4,6 @@ import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatStatusBar from "./ChatStatusBar";
 
-jest.mock("../../hooks/useWebSocket");
-jest.mock("../../hooks/useInterval");
-
 describe("components", () => {
   describe("ChatStatusBar", () => {
     beforeEach(() => {

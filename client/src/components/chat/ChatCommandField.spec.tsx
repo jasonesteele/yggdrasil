@@ -7,8 +7,6 @@ import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatCommandField, { POST_MESSAGE } from "./ChatCommandField";
 
-jest.mock("../../hooks/useWebSocket");
-
 const mocks = [
   {
     request: {
