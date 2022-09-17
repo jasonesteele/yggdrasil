@@ -63,7 +63,7 @@ Connect to http://localhost:3000 and log in through Discord.
     # Configure Discord Oauth2
     export DISCORD_ID=<CLIENT ID>
     export DISCORD_SECRET=<CLIENT SECRET>
-    
+
     docker compose --profile integration up
 
 Connect to http://localhost:3000 and log in through Discord.
