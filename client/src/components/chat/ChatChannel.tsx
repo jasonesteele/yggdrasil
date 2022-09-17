@@ -9,7 +9,12 @@ const ChatChannel = ({ channelId }: { channelId: string }) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box
+      data-testid="chat-channel"
+      display="flex"
+      flexDirection="column"
+      height="100%"
+    >
       <Box display="flex" flexGrow={1} minHeight="100px">
         <Box minHeight={0} flexGrow={1}>
           <ChatHistory channelId={channelId} />
