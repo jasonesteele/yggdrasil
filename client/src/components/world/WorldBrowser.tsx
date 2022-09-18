@@ -76,9 +76,9 @@ const WorldBrowser = () => {
             </Alert>
           )}
           <Box sx={{ overflowY: "auto" }}>
-            <Grid container>
+            <Grid container spacing={1} padding={1}>
               {filteredWorlds.map((world: World, idx: number) => (
-                <Grid key={idx} item xs={12} sm={6}>
+                <Grid key={idx} item xs={12} md={6} lg={4}>
                   <WorldCard world={world} />
                 </Grid>
               ))}
