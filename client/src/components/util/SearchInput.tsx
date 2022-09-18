@@ -26,7 +26,10 @@ const SearchInput = ({
           <>
             {searchFilter.trim().length > 0 ? (
               <InputAdornment position="end">
-                <IconButton onClick={() => setSearchFilter("")}>
+                <IconButton
+                  data-testid="search-filter-close"
+                  onClick={() => setSearchFilter("")}
+                >
                   <Close />
                 </IconButton>
               </InputAdornment>
