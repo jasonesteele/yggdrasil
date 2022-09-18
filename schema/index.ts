@@ -11,6 +11,16 @@ import * as WorldTypes from "./WorldTypes";
 
 export const GQLDateTime = asNexusMethod(GraphQLDateTime, "dateTime");
 
+export const validateObject = (schema: any, obj: any) => {
+  try {
+    return schema.validateSync(obj);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+
 const schema = makeSchema({
   types: [
     GQLDateTime,

@@ -27,6 +27,8 @@ const WorldBrowser = () => {
   const [searchFilter, setSearchFilter] = useState("");
   const { data, loading, error } = useQuery(GET_WORLDS);
 
+  // TODO: subscribe to world:new notifications
+
   const filteredWorlds = data?.worlds
     ? data?.worlds.filter(
         (world: World) =>
@@ -57,7 +59,7 @@ const WorldBrowser = () => {
         </Box>
       )}
       {!loading && error && (
-        <ApolloErrorAlert title="Error loading messages" error={error} />
+        <ApolloErrorAlert title="Error loading worlds" error={error} />
       )}
       {!loading && !error && (
         <Box

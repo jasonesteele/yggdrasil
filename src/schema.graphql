@@ -163,6 +163,13 @@ type Message {
 }
 
 type Mutation {
+  createWorld(
+    """Short description of the world"""
+    description: String
+
+    """Unique world name"""
+    name: String!
+  ): World
   postMessage(
     """Channel ID to post message on"""
     channelId: String!

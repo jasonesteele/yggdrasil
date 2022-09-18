@@ -208,6 +208,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
+    createWorld: NexusGenRootTypes['World'] | null; // World
     postMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   OperationResponse: { // field return type
@@ -312,6 +313,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    createWorld: 'World'
     postMessage: 'Message'
   }
   OperationResponse: { // field return type name
@@ -360,6 +362,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createWorld: { // args
+      description?: string | null; // String
+      name: string; // String!
+    }
     postMessage: { // args
       channelId: string; // String!
       text: string; // String!
