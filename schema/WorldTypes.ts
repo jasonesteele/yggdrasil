@@ -1,10 +1,10 @@
-import { extendType, objectType } from "nexus";
+import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
 import { Location } from "./LocationTypes";
-import { User } from "./UserTypes";
+import { OperationResponse, User } from "./UserTypes";
 
 export const World = objectType({
   name: "World",
@@ -58,6 +58,22 @@ export const Query = extendType({
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: async (_root, _args, ctx) =>
         ctx.prisma.world.findMany({ include: { owner: true } }),
+    });
+
+    t.field("worldNameAvailability", {
+      type: OperationResponse,
+      description: "Determines if a world names is available",
+      args: {
+        name: nonNull(stringArg()),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: async (_root, args, ctx) => {
+        const world = await ctx.prisma.world.findMany({
+          where: { name: { equals: args.name, mode: "insensitive" } },
+        });
+        // TODO: other validation on world name (profanity filter, etc.)
+        return { success: !world?.length };
+      },
     });
   },
 });

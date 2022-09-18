@@ -191,6 +191,9 @@ type Query {
   """Retrieves the current user's subscribed channels"""
   subscribedChannels: [Channel]
 
+  """Determines if a world names is available"""
+  worldNameAvailability(name: String!): OperationResponse
+
   """Retrieves all worlds visible to the current user"""
   worlds: [World]
 }
