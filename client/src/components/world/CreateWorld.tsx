@@ -1,4 +1,9 @@
-import { ApolloClient, gql, useApolloClient } from "@apollo/client";
+import {
+  ApolloClient,
+  gql,
+  useApolloClient,
+  useMutation,
+} from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -11,13 +16,21 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 
 export const WORLD_NAME_AVAILABILITY = gql`
   query WorldNameAvailability($name: String!) {
     worldNameAvailability(name: $name) {
       success
+    }
+  }
+`;
+
+export const CREATE_WORLD = gql`
+  mutation CreateWorld($name: String!, $description: String) {
+    createWorld(name: $name, description: $description) {
+      id
     }
   }
 `;
@@ -40,6 +53,8 @@ const checkWorldNameAvailability = async (
 const CreateWorld = () => {
   const client = useApolloClient();
   const [worldNameAvailable, setWorldNameAvailable] = useState(true);
+  const [createWorld, { loading: creating }] = useMutation(CREATE_WORLD);
+  const navigate = useNavigate();
 
   const schema = object({
     name: string()
@@ -69,11 +84,22 @@ const CreateWorld = () => {
   });
 
   const onSubmit = async (data: FieldValues) => {
-    // TODO: change this to reflect field-specific errors on the mutation
     const available = await checkWorldNameAvailability(client, data.name);
     setWorldNameAvailable(available);
     if (available) {
-      console.log(data);
+      try {
+        await createWorld({
+          variables: {
+            name: data.name.trim(),
+            description: data.description.trim(),
+          },
+        });
+        // TODO: show toast for success
+        navigate("/world");
+      } catch (error) {
+        // TODO: change this to reflect field-specific validation errors from the mutation
+        // TODO: show toast for error
+      }
     }
   };
 
@@ -111,6 +137,7 @@ const CreateWorld = () => {
                 />
               </FormControl>
               <Stack direction="row-reverse" spacing={3} padding={1}>
+                {/* TODO: Change to ProgressButton based on creating */}
                 <Button
                   type="submit"
                   disabled={Object.keys(errors).length > 0}

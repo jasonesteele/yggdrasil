@@ -1,5 +1,6 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { object, string } from "yup";
+import { validateObject } from ".";
 import { Context } from "../src/context";
 
 const MAX_MESSAGE_LENGTH = 1500;
@@ -63,15 +64,6 @@ const postMessageSchema: any = object({
   text: string().required().min(1).max(MAX_MESSAGE_LENGTH),
 });
 
-const validatePostMessage = (schema: any, obj: any) => {
-  try {
-    return schema.validateSync(obj);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
-
 export const Mutation = extendType({
   type: "Mutation",
   definition(t) {
@@ -85,7 +77,7 @@ export const Mutation = extendType({
       },
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       async resolve(_root, args, ctx) {
-        const { text } = validatePostMessage(postMessageSchema, args);
+        const { text } = validateObject(postMessageSchema, args);
         const message = await ctx.prisma.message.create({
           data: {
             channel: { connect: { id: args.channelId } },

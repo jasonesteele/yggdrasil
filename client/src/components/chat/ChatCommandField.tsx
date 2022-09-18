@@ -23,7 +23,7 @@ export const POST_MESSAGE = gql`
 
 const ChatCommandField = ({ channelId }: { channelId: string }) => {
   const [command, setCommand] = useState<string>("");
-  const [postMessage, { loading: posting, error }] = useMutation(POST_MESSAGE);
+  const [postMessage, { loading: posting }] = useMutation(POST_MESSAGE);
   const { sendEvent } = useWebSocket("chat:activity");
 
   const notifyActivityHandler = useMemo(
@@ -47,16 +47,13 @@ const ChatCommandField = ({ channelId }: { channelId: string }) => {
         setCommand("");
         cancelActivity();
       } catch (error) {
-        // intentionally blank - error is handled through useMutation hook
+        // TODO: change this to use a toast for error, remove from useMutation hook
       }
     }
   };
 
   return (
     <Box>
-      {error && (
-        <ApolloErrorAlert title="Error sending message" error={error} />
-      )}
       <div style={{ position: "relative" }}>
         <TextField
           fullWidth
