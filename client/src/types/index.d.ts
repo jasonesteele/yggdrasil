@@ -31,6 +31,7 @@ type Message = {
 
 type Session = {
   user?: User;
+  loading?: boolean;
   error?: ApolloError;
 };
 

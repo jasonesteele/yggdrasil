@@ -60,7 +60,7 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
 
   return (
     <Card
-      elevation={3}
+      elevation={5}
       sx={{
         display: "flex",
         flexDirection: "column",

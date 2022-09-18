@@ -31,9 +31,11 @@ export const handleLogin = () => {
 };
 
 const SessionProvider = ({ children }: { children: JSX.Element }) => {
-  const { data, error } = useQuery(GET_CURRENT_USER);
+  const { data, loading, error } = useQuery(GET_CURRENT_USER);
   return (
-    <SessionContext.Provider value={{ user: data?.currentUser, error }}>
+    <SessionContext.Provider
+      value={{ user: data?.currentUser, loading, error }}
+    >
       {children}
     </SessionContext.Provider>
   );

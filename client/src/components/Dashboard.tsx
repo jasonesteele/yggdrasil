@@ -1,7 +1,9 @@
 import { Box, Card, Stack } from "@mui/material";
 import { SxProps, Theme } from "@mui/system";
+import { useSessionContext } from "../providers/SessionProvider";
+import AppLoading from "./AppLoading";
 import ChatPanel from "./chat/ChatPanel";
-import WorldBrowser from "./world/WorldBrowser";
+import Signin from "./Signin";
 
 const DashBoardWidget = ({
   children,
@@ -17,13 +19,18 @@ const DashBoardWidget = ({
   );
 };
 
-const Dashboard = () => {
+const Dashboard = ({ children }: { children: JSX.Element }) => {
+  const { user, loading } = useSessionContext();
+
+  if (loading) return <AppLoading />;
+  if (!user) return <Signin />;
+
   return (
     <Stack display="flex" flexDirection="column" spacing={2} height="100%">
       <DashBoardWidget
         sx={{ flexGrow: 0, flexShrink: 1, minHeight: "150px", height: "50%" }}
       >
-        <WorldBrowser />
+        {children}
       </DashBoardWidget>
       <DashBoardWidget sx={{ flexGrow: 1, flexShrink: 0, minHeight: "50px" }}>
         <ChatPanel />

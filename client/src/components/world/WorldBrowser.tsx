@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { Alert, Box, Grid } from "@mui/material";
+import Add from "@mui/icons-material/Add";
+import { Alert, Box, Grid, IconButton } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import SearchInput from "../util/SearchInput";
 import WorldCard from "./WorldCard";
@@ -65,11 +67,21 @@ const WorldBrowser = () => {
           flexGrow="1"
           minHeight="0"
         >
-          <SearchInput
-            searchFilter={searchFilter}
-            setSearchFilter={setSearchFilter}
-            dataTestId="worlds-list-search"
-          />
+          <Box display="flex">
+            <SearchInput
+              searchFilter={searchFilter}
+              setSearchFilter={setSearchFilter}
+              dataTestId="worlds-list-search"
+            />
+            <IconButton
+              component={Link}
+              to={"/world/new"}
+              title="Create a world"
+              color="primary"
+            >
+              <Add />
+            </IconButton>
+          </Box>
           {!filteredWorlds.length && (
             <Alert sx={{ width: "100%" }} severity="info">
               No worlds found

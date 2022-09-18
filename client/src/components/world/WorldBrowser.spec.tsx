@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { cache } from "../../apollo-client";
 import worldFixture from "../../fixtures/worldFixture";
 import SessionProvider from "../../providers/SessionProvider";
@@ -58,7 +59,9 @@ describe("components", () => {
         render(
           <MockedProvider mocks={noWorlds}>
             <SessionProvider>
-              <WorldBrowser />
+              <MemoryRouter>
+                <WorldBrowser />
+              </MemoryRouter>
             </SessionProvider>
           </MockedProvider>
         );
@@ -73,7 +76,9 @@ describe("components", () => {
         render(
           <MockedProvider mocks={someWorlds}>
             <SessionProvider>
-              <WorldBrowser />
+              <MemoryRouter>
+                <WorldBrowser />
+              </MemoryRouter>
             </SessionProvider>
           </MockedProvider>
         );
@@ -106,7 +111,9 @@ describe("components", () => {
         render(
           <MockedProvider mocks={errorResponse}>
             <SessionProvider>
-              <WorldBrowser />
+              <MemoryRouter>
+                <WorldBrowser />
+              </MemoryRouter>
             </SessionProvider>
           </MockedProvider>
         );

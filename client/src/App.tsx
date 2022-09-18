@@ -4,8 +4,8 @@ import Dashboard from "./components/Dashboard";
 import DiscordIcon from "./components/icons/DiscordIcon";
 import YggdrasilIcon from "./components/icons/YggdrasilIcon";
 import PageNotFound from "./components/PageNotFound";
-import Signin from "./components/Signin";
 import UserProfileButton from "./components/UserProfileButton";
+import WorldBrowser from "./components/world/WorldBrowser";
 import { handleLogin, useSessionContext } from "./providers/SessionProvider";
 
 const App = () => {
@@ -50,10 +50,12 @@ const App = () => {
       <Toolbar sx={{ height: "64px" }} />
       <Box flexGrow={1} sx={{ minHeight: 0 }} p={0.5} pt={1.5}>
         <Router>
-          <Routes>
-            <Route path="/" element={user ? <Dashboard /> : <Signin />} />
-            <Route path="/*" element={<PageNotFound />} />
-          </Routes>
+          <Dashboard>
+            <Routes>
+              <Route path="/" element={<WorldBrowser />} />
+              <Route path="/*" element={<PageNotFound />} />
+            </Routes>
+          </Dashboard>
         </Router>
       </Box>
     </Box>
