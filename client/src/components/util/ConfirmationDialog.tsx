@@ -18,14 +18,14 @@ const ConfirmationDialog = ({
   title?: string;
   message: JSX.Element | string;
   open: boolean;
-  onClose: (value?: boolean) => void;
+  onClose: (value: boolean) => void;
 }) => {
   return (
     <Dialog open={open} data-testid={testid} {...rest}>
       <DialogTitle>{title || "Please confirm"}</DialogTitle>
       <DialogContent>{message}</DialogContent>
       <DialogActions>
-        <Button autoFocus onClick={() => onClose()}>
+        <Button autoFocus onClick={() => onClose(false)}>
           Cancel
         </Button>
         <Button onClick={() => onClose(true)}>Ok</Button>
