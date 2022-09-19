@@ -29,10 +29,19 @@ type Message = {
   user: User;
 };
 
-type Session = {
+type SessionContextData = {
   user?: User;
   loading?: boolean;
   error?: ApolloError;
+};
+
+type Toast = {
+  message: string;
+  severity: "error" | "warning" | "info" | "success";
+};
+
+type ToastContextData = {
+  showToast: (toast: Toast) => void;
 };
 
 type ActivityNotification = {

@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import client from "./apollo-client";
 import App from "./App";
 import SessionProvider from "./providers/SessionProvider";
+import ToastProvider from "./providers/ToastProvider";
 import reportWebVitals from "./reportWebVitals";
 import theme from "./theme";
 
@@ -18,7 +19,9 @@ root.render(
       <SessionProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <App />
+          <ToastProvider>
+            <App />
+          </ToastProvider>
         </ThemeProvider>
       </SessionProvider>
     </ApolloProvider>
