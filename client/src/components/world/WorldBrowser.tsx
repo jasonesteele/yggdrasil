@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
-import { Alert, Box, Grid, IconButton } from "@mui/material";
-import { useState } from "react";
+import { Alert, Box, Grid, IconButton, LinearProgress } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { SLOW_POLL_INTERVAL } from "../../constants";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import SearchInput from "../util/SearchInput";
 import WorldCard from "./WorldCard";
@@ -25,9 +26,19 @@ export const GET_WORLDS = gql`
 
 const WorldBrowser = () => {
   const [searchFilter, setSearchFilter] = useState("");
-  const { data, loading, error } = useQuery(GET_WORLDS);
+  const { data, loading, error, startPolling, stopPolling } = useQuery(
+    GET_WORLDS,
+    {
+      fetchPolicy: "cache-and-network",
+    }
+  );
 
-  // TODO: subscribe to world:new notifications
+  useEffect(() => {
+    startPolling(SLOW_POLL_INTERVAL);
+    return () => {
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
 
   const filteredWorlds = data?.worlds
     ? data?.worlds.filter(
@@ -51,17 +62,10 @@ const WorldBrowser = () => {
       height="100%"
       data-testid="worlds-panel"
     >
-      {loading && (
-        <Box>
-          <Alert sx={{ width: "100%" }} severity="info">
-            Loading...
-          </Alert>
-        </Box>
-      )}
       {!loading && error && (
         <ApolloErrorAlert title="Error loading worlds" error={error} />
       )}
-      {!loading && !error && (
+      {!error && (
         <Box
           display="flex"
           flexDirection="column"
@@ -84,6 +88,15 @@ const WorldBrowser = () => {
               <Add />
             </IconButton>
           </Box>
+          {loading && (
+            <Box>
+              <Alert sx={{ width: "100%" }} severity="info">
+                Loading...
+              </Alert>
+              <LinearProgress />
+            </Box>
+          )}
+
           {!filteredWorlds.length && (
             <Alert sx={{ width: "100%" }} severity="info">
               No worlds found

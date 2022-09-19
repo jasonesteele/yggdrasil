@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  gql,
-  useApolloClient,
-  useMutation,
-} from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
@@ -14,61 +9,55 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { object, string } from "yup";
-
-export const WORLD_NAME_AVAILABILITY = gql`
-  query WorldNameAvailability($name: String!) {
-    worldNameAvailability(name: $name) {
-      success
-    }
-  }
-`;
+import {
+  MAX_WORLD_NAME_LEN,
+  MIN_WORLD_DESCR_LEN,
+  MIN_WORLD_NAME_LEN,
+} from "../../constants";
+import { useToastContext } from "../../providers/ToastProvider";
+import ProgressButton from "../util/ProgressButton";
 
 export const CREATE_WORLD = gql`
   mutation CreateWorld($name: String!, $description: String) {
     createWorld(name: $name, description: $description) {
-      id
+      world {
+        id
+        name
+      }
+      validationErrors {
+        field
+        message
+      }
     }
   }
 `;
 
-const checkWorldNameAvailability = async (
-  client: ApolloClient<object>,
-  value: string | undefined
-): Promise<boolean> => {
-  try {
-    const result = await client.query({
-      query: WORLD_NAME_AVAILABILITY,
-      variables: { name: value },
-    });
-    return result?.data?.worldNameAvailability?.success;
-  } catch (error) {
-    return false;
-  }
-};
-
 const CreateWorld = () => {
-  const client = useApolloClient();
-  const [worldNameAvailable, setWorldNameAvailable] = useState(true);
+  const [validationErrors, setValidationErrors] = useState<
+    { field: string; message: string }[] | undefined
+  >(undefined);
   const [createWorld, { loading: creating }] = useMutation(CREATE_WORLD);
   const navigate = useNavigate();
+  const { showToast } = useToastContext();
 
   const schema = object({
     name: string()
       .trim()
       .required()
-      .min(5)
-      .max(32)
-      .test("clearWorldNameAvailable", "", (value) => {
-        setWorldNameAvailable(true);
+      .min(MIN_WORLD_NAME_LEN)
+      .max(MAX_WORLD_NAME_LEN)
+      .test("clearValidationErrors", "", (value) => {
+        setValidationErrors(undefined);
         return true;
       }),
     description: string()
       .trim()
-      .matches(/.{10,}/, {
+      .matches(new RegExp(`.{${MIN_WORLD_DESCR_LEN},}`), {
         excludeEmptyString: true,
         message: "description must be at least 10 characters",
       })
@@ -84,23 +73,26 @@ const CreateWorld = () => {
   });
 
   const onSubmit = async (data: FieldValues) => {
-    const available = await checkWorldNameAvailability(client, data.name);
-    setWorldNameAvailable(available);
-    if (available) {
-      try {
-        await createWorld({
-          variables: {
-            name: data.name.trim(),
-            description: data.description.trim(),
-          },
+    try {
+      const response = await createWorld({
+        variables: {
+          name: data.name.trim(),
+          description: data.description.trim(),
+        },
+      });
+      if (response.data.createWorld.validationErrors?.length > 0) {
+        setValidationErrors(response.data.createWorld.validationErrors);
+      } else {
+        showToast({
+          severity: "success",
+          message: `Created ${response.data.createWorld.world.name}`,
         });
-        // TODO: show toast for success
-        navigate("/world");
-      } catch (error) {
-        // TODO: change this to reflect field-specific validation errors from the mutation
-        // TODO: show toast for error
+        navigate(`/world`);
       }
+    } catch (error) {
+      showToast({ severity: "error", message: (error as any).message });
     }
+    // }
   };
 
   return (
@@ -112,22 +104,41 @@ const CreateWorld = () => {
               <Typography variant="h5">Create a New World</Typography>
               <FormControl fullWidth>
                 <TextField
+                  autoFocus
                   required
-                  error={!!errors.name || !worldNameAvailable}
+                  error={
+                    !!errors.name ||
+                    !!validationErrors?.find((error) => error.field === "name")
+                  }
                   helperText={
                     errors.name?.message?.toString() ||
-                    (!worldNameAvailable ? "name is not available" : " ")
+                    validationErrors
+                      ?.filter((error) => error.field === "name")
+                      ?.map((error) => error.message)
+                      .join(", ")
                   }
                   label="World Name"
                   variant="outlined"
                   id="world-name"
+                  inputProps={{ maxLength: MAX_WORLD_NAME_LEN }}
                   {...register("name")}
                 />
               </FormControl>
               <FormControl fullWidth>
                 <TextField
-                  error={!!errors.description}
-                  helperText={errors.description?.message?.toString() || " "}
+                  error={
+                    !!errors.description ||
+                    !!validationErrors?.find(
+                      (error) => error.field === "description"
+                    )
+                  }
+                  helperText={
+                    errors.description?.message?.toString() ||
+                    validationErrors
+                      ?.filter((error) => error.field === "description")
+                      ?.map((error) => error.message)
+                      .join(", ")
+                  }
                   multiline
                   rows={3}
                   label="Short Description"
@@ -137,14 +148,14 @@ const CreateWorld = () => {
                 />
               </FormControl>
               <Stack direction="row-reverse" spacing={3} padding={1}>
-                {/* TODO: Change to ProgressButton based on creating */}
-                <Button
+                <ProgressButton
                   type="submit"
+                  loading={creating}
                   disabled={Object.keys(errors).length > 0}
                   variant="contained"
                 >
                   Create
-                </Button>
+                </ProgressButton>
                 <Button component={Link} to="/world">
                   Cancel
                 </Button>

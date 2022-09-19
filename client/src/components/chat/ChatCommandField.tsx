@@ -3,8 +3,8 @@ import { Box, CircularProgress, TextField } from "@mui/material";
 import { throttle } from "lodash";
 import { useMemo, useState } from "react";
 import useWebSocket from "../../hooks/useWebSocket";
+import { useToastContext } from "../../providers/ToastProvider";
 import theme from "../../theme";
-import ApolloErrorAlert from "../ApolloErrorAlert";
 
 const MAX_MESSAGE_LENGTH = 1500;
 
@@ -25,6 +25,7 @@ const ChatCommandField = ({ channelId }: { channelId: string }) => {
   const [command, setCommand] = useState<string>("");
   const [postMessage, { loading: posting }] = useMutation(POST_MESSAGE);
   const { sendEvent } = useWebSocket("chat:activity");
+  const { showToast } = useToastContext();
 
   const notifyActivityHandler = useMemo(
     () =>
@@ -47,7 +48,7 @@ const ChatCommandField = ({ channelId }: { channelId: string }) => {
         setCommand("");
         cancelActivity();
       } catch (error) {
-        // TODO: change this to use a toast for error, remove from useMutation hook
+        showToast({ severity: "error", message: (error as any).message });
       }
     }
   };

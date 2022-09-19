@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { object, string } from "yup";
 import { validateObject } from ".";
@@ -51,6 +52,24 @@ export const World = objectType({
   },
 });
 
+export const ValidationError = objectType({
+  name: "ValidationError",
+  description: "Validation error for a mutation",
+  definition(t) {
+    t.string("field", { description: "Name of field with error" });
+    t.string("message", { description: "Error message" });
+  },
+});
+
+export const WorldMutateResponse = objectType({
+  name: "WorldMutateResponse",
+  description: "Response to a mutation for updating or creating a world",
+  definition(t) {
+    t.field("world", { type: World });
+    t.list.field("validationErrors", { type: ValidationError });
+  },
+});
+
 export const Query = extendType({
   type: "Query",
   definition(t) {
@@ -60,22 +79,6 @@ export const Query = extendType({
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: async (_root, _args, ctx) =>
         ctx.prisma.world.findMany({ include: { owner: true } }),
-    });
-
-    t.field("worldNameAvailability", {
-      type: OperationResponse,
-      description: "Determines if a world names is available",
-      args: {
-        name: nonNull(stringArg()),
-      },
-      authorize: (_root, _args, ctx: Context) => !!ctx.user,
-      resolve: async (_root, args, ctx) => {
-        const world = await ctx.prisma.world.findMany({
-          where: { name: { equals: args.name, mode: "insensitive" } },
-        });
-        // TODO: other validation on world name (profanity filter, etc.)
-        return { success: !world?.length };
-      },
     });
   },
 });
@@ -96,7 +99,7 @@ export const Mutation = extendType({
   type: "Mutation",
   definition(t) {
     t.field("createWorld", {
-      type: World,
+      type: WorldMutateResponse,
       args: {
         name: nonNull(stringArg({ description: "Unique world name" })),
         description: stringArg({
@@ -110,8 +113,13 @@ export const Mutation = extendType({
         const existingWorld = await ctx.prisma.world.findMany({
           where: { name: { equals: args.name, mode: "insensitive" } },
         });
-        console.log(existingWorld);
-        if (existingWorld?.length > 0) throw new Error("name not available");
+        if (existingWorld?.length > 0) {
+          return {
+            validationErrors: [
+              { field: "name", message: "name is not available" },
+            ],
+          };
+        }
 
         const worldChannel = await ctx.prisma.channel.create({
           data: { name: "World" },
@@ -128,8 +136,9 @@ export const Mutation = extendType({
             owner: true,
           },
         });
+
         ctx.io.emit(`world:create`, world);
-        return world;
+        return { world };
       },
     });
   },

@@ -169,7 +169,7 @@ type Mutation {
 
     """Unique world name"""
     name: String!
-  ): World
+  ): WorldMutateResponse
   postMessage(
     """Channel ID to post message on"""
     channelId: String!
@@ -197,9 +197,6 @@ type Query {
 
   """Retrieves the current user's subscribed channels"""
   subscribedChannels: [Channel]
-
-  """Determines if a world names is available"""
-  worldNameAvailability(name: String!): OperationResponse
 
   """Retrieves all worlds visible to the current user"""
   worlds: [World]
@@ -250,6 +247,15 @@ type UserActivity {
   user: User
 }
 
+"""Validation error for a mutation"""
+type ValidationError {
+  """Name of field with error"""
+  field: String
+
+  """Error message"""
+  message: String
+}
+
 """A role-play setting"""
 type World {
   """Articles relating to this world"""
@@ -287,4 +293,10 @@ type World {
 
   """Users associated with this world"""
   users: [User]
+}
+
+"""Response to a mutation for updating or creating a world"""
+type WorldMutateResponse {
+  validationErrors: [ValidationError]
+  world: World
 }

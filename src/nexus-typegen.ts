@@ -124,6 +124,10 @@ export interface NexusGenObjects {
     timestamp?: NexusGenScalars['DateTime'] | null; // DateTime
     user?: NexusGenRootTypes['User'] | null; // User
   }
+  ValidationError: { // root type
+    field?: string | null; // String
+    message?: string | null; // String
+  }
   World: { // root type
     articles?: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
     channel?: NexusGenRootTypes['Channel'] | null; // Channel
@@ -137,6 +141,10 @@ export interface NexusGenObjects {
     owner?: NexusGenRootTypes['User'] | null; // User
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
     users?: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  WorldMutateResponse: { // root type
+    validationErrors?: Array<NexusGenRootTypes['ValidationError'] | null> | null; // [ValidationError]
+    world?: NexusGenRootTypes['World'] | null; // World
   }
 }
 
@@ -208,7 +216,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
   }
   Mutation: { // field return type
-    createWorld: NexusGenRootTypes['World'] | null; // World
+    createWorld: NexusGenRootTypes['WorldMutateResponse'] | null; // WorldMutateResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   OperationResponse: { // field return type
@@ -219,7 +227,6 @@ export interface NexusGenFieldTypes {
     channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     currentUser: NexusGenRootTypes['User'] | null; // User
     subscribedChannels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
-    worldNameAvailability: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
   User: { // field return type
@@ -239,6 +246,10 @@ export interface NexusGenFieldTypes {
     timestamp: NexusGenScalars['DateTime'] | null; // DateTime
     user: NexusGenRootTypes['User'] | null; // User
   }
+  ValidationError: { // field return type
+    field: string | null; // String
+    message: string | null; // String
+  }
   World: { // field return type
     articles: Array<NexusGenRootTypes['Article'] | null> | null; // [Article]
     channel: NexusGenRootTypes['Channel'] | null; // Channel
@@ -252,6 +263,10 @@ export interface NexusGenFieldTypes {
     owner: NexusGenRootTypes['User'] | null; // User
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+  }
+  WorldMutateResponse: { // field return type
+    validationErrors: Array<NexusGenRootTypes['ValidationError'] | null> | null; // [ValidationError]
+    world: NexusGenRootTypes['World'] | null; // World
   }
 }
 
@@ -313,7 +328,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
-    createWorld: 'World'
+    createWorld: 'WorldMutateResponse'
     postMessage: 'Message'
   }
   OperationResponse: { // field return type name
@@ -324,7 +339,6 @@ export interface NexusGenFieldTypeNames {
     channelUsers: 'User'
     currentUser: 'User'
     subscribedChannels: 'Channel'
-    worldNameAvailability: 'OperationResponse'
     worlds: 'World'
   }
   User: { // field return type name
@@ -344,6 +358,10 @@ export interface NexusGenFieldTypeNames {
     timestamp: 'DateTime'
     user: 'User'
   }
+  ValidationError: { // field return type name
+    field: 'String'
+    message: 'String'
+  }
   World: { // field return type name
     articles: 'Article'
     channel: 'Channel'
@@ -357,6 +375,10 @@ export interface NexusGenFieldTypeNames {
     owner: 'User'
     updatedAt: 'DateTime'
     users: 'User'
+  }
+  WorldMutateResponse: { // field return type name
+    validationErrors: 'ValidationError'
+    world: 'World'
   }
 }
 
@@ -377,9 +399,6 @@ export interface NexusGenArgTypes {
     }
     channelUsers: { // args
       channelId: string; // String!
-    }
-    worldNameAvailability: { // args
-      name: string; // String!
     }
   }
 }
