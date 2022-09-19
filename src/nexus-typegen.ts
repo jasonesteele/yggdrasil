@@ -217,6 +217,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createWorld: NexusGenRootTypes['WorldMutateResponse'] | null; // WorldMutateResponse
+    deleteWorld: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
   }
   OperationResponse: { // field return type
@@ -329,6 +330,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createWorld: 'WorldMutateResponse'
+    deleteWorld: 'OperationResponse'
     postMessage: 'Message'
   }
   OperationResponse: { // field return type name
@@ -387,6 +389,9 @@ export interface NexusGenArgTypes {
     createWorld: { // args
       description?: string | null; // String
       name: string; // String!
+    }
+    deleteWorld: { // args
+      worldId: string; // String!
     }
     postMessage: { // args
       channelId: string; // String!

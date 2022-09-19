@@ -1,13 +1,12 @@
-import { GraphQLError } from "graphql";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { object, string } from "yup";
-import { validateObject } from ".";
+import { OperationResponse, validateObject, ValidationError } from ".";
 import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
 import { Character } from "./CharacterTypes";
 import { Location } from "./LocationTypes";
-import { OperationResponse, User } from "./UserTypes";
+import { User } from "./UserTypes";
 
 export const World = objectType({
   name: "World",
@@ -49,15 +48,6 @@ export const World = objectType({
       type: Channel,
       description: "Global channel for this world",
     });
-  },
-});
-
-export const ValidationError = objectType({
-  name: "ValidationError",
-  description: "Validation error for a mutation",
-  definition(t) {
-    t.string("field", { description: "Name of field with error" });
-    t.string("message", { description: "Error message" });
   },
 });
 
@@ -139,6 +129,34 @@ export const Mutation = extendType({
 
         ctx.io.emit(`world:create`, world);
         return { world };
+      },
+    });
+
+    t.field("deleteWorld", {
+      type: OperationResponse,
+      args: {
+        worldId: nonNull(stringArg({ description: "Identifier of world" })),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      async resolve(_root, args, ctx) {
+        const world = await ctx.prisma.world.findUnique({
+          where: { id: args.worldId },
+          include: { owner: true },
+        });
+
+        if (!world) {
+          throw new Error("World does not exist");
+        }
+
+        // if (world.owner.id !== ctx.user.id) {
+        //   throw new Error("User does not own this world");
+        // }
+
+        await ctx.prisma.world.delete({
+          where: { id: args.worldId },
+        });
+
+        return { success: true };
       },
     });
   },

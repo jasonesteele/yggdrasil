@@ -1,15 +1,16 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
 import { Alert, Box, Grid, IconButton, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SLOW_POLL_INTERVAL } from "../../constants";
+import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import SearchInput from "../util/SearchInput";
 import WorldCard from "./WorldCard";
 
 export const GET_WORLDS = gql`
-  query Worlds {
+  query GetWorlds {
     worlds {
       id
       name
@@ -24,6 +25,14 @@ export const GET_WORLDS = gql`
   }
 `;
 
+export const DELETE_WORLD = gql`
+  mutation DeleteWorld($worldId: String!) {
+    deleteWorld(worldId: $worldId) {
+      success
+    }
+  }
+`;
+
 const WorldBrowser = () => {
   const [searchFilter, setSearchFilter] = useState("");
   const { data, loading, error, startPolling, stopPolling } = useQuery(
@@ -32,6 +41,8 @@ const WorldBrowser = () => {
       fetchPolicy: "cache-and-network",
     }
   );
+  const { showToast } = useToastContext();
+  const [deleteWorld] = useMutation(DELETE_WORLD);
 
   useEffect(() => {
     startPolling(SLOW_POLL_INTERVAL);
@@ -53,6 +64,32 @@ const WorldBrowser = () => {
             .includes(searchFilter.trim().toLowerCase())
       )
     : [];
+
+  const handleWorldDelete = async (world: World) => {
+    try {
+      await deleteWorld({
+        variables: { worldId: world.id },
+        update(cache) {
+          cache.modify({
+            fields: {
+              worlds(existingWorldRefs: any[], { readField }) {
+                return existingWorldRefs.filter(
+                  (worldRef: any) => world.id !== readField("id", worldRef)
+                );
+              },
+            },
+          });
+        },
+      });
+
+      showToast({
+        severity: "success",
+        message: `Deleted ${world.name}`,
+      });
+    } catch (error) {
+      showToast({ severity: "error", message: (error as any).message });
+    }
+  };
 
   return (
     <Box
@@ -90,7 +127,7 @@ const WorldBrowser = () => {
           </Box>
           {loading && (
             <Box>
-              <Alert sx={{ width: "100%" }} severity="info">
+              <Alert sx={{ mt: 2, width: "100%" }} severity="info">
                 Loading...
               </Alert>
               <LinearProgress />
@@ -98,7 +135,7 @@ const WorldBrowser = () => {
           )}
 
           {!filteredWorlds.length && (
-            <Alert sx={{ width: "100%" }} severity="info">
+            <Alert sx={{ mt: 2, width: "100%" }} severity="info">
               No worlds found
             </Alert>
           )}
@@ -106,7 +143,7 @@ const WorldBrowser = () => {
             <Grid container spacing={1} padding={1}>
               {filteredWorlds.map((world: World, idx: number) => (
                 <Grid key={idx} item xs={12} md={6} lg={4}>
-                  <WorldCard world={world} />
+                  <WorldCard world={world} onDelete={handleWorldDelete} />
                 </Grid>
               ))}
             </Grid>

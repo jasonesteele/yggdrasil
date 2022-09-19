@@ -58,15 +58,6 @@ export const UserActivity = objectType({
     });
   },
 });
-
-export const OperationResponse = objectType({
-  name: "OperationResponse",
-  description: "Generic response to an API operation",
-  definition(t) {
-    t.boolean("success", { description: "Was the operation successful" });
-  },
-});
-
 export const Query = extendType({
   type: "Query",
   definition(t) {

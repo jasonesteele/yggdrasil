@@ -1,13 +1,26 @@
+import Close from "@mui/icons-material/Close";
 import {
+  Alert,
+  Box,
   Card,
   CardContent,
   CardMedia,
+  IconButton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useState } from "react";
 import theme from "../../theme";
+import ConfirmationDialog from "../util/ConfirmationDialog";
 
-const WorldCard = ({ world }: { world: World }) => {
+const WorldCard = ({
+  world,
+  onDelete,
+}: {
+  world: World;
+  onDelete?: (world: World) => void;
+}) => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
 
   if (!world) return null;
@@ -19,6 +32,12 @@ const WorldCard = ({ world }: { world: World }) => {
         display: "flex",
         height: "100%",
         "&:hover": { background: "rgba(0,0,0,0.05)" },
+        "& .buttonBox": { visibility: "hidden" },
+        ...(onDelete
+          ? {
+              "&:hover .buttonBox": { visibility: "visible" },
+            }
+          : {}),
       }}
     >
       {breakpoint && (
@@ -48,9 +67,21 @@ const WorldCard = ({ world }: { world: World }) => {
             : "inherit",
         }}
       >
-        <Typography color="primary" variant="h6">
-          {world.name}
-        </Typography>
+        <Box display="flex">
+          <Typography color="primary" variant="h6" sx={{ flexGrow: 1 }}>
+            {world.name}
+          </Typography>
+          <Box className="buttonBox">
+            <IconButton
+              size="small"
+              onClick={() => {
+                setConfirmOpen(true);
+              }}
+            >
+              <Close fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
         <Typography
           variant="subtitle2"
           color="text.secondary"
@@ -59,6 +90,18 @@ const WorldCard = ({ world }: { world: World }) => {
           {world.description}
         </Typography>
       </CardContent>
+      <ConfirmationDialog
+        message={
+          <Alert severity="warning">
+            Delete {world.name}? This action can not be undone.
+          </Alert>
+        }
+        open={confirmOpen}
+        onClose={(value) => {
+          setConfirmOpen(false);
+          if (value && onDelete) onDelete(world);
+        }}
+      />
     </Card>
   );
 };
