@@ -170,6 +170,10 @@ type Mutation {
     """Unique world name"""
     name: String!
   ): WorldMutateResponse
+  deleteWorld(
+    """Identifier of world"""
+    worldId: String!
+  ): OperationResponse
   postMessage(
     """Channel ID to post message on"""
     channelId: String!
