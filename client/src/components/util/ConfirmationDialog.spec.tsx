@@ -1,5 +1,7 @@
+import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import ToastProvider from "../../providers/ToastProvider";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 describe("components", () => {
@@ -8,13 +10,17 @@ describe("components", () => {
       it("renders the dialogue when open", async () => {
         const onClose = jest.fn();
         render(
-          <MemoryRouter>
-            <ConfirmationDialog
-              message={"dialog message"}
-              open={false}
-              onClose={onClose}
-            />
-          </MemoryRouter>
+          <MockedProvider mocks={[]}>
+            <MemoryRouter>
+              <ToastProvider>
+                <ConfirmationDialog
+                  message={"dialog message"}
+                  open={true}
+                  onClose={onClose}
+                />
+              </ToastProvider>
+            </MemoryRouter>
+          </MockedProvider>
         );
 
         // TODO: implement me

@@ -10,7 +10,11 @@ const ProgressButton = ({
     <Button disabled={disabled || loading} {...rest}>
       {children}
       {loading && (
-        <CircularProgress data-testid="inherit" size={20} sx={{ ml: 1 }} />
+        <CircularProgress
+          data-testid="button-spinner"
+          size={20}
+          sx={{ ml: 1 }}
+        />
       )}
     </Button>
   );
