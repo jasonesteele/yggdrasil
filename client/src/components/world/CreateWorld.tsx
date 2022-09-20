@@ -76,8 +76,11 @@ const CreateWorld = () => {
     try {
       const response = await createWorld({
         variables: {
-          name: data.name.trim(),
-          description: data.description.trim(),
+          name: data.name.trim().length > 0 ? data.name.trim() : undefined,
+          description:
+            data.description.trim().length > 0
+              ? data.description.trim()
+              : undefined,
         },
       });
       if (response.data.createWorld.validationErrors?.length > 0) {
@@ -120,7 +123,10 @@ const CreateWorld = () => {
                   label="World Name"
                   variant="outlined"
                   id="world-name"
-                  inputProps={{ maxLength: MAX_WORLD_NAME_LEN }}
+                  inputProps={{
+                    maxLength: MAX_WORLD_NAME_LEN,
+                    "data-testid": "world-name",
+                  }}
                   {...register("name")}
                 />
               </FormControl>
@@ -144,6 +150,9 @@ const CreateWorld = () => {
                   label="Short Description"
                   variant="outlined"
                   id="world-description"
+                  inputProps={{
+                    "data-testid": "world-description",
+                  }}
                   {...register("description")}
                 />
               </FormControl>
