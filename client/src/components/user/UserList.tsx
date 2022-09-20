@@ -3,6 +3,7 @@ import {
   Alert,
   Avatar,
   Box,
+  Chip,
   Container,
   LinearProgress,
   List,
@@ -122,7 +123,17 @@ const UserList = () => {
                   data-testid={`user-name-${idx}`}
                   variant="subtitle2"
                 >
-                  {user.name}
+                  {user.name}{" "}
+                  {user.online ? (
+                    <Chip color="success" size="small" label="Online" />
+                  ) : (
+                    <Chip
+                      disabled
+                      size="small"
+                      variant="outlined"
+                      label="Offline"
+                    />
+                  )}
                 </Typography>
               </ListItem>
             ))}

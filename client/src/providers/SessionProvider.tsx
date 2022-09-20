@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
+import { SESSION_POLL_PERIOD } from "../constants";
 
 export const GET_CURRENT_USER = gql`
   query GetCurrentUser {
@@ -31,7 +32,18 @@ export const handleLogin = () => {
 };
 
 const SessionProvider = ({ children }: { children: JSX.Element }) => {
-  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+  const { data, loading, error, startPolling, stopPolling } = useQuery(
+    GET_CURRENT_USER,
+    { fetchPolicy: "network-only" }
+  );
+
+  useEffect(() => {
+    startPolling(SESSION_POLL_PERIOD);
+    return () => {
+      stopPolling();
+    };
+  }, [startPolling, stopPolling]);
+
   return (
     <SessionContext.Provider
       value={{ user: data?.currentUser, loading, error }}

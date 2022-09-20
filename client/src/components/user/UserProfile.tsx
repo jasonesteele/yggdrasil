@@ -4,6 +4,7 @@ import {
   Alert,
   Avatar,
   Box,
+  Chip,
   Container,
   IconButton,
   LinearProgress,
@@ -72,14 +73,16 @@ const UserProfile = () => {
               </IconButton>
             )}
           </Box>
-          {user.online ? (
-            <Typography color="secondary">Online</Typography>
-          ) : (
-            <Typography color="text.secondary">Offline</Typography>
-          )}
           <Typography variant="caption">
             Account created {moment(user.createdAt).calendar().toLowerCase()}
           </Typography>
+          <Box>
+            {user.online ? (
+              <Chip color="success" size="small" label="Online" />
+            ) : (
+              <Chip disabled size="small" variant="outlined" label="Offline" />
+            )}
+          </Box>
         </Box>
       )}
     </Container>

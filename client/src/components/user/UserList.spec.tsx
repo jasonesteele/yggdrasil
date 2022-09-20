@@ -1,5 +1,7 @@
+import { MockedProvider } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import SessionProvider from "../../providers/SessionProvider";
 import UserList from "./UserList";
 
 describe("components", () => {
@@ -8,9 +10,13 @@ describe("components", () => {
       it("renders the component", async () => {
         // TODO: implement this
         render(
-          <MemoryRouter>
-            <UserList />
-          </MemoryRouter>
+          <MockedProvider mocks={[]}>
+            <SessionProvider>
+              <MemoryRouter>
+                <UserList />
+              </MemoryRouter>
+            </SessionProvider>
+          </MockedProvider>
         );
       });
     });

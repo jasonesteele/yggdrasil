@@ -18,9 +18,10 @@ const Breadcrumbs = ({
 }) => {
   return (
     <MuiBreadcrumbs aria-label="breadcrumb" sx={{ mb: 3 }}>
-      {path?.map(({ label, link }) =>
+      {path?.map(({ label, link }, idx) =>
         link ? (
           <Button
+            key={idx}
             color="primary"
             size="small"
             sx={{ textTransform: "inherit", p: 0, m: 0 }}
@@ -31,6 +32,7 @@ const Breadcrumbs = ({
           </Button>
         ) : (
           <Button
+            key={idx}
             color="primary"
             size="small"
             sx={{ textTransform: "inherit", p: 0, m: 0 }}

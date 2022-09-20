@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import moment from "moment";
+import { MemoryRouter } from "react-router-dom";
 import { cache } from "../../apollo-client";
 import messageFixture from "../../fixtures/messageFixture";
 import userFixture from "../../fixtures/userFixture";
@@ -98,7 +99,9 @@ describe("components", () => {
       it("renders an empty channel", async () => {
         render(
           <MockedProvider cache={cache} mocks={[noMessages]}>
-            <ChatHistory channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatHistory channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
         await waitFor(() => {
@@ -112,7 +115,9 @@ describe("components", () => {
       it("renders a channel with some messages", async () => {
         render(
           <MockedProvider cache={cache} mocks={[someMessages]}>
-            <ChatHistory channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatHistory channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
         await waitFor(() => {
@@ -129,7 +134,9 @@ describe("components", () => {
       it("dyanmically adds a new message", async () => {
         render(
           <MockedProvider cache={cache} mocks={[noMessages]}>
-            <ChatHistory channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatHistory channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
         await waitFor(() => {
@@ -175,7 +182,9 @@ describe("components", () => {
       it("displays an error", async () => {
         render(
           <MockedProvider cache={cache} mocks={[errorResponse]}>
-            <ChatHistory channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatHistory channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
 

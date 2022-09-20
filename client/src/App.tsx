@@ -1,4 +1,13 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { ApolloError } from "@apollo/client";
+import {
+  AppBar,
+  Backdrop,
+  Box,
+  Button,
+  Container,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import {
   BrowserRouter as Router,
   Link,
@@ -6,6 +15,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+import ApolloErrorAlert from "./components/ApolloErrorAlert";
 import Dashboard from "./components/Dashboard";
 import DiscordIcon from "./components/icons/DiscordIcon";
 import YggdrasilIcon from "./components/icons/YggdrasilIcon";
@@ -17,8 +27,12 @@ import CreateWorld from "./components/world/CreateWorld";
 import WorldBrowser from "./components/world/WorldBrowser";
 import { handleLogin, useSessionContext } from "./providers/SessionProvider";
 
+const notAuthorizedError = (error: ApolloError) =>
+  error?.graphQLErrors?.length > 0 &&
+  (error.graphQLErrors[0] as any).message === "Not authorized";
+
 const App = () => {
-  const { user } = useSessionContext();
+  const { user, error } = useSessionContext();
 
   return (
     <Box
@@ -27,6 +41,19 @@ const App = () => {
       flexDirection="column"
       sx={{ minHeight: 0, bgcolor: "ghostwhite" }}
     >
+      {error && !notAuthorizedError(error) && (
+        <Backdrop
+          open={true}
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <Container maxWidth="sm">
+            <ApolloErrorAlert
+              title="Unable to communicate with the server"
+              error={error}
+            />
+          </Container>
+        </Backdrop>
+      )}
       <Router>
         <AppBar position="absolute">
           <Toolbar sx={{ height: "64px" }}>
