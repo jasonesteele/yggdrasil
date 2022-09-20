@@ -1,6 +1,13 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
-import { Alert, Box, Grid, IconButton, LinearProgress } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SLOW_POLL_INTERVAL } from "../../constants";
@@ -91,6 +98,18 @@ const WorldBrowser = () => {
     }
   };
 
+  const filterCaption = (): string => {
+    if (filteredWorlds?.length !== data?.worlds?.length) {
+      return `Displaying ${filteredWorlds.length} of ${
+        data?.worlds?.length
+      } world${data?.worlds?.length === 1 ? "" : "s"}`;
+    } else {
+      return `Displaying ${filteredWorlds.length} world${
+        data?.worlds?.length === 1 ? "" : "s"
+      }`;
+    }
+  };
+
   return (
     <Box
       minHeight="0"
@@ -131,6 +150,12 @@ const WorldBrowser = () => {
                 Loading...
               </Alert>
               <LinearProgress />
+            </Box>
+          )}
+
+          {data?.worlds?.length > 0 && (
+            <Box>
+              <Typography variant="caption">{filterCaption()}</Typography>
             </Box>
           )}
 

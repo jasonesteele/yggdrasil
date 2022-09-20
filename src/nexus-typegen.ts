@@ -228,6 +228,7 @@ export interface NexusGenFieldTypes {
     channelUsers: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     currentUser: NexusGenRootTypes['User'] | null; // User
     subscribedChannels: Array<NexusGenRootTypes['Channel'] | null> | null; // [Channel]
+    user: NexusGenRootTypes['User'] | null; // User
     worlds: Array<NexusGenRootTypes['World'] | null> | null; // [World]
   }
   User: { // field return type
@@ -341,6 +342,7 @@ export interface NexusGenFieldTypeNames {
     channelUsers: 'User'
     currentUser: 'User'
     subscribedChannels: 'Channel'
+    user: 'User'
     worlds: 'World'
   }
   User: { // field return type name
@@ -404,6 +406,9 @@ export interface NexusGenArgTypes {
     }
     channelUsers: { // args
       channelId: string; // String!
+    }
+    user: { // args
+      id: string; // String!
     }
   }
 }

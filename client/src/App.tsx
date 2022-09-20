@@ -10,6 +10,7 @@ import Dashboard from "./components/Dashboard";
 import DiscordIcon from "./components/icons/DiscordIcon";
 import YggdrasilIcon from "./components/icons/YggdrasilIcon";
 import PageNotFound from "./components/PageNotFound";
+import UserProfile from "./components/user/UserProfile";
 import UserProfileButton from "./components/UserProfileButton";
 import CreateWorld from "./components/world/CreateWorld";
 import WorldBrowser from "./components/world/WorldBrowser";
@@ -62,8 +63,9 @@ const App = () => {
           <Dashboard>
             <Routes>
               <Route path="/" element={<Navigate to="/world" />} />
-              <Route path="/world" element={<WorldBrowser />} />
+              <Route path="/user/:id" element={<UserProfile />} />
               <Route path="/world/new" element={<CreateWorld />} />
+              <Route path="/world" element={<WorldBrowser />} />
               <Route path="/*" element={<PageNotFound />} />
             </Routes>
           </Dashboard>

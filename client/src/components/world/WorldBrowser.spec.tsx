@@ -90,12 +90,16 @@ describe("components", () => {
         expect(screen.getByText("A-World 1")).toBeInTheDocument();
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
         expect(screen.getByText("B-World 1")).toBeInTheDocument();
+        expect(screen.getByText("Displaying 3 worlds")).toBeInTheDocument();
 
         userEvent.type(screen.getByTestId("worlds-list-search"), "A-World");
 
         expect(screen.getByText("A-World 1")).toBeInTheDocument();
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
         expect(screen.queryByText("B-World 1")).not.toBeInTheDocument();
+        expect(
+          screen.getByText("Displaying 2 of 3 worlds")
+        ).toBeInTheDocument();
 
         userEvent.type(
           screen.getByTestId("worlds-list-search"),
@@ -105,6 +109,7 @@ describe("components", () => {
         expect(screen.getByText("A-World 1")).toBeInTheDocument();
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
         expect(screen.getByText("B-World 1")).toBeInTheDocument();
+        expect(screen.getByText("Displaying 3 worlds")).toBeInTheDocument();
       });
 
       it("handles an error", async () => {

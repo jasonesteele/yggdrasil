@@ -10,6 +10,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import useWebSocket from "../../hooks/useWebSocket";
 import theme from "../../theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
@@ -31,6 +32,7 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
     variables: { channelId },
   });
   const client = useApolloClient();
+  const navigate = useNavigate();
 
   const { isConnected } = useWebSocket(
     "user:online",
@@ -93,7 +95,10 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
             <ListItem
               data-testid={`user-list-${idx}`}
               key={`user-${idx}`}
-              sx={{ p: 0.5 }}
+              sx={{ p: 0.5, "&:hover": { background: "rgba(0,0,0,0.05)" } }}
+              onClick={() => {
+                navigate(`/user/${user.id}`);
+              }}
             >
               <Avatar
                 data-testid={`user-avatar-${idx}`}
