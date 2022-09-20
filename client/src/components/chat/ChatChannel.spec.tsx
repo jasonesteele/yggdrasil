@@ -27,7 +27,7 @@ describe("components", () => {
 
         expect(screen.getByTestId("chat-channel-test-id")).toBeInTheDocument();
         expect(screen.getByTestId("chat-history")).toBeInTheDocument();
-        expect(screen.getByTestId("user-list")).toBeInTheDocument();
+        expect(screen.getByTestId("chat-users")).toBeInTheDocument();
         expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
         expect(screen.getByTestId("chat-status-activity")).toBeInTheDocument();
       });

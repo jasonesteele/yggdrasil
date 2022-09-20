@@ -1,22 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
+import Edit from "@mui/icons-material/Edit";
 import {
   Alert,
   Avatar,
   Box,
-  Breadcrumbs,
-  Button,
-  Card,
   Container,
   IconButton,
   LinearProgress,
   Typography,
 } from "@mui/material";
 import moment from "moment";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { LARGE_AVATAR_SIZE } from "../../constants";
 import { useSessionContext } from "../../providers/SessionProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
-import Edit from "@mui/icons-material/Edit";
-import { LARGE_AVATAR_SIZE } from "../../constants";
+import Breadcrumbs from "../util/Breadcrumbs";
 
 export const GET_USER = gql`
   query GetUser($userId: String!) {
@@ -41,27 +39,13 @@ const UserProfile = () => {
 
   return (
     <Container sx={{ height: "100%" }}>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 3 }}>
-        <Button
-          color="primary"
-          size="small"
-          sx={{ textTransform: "inherit", p: 0, m: 0 }}
-          component={Link}
-          to={"/"}
-        >
-          Home
-        </Button>
-        <Button
-          color="primary"
-          size="small"
-          sx={{ textTransform: "inherit", p: 0, m: 0 }}
-          component={Link}
-          to={"/user"}
-        >
-          Users
-        </Button>
-        <Typography color="text.primary">{user ? user.name : " "}</Typography>
-      </Breadcrumbs>
+      <Breadcrumbs
+        path={[
+          { label: "Home", link: "/" },
+          { label: "Users", link: "/user" },
+        ]}
+        pageLabel={user ? user.name : " "}
+      />
       {loading && (
         <Box>
           <Alert sx={{ width: "100%" }} severity="info">

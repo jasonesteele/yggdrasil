@@ -1,15 +1,15 @@
 import { render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import UserProfile from "./UserProfile";
+import Breadcrumbs from "./Breadcrumbs";
 
 describe("components", () => {
-  describe("user", () => {
-    describe("UserProfile", () => {
+  describe("util", () => {
+    describe("Breadcrumbs", () => {
       it("renders the component", async () => {
         // TODO: implement this
         render(
           <MemoryRouter>
-            <UserProfile />
+            <Breadcrumbs pageLabel="Home" />
           </MemoryRouter>
         );
       });

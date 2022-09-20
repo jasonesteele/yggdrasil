@@ -72,7 +72,7 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
       }}
     >
       <List
-        data-testid="user-list"
+        data-testid="chat-users"
         sx={{ overflowY: "auto", minHeight: 0, p: 0 }}
       >
         {loading && (
@@ -95,7 +95,13 @@ const ChatUsers = ({ channelId }: { channelId: string }) => {
             <ListItem
               data-testid={`user-list-${idx}`}
               key={`user-${idx}`}
-              sx={{ p: 0.5, "&:hover": { background: "rgba(0,0,0,0.05)" } }}
+              sx={{
+                p: 0.5,
+                "&:hover": {
+                  background: "rgba(0,0,0,0.05)",
+                  cursor: "pointer",
+                },
+              }}
               onClick={() => {
                 navigate(`/user/${user.id}`);
               }}

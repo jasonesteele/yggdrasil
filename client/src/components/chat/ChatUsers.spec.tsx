@@ -70,7 +70,7 @@ describe("components", () => {
             screen.queryByTestId("user-list-loading")
           ).not.toBeInTheDocument();
         });
-        expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
+        expect(screen.getByTestId("chat-users")).toBeEmptyDOMElement();
       });
 
       it("renders a list of users", async () => {
@@ -183,7 +183,7 @@ describe("components", () => {
           ).not.toBeInTheDocument();
         });
 
-        expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
+        expect(screen.getByTestId("chat-users")).toBeEmptyDOMElement();
 
         await act(async () => {
           if (__useWebSocket_onEvent)
