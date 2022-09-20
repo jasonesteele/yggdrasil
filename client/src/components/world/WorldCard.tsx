@@ -107,7 +107,10 @@ const WorldCard = ({
       <ConfirmationDialog
         message={
           <Alert severity="warning">
-            Delete {world.name}? This action can not be undone.
+            <Typography variant="subtitle1">Delete {world.name}?</Typography>
+            <Typography variant="body2">
+              This action can not be undone.
+            </Typography>
           </Alert>
         }
         open={confirmOpen}
