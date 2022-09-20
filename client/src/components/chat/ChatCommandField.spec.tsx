@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import moment from "moment";
 import userFixture from "../../fixtures/userFixture";
 import SessionProvider from "../../providers/SessionProvider";
+import ToastProvider from "../../providers/ToastProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatCommandField, { POST_MESSAGE } from "./ChatCommandField";
 
@@ -116,7 +117,9 @@ describe("components", () => {
         render(
           <MockedProvider mocks={errorMocks}>
             <SessionProvider>
-              <ChatCommandField channelId="test-channel" />
+              <ToastProvider>
+                <ChatCommandField channelId="test-channel" />
+              </ToastProvider>
             </SessionProvider>
           </MockedProvider>
         );

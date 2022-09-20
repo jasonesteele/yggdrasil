@@ -11,7 +11,7 @@ export const GET_CURRENT_USER = gql`
   }
 `;
 
-const SessionContext = createContext<Session>({});
+const SessionContext = createContext<SessionContextData>({});
 
 export const useSessionContext = () => useContext(SessionContext);
 

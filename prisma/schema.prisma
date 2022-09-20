@@ -45,7 +45,7 @@ model User {
 
 model World {
   id          String      @id @default(cuid())
-  name        String
+  name        String      @unique
   description String
   image       String?
   createdAt   DateTime    @default(now()) @map(name: "created_at")
@@ -116,7 +116,7 @@ model LocationConnection {
 
 model Channel {
   id        String    @id @default(cuid())
-  name      String    @unique
+  name      String
   global    Boolean   @default(false)
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @default(now()) @map(name: "updated_at")

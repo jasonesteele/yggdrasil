@@ -163,6 +163,17 @@ type Message {
 }
 
 type Mutation {
+  createWorld(
+    """Short description of the world"""
+    description: String
+
+    """Unique world name"""
+    name: String!
+  ): WorldMutateResponse
+  deleteWorld(
+    """Identifier of world"""
+    worldId: String!
+  ): OperationResponse
   postMessage(
     """Channel ID to post message on"""
     channelId: String!
@@ -240,6 +251,15 @@ type UserActivity {
   user: User
 }
 
+"""Validation error for a mutation"""
+type ValidationError {
+  """Name of field with error"""
+  field: String
+
+  """Error message"""
+  message: String
+}
+
 """A role-play setting"""
 type World {
   """Articles relating to this world"""
@@ -277,4 +297,10 @@ type World {
 
   """Users associated with this world"""
   users: [User]
+}
+
+"""Response to a mutation for updating or creating a world"""
+type WorldMutateResponse {
+  validationErrors: [ValidationError]
+  world: World
 }
