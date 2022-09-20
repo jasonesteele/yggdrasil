@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { ApolloError, gql, useQuery } from "@apollo/client";
 import { createContext, useContext, useEffect } from "react";
 import { SESSION_POLL_PERIOD } from "../constants";
 
@@ -31,6 +31,10 @@ export const handleLogin = () => {
   window.location.href = "/auth/discord";
 };
 
+export const notAuthorizedError = (error: ApolloError) =>
+  error?.graphQLErrors?.length > 0 &&
+  (error.graphQLErrors[0] as any).message === "Not authorized";
+
 const SessionProvider = ({ children }: { children: JSX.Element }) => {
   const { data, loading, error, startPolling, stopPolling } = useQuery(
     GET_CURRENT_USER,
@@ -46,7 +50,11 @@ const SessionProvider = ({ children }: { children: JSX.Element }) => {
 
   return (
     <SessionContext.Provider
-      value={{ user: data?.currentUser, loading, error }}
+      value={{
+        user: (!error || !notAuthorizedError(error)) && data?.currentUser,
+        loading,
+        error,
+      }}
     >
       {children}
     </SessionContext.Provider>
