@@ -38,6 +38,8 @@ const UserProfile = () => {
 
   const user = data?.user;
 
+  if (!user) return null;
+
   return (
     <Container sx={{ height: "100%" }}>
       <Breadcrumbs
