@@ -87,6 +87,7 @@ const WorldCard = ({
           </Box>
           <Box className="buttonBox">
             <IconButton
+              data-testid="close-world-button"
               size="small"
               onClick={() => {
                 setConfirmOpen(true);
