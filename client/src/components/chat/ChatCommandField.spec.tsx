@@ -65,7 +65,7 @@ describe("components", () => {
 
         global.__useWebSocket_sendEvent = jest.fn();
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("chat-command-input"),
           "Sample Message{Enter}"
         );
@@ -92,7 +92,7 @@ describe("components", () => {
 
         global.__useWebSocket_sendEvent = jest.fn();
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("chat-command-input"),
           "Sample Message"
         );
@@ -102,9 +102,9 @@ describe("components", () => {
           active: true,
         });
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("chat-command-input"),
-          "{selectall}{del}"
+          "{Control>}[KeyA]{/Control}{Backspace}"
         );
 
         expect(__useWebSocket_sendEvent).toHaveBeenCalledWith({
@@ -128,7 +128,7 @@ describe("components", () => {
           expect(screen.getByTestId("chat-command-input")).toBeInTheDocument();
         });
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("chat-command-input"),
           "Sample Message{Enter}"
         );

@@ -44,23 +44,17 @@ describe("components", () => {
         expect(screen.getByTestId("user-profile-button")).toBeInTheDocument();
       });
 
-      fireEvent(
-        screen.getByTestId("user-profile-button"),
-        new MouseEvent("click", { bubbles: true, cancelable: true })
-      );
+      await userEvent.click(screen.getByTestId("user-profile-button"));
       expect(screen.getByText("User Name 0")).toBeInTheDocument();
 
-      userEvent.click(screen.getByTestId("user-profile-container"));
+      await userEvent.click(screen.getByTestId("user-profile-container"));
 
       await waitFor(() => {
         expect(screen.queryByText("User Name 0")).not.toBeInTheDocument();
       });
 
-      fireEvent(
-        screen.getByTestId("user-profile-button"),
-        new MouseEvent("click", { bubbles: true, cancelable: true })
-      );
-      userEvent.click(screen.getByTestId("logout-button"));
+      await userEvent.click(screen.getByTestId("user-profile-button"));
+      await userEvent.click(screen.getByTestId("logout-button"));
       expect(sessionProvider.handleLogout).toHaveBeenCalled();
     });
   });

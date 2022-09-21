@@ -29,7 +29,7 @@ describe("components", () => {
         expect(screen.getByText("Please confirm")).toBeInTheDocument();
         expect(screen.getByText("dialog message")).toBeInTheDocument();
         expect(screen.getByText("Cancel")).toBeInTheDocument();
-        userEvent.click(screen.getByText("Ok"));
+        await userEvent.click(screen.getByText("Ok"));
         expect(onClose).toHaveBeenCalledWith(true);
       });
 
@@ -55,7 +55,7 @@ describe("components", () => {
         expect(screen.getByText("dialog title")).toBeInTheDocument();
         expect(screen.getByText("dialog message")).toBeInTheDocument();
         expect(screen.getByText("Ok")).toBeInTheDocument();
-        userEvent.click(screen.getByText("Cancel"));
+        await userEvent.click(screen.getByText("Cancel"));
         expect(onClose).toHaveBeenCalledWith(false);
       });
 

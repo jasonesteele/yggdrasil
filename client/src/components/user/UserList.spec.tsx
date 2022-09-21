@@ -83,16 +83,16 @@ describe("components", () => {
         expect(screen.getByText("User Name 1")).toBeInTheDocument();
         expect(screen.getByText("User Name 2")).toBeInTheDocument();
 
-        userEvent.type(screen.getByTestId("users-list-search"), "Name 1");
+        await userEvent.type(screen.getByTestId("users-list-search"), "Name 1");
 
         expect(screen.getByText("Displaying 1 of 3 users")).toBeInTheDocument();
         expect(screen.queryByText("User Name 0")).not.toBeInTheDocument();
         expect(screen.getByText("User Name 1")).toBeInTheDocument();
         expect(screen.queryByText("User Name 2")).not.toBeInTheDocument();
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("users-list-search"),
-          "{selectall}{del}"
+          "{Control>}[KeyA]{/Control}{Backspace}"
         );
         expect(screen.getByText("Displaying 3 users")).toBeInTheDocument();
         expect(screen.getByText("User Name 0")).toBeInTheDocument();

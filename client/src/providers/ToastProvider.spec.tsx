@@ -26,12 +26,9 @@ describe("providers", () => {
       );
 
       expect(screen.queryByText("toast message")).not.toBeInTheDocument();
-      userEvent.click(screen.getByText("Show"));
+      await userEvent.click(screen.getByText("Show"));
       expect(screen.getByText("toast message")).toBeInTheDocument();
-      userEvent.click(screen.getByTestId("CloseIcon"), {
-        bubbles: true,
-        cancelable: true,
-      });
+      await userEvent.click(screen.getByTestId("CloseIcon"));
       await waitFor(() => {
         expect(screen.queryByText("toast message")).not.toBeInTheDocument();
       });

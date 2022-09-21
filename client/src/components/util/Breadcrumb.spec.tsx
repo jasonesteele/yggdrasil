@@ -33,11 +33,11 @@ describe("components", () => {
         );
 
         expect(history.location.pathname).toEqual("/");
-        userEvent.click(screen.getByText("Foo"));
+        await userEvent.click(screen.getByText("Foo"));
         expect(history.location.pathname).toEqual("/foo");
-        userEvent.click(screen.getByText("Bar"));
+        await userEvent.click(screen.getByText("Bar"));
         expect(history.location.pathname).toEqual("/bar");
-        userEvent.click(screen.getByText("Baz"));
+        await userEvent.click(screen.getByText("Baz"));
         expect(history.location.pathname).toEqual("/bar");
       });
     });

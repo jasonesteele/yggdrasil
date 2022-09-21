@@ -150,7 +150,7 @@ describe("components", () => {
           screen.queryByTestId("chat-channel-channel-3")
         ).not.toBeInTheDocument();
 
-        userEvent.click(screen.getByText("Channel 2"));
+        await userEvent.click(screen.getByText("Channel 2"));
 
         expect(
           screen.queryByTestId("chat-channel-channel-1")
