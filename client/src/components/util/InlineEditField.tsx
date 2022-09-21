@@ -33,7 +33,7 @@ const InlineEditField = ({
     setIsEditting(false);
   }, [value]);
 
-  const handleUserNameChange = async (newValue: string) => {
+  const handleChange = async (newValue: string) => {
     setEditValue(newValue);
     if (validate) setError(await validate(newValue));
   };
@@ -59,14 +59,17 @@ const InlineEditField = ({
           }
         }
       }}
-      onChange={(e) => handleUserNameChange(e.target.value)}
+      onChange={(e) => handleChange(e.target.value)}
       onBlur={() => setIsEditting(false)}
       inputProps={inputProps}
       InputProps={{
         endAdornment: isUpdating ? (
           <InputAdornment position="end">
             <IconButton data-testid="updating-button">
-              <CircularProgress />
+              <CircularProgress
+                size="16px"
+                sx={{ color: theme.palette.text.secondary }}
+              />
             </IconButton>
           </InputAdornment>
         ) : (

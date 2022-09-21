@@ -195,8 +195,6 @@ describe("components", () => {
         });
         expect(screen.getByText("An error occurred!")).toBeInTheDocument();
       });
-
-      it.todo("rolls off old messages");
     });
   });
 });

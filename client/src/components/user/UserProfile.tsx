@@ -1,4 +1,4 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import {
   Alert,
   Avatar,
@@ -17,6 +17,7 @@ import {
   MIN_USERNAME_LEN,
 } from "../../constants";
 import { useSessionContext } from "../../providers/SessionProvider";
+import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import Breadcrumbs from "../util/Breadcrumbs";
 import InlineEditField from "../util/InlineEditField";
@@ -33,12 +34,32 @@ export const GET_USER = gql`
   }
 `;
 
+export const UPDATE_USER = gql`
+  mutation UpdateCurrentUser($name: String!) {
+    updateCurrentUser(name: $name) {
+      user {
+        id
+        name
+        image
+        createdAt
+        online
+      }
+      validationErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
 const UserProfile = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_USER, {
     variables: { userId: id },
   });
   const { user: currentUser } = useSessionContext();
+  const [updateUser, { loading: updating }] = useMutation(UPDATE_USER);
+  const { showToast } = useToastContext();
 
   const user = data?.user;
 
@@ -61,7 +82,17 @@ const UserProfile = () => {
   };
 
   const handleUserNameChange = async (newValue: string) => {
-    console.log(`Updating user name to ${newValue}`);
+    try {
+      const response = await updateUser({ variables: { name: newValue } });
+
+      if (response.data.updateCurrentUser.validationErrors?.length) {
+        throw new Error(
+          response.data.updateCurrentUser.validationErrors[0].message
+        );
+      }
+    } catch (error) {
+      showToast({ severity: "error", message: (error as any).message });
+    }
   };
 
   return (

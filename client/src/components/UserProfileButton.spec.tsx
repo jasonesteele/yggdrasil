@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import userFixture from "../fixtures/userFixture";
 import * as sessionProvider from "../providers/SessionProvider";
 import SessionProvider, {
@@ -35,7 +36,9 @@ describe("components", () => {
       render(
         <MockedProvider mocks={[currentUser]}>
           <SessionProvider>
-            <UserProfileButton />
+            <MemoryRouter>
+              <UserProfileButton />
+            </MemoryRouter>
           </SessionProvider>
         </MockedProvider>
       );

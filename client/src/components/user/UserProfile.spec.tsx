@@ -1,4 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
+import { iterateObserversSafely } from "@apollo/client/utilities";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userFixture from "../../fixtures/userFixture";
@@ -85,6 +86,16 @@ describe("components", () => {
           expect(screen.getAllByText("User Name 2")).toHaveLength(2);
         });
         expect(screen.getByText("Offline")).toBeInTheDocument();
+      });
+
+      describe("updates to user name", () => {
+        it.todo("updates the current user name");
+
+        it.todo("shows a validation error if the user name is already in use");
+
+        it.todo("shows other errors on update");
+
+        it.todo("does not allow updating a different user");
       });
     });
   });

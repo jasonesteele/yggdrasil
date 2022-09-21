@@ -16,7 +16,7 @@ export const connectedUsers = global.connectedUsers
   ? global.connectedUsers
   : (global.connectedUsers = {});
 
-// TODO: handle session timeout for websock
+// TODO: handle session timeout for an active websock
 
 const createWebSocket = () => {
   logger.info(`creating websocket server on port ${WEBSOCKET_PORT}`);
@@ -33,8 +33,20 @@ const createWebSocket = () => {
       {} as Response,
       next as NextFunction
     );
-  }).on("connection", (socket) => {
-    const user = socket.request.session.passport?.user;
+  }).on("connection", async (socket) => {
+    const getUser = async (userId: string) => {
+      const user =
+        userId &&
+        (await prisma.user.findUnique({
+          where: { id: socket.request.session.passport?.user?.id },
+        }));
+      return user;
+    };
+
+    const user =
+      socket.request.session.passport?.user?.id &&
+      (await getUser(socket.request.session.passport?.user?.id));
+
     if (!user) {
       socket.disconnect();
     } else {
@@ -57,30 +69,40 @@ const createWebSocket = () => {
         });
       }
 
-      socket.on("disconnect", (reason) => {
+      socket.on("disconnect", async (reason) => {
         logger.info(`disconnect socket id ${socket.id}: ${reason}`);
         connectedUsers[user.id] = connectedUsers[user.id].filter(
           (id) => id !== socket.id
         );
         if (connectedUsers[user.id].length < 1) {
-          logger.info({ msg: "user is offline", user });
-          io.emit("user:online", {
-            user: { id: user.id, name: user.name, image: user.image },
-            online: false,
-          });
+          const eventUser = await getUser(user.id);
+          if (eventUser) {
+            logger.info({ msg: "user is offline", eventUser });
+            io.emit("user:online", {
+              user: {
+                id: eventUser.id,
+                name: eventUser.name,
+                image: eventUser.image,
+              },
+              online: false,
+            });
+          }
         }
       });
       socket.on("disconnecting", (reason) => {
         logger.info(`disconnecting socket id ${socket.id}: ${reason}`);
       });
 
-      socket.on("chat:activity", (event) => {
-        // TODO: validate that user is a member of the channel?
-        io.emit("chat:activity", {
-          ...event,
-          user: { id: user.id, name: user.name },
-          timestamp: new Date(),
-        });
+      socket.on("chat:activity", async (event) => {
+        const eventUser = await getUser(user.id);
+        if (eventUser) {
+          // TODO: validate that user is a member of the channel?
+          io.emit("chat:activity", {
+            ...event,
+            user: { id: eventUser.id, name: eventUser.name },
+            timestamp: new Date(),
+          });
+        }
       });
     }
   });
