@@ -10,6 +10,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import useWebSocket from "../../hooks/useWebSocket";
 import theme from "../../theme";
 import ApolloErrorAlert from "../ApolloErrorAlert";
@@ -31,6 +32,7 @@ export const GET_CHANNEL_MESSAGES = gql`
 const ChatHistory = ({ channelId }: { channelId: string }) => {
   const mdBreakpoint = useMediaQuery(theme.breakpoints.up("md"));
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const { data, loading, error } = useQuery(GET_CHANNEL_MESSAGES, {
     variables: { channelId },
   });
@@ -42,7 +44,6 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
       variables: { channelId },
     });
   });
-
   useEffect(() => {
     if (lastMessageRef.current?.scrollIntoView) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
@@ -101,8 +102,19 @@ const ChatHistory = ({ channelId }: { channelId: string }) => {
                   })}
                 </Typography>
               )}
-              <Typography sx={{ ml: 1 }}>
-                <b>{message.user?.name || <i>anonymous</i>}</b>
+              <Typography
+                sx={{
+                  ml: 1,
+                  "&:hover": {
+                    background: "rgba(0,0,0,0.05)",
+                    cursor: "pointer",
+                  },
+                }}
+                onClick={() => {
+                  navigate(`/user/${message.user.id}`);
+                }}
+              >
+                <b>{message.user.name || <i>anonymous</i>}</b>
               </Typography>
               <Typography
                 flexGrow={1}

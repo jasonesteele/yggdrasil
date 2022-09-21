@@ -1,22 +1,33 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Backdrop,
+  Box,
+  Button,
+  Container,
+  Toolbar,
+  Typography
+} from "@mui/material";
 import {
   BrowserRouter as Router,
   Link,
   Navigate,
   Route,
-  Routes,
+  Routes
 } from "react-router-dom";
+import ApolloErrorAlert from "./components/ApolloErrorAlert";
 import Dashboard from "./components/Dashboard";
 import DiscordIcon from "./components/icons/DiscordIcon";
 import YggdrasilIcon from "./components/icons/YggdrasilIcon";
 import PageNotFound from "./components/PageNotFound";
+import UserList from "./components/user/UserList";
+import UserProfile from "./components/user/UserProfile";
 import UserProfileButton from "./components/UserProfileButton";
 import CreateWorld from "./components/world/CreateWorld";
 import WorldBrowser from "./components/world/WorldBrowser";
-import { handleLogin, useSessionContext } from "./providers/SessionProvider";
+import { handleLogin, notAuthorizedError, useSessionContext } from "./providers/SessionProvider";
 
 const App = () => {
-  const { user } = useSessionContext();
+  const { user, error } = useSessionContext();
 
   return (
     <Box
@@ -25,6 +36,19 @@ const App = () => {
       flexDirection="column"
       sx={{ minHeight: 0, bgcolor: "ghostwhite" }}
     >
+      {error && !notAuthorizedError(error) && (
+        <Backdrop
+          open={true}
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <Container maxWidth="sm">
+            <ApolloErrorAlert
+              title="Unable to communicate with the server"
+              error={error}
+            />
+          </Container>
+        </Backdrop>
+      )}
       <Router>
         <AppBar position="absolute">
           <Toolbar sx={{ height: "64px" }}>
@@ -62,8 +86,10 @@ const App = () => {
           <Dashboard>
             <Routes>
               <Route path="/" element={<Navigate to="/world" />} />
-              <Route path="/world" element={<WorldBrowser />} />
+              <Route path="/user/:id" element={<UserProfile />} />
+              <Route path="/user" element={<UserList />} />
               <Route path="/world/new" element={<CreateWorld />} />
+              <Route path="/world" element={<WorldBrowser />} />
               <Route path="/*" element={<PageNotFound />} />
             </Routes>
           </Dashboard>

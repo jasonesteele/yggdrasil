@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import ChatPanel, { GET_SUBSCRIBED_CHANNELS } from "./ChatPanel";
@@ -81,9 +82,11 @@ describe("components", () => {
       it("renders the chat panel with no channels", async () => {
         render(
           <MockedProvider mocks={noChannels}>
-            <SessionProvider>
-              <ChatPanel />
-            </SessionProvider>
+            <MemoryRouter>
+              <SessionProvider>
+                <ChatPanel />
+              </SessionProvider>
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -98,9 +101,11 @@ describe("components", () => {
       it("renders the chat panel with one channel", async () => {
         render(
           <MockedProvider mocks={oneChannel}>
-            <SessionProvider>
-              <ChatPanel />
-            </SessionProvider>
+            <MemoryRouter>
+              <SessionProvider>
+                <ChatPanel />
+              </SessionProvider>
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -118,9 +123,11 @@ describe("components", () => {
       it("renders the chat panel with many channels", async () => {
         render(
           <MockedProvider mocks={threeChannels}>
-            <SessionProvider>
-              <ChatPanel />
-            </SessionProvider>
+            <MemoryRouter>
+              <SessionProvider>
+                <ChatPanel />
+              </SessionProvider>
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -159,9 +166,11 @@ describe("components", () => {
       it("handles an error", async () => {
         render(
           <MockedProvider mocks={errorResponse}>
-            <SessionProvider>
-              <ChatPanel />
-            </SessionProvider>
+            <MemoryRouter>
+              <SessionProvider>
+                <ChatPanel />
+              </SessionProvider>
+            </MemoryRouter>
           </MockedProvider>
         );
 

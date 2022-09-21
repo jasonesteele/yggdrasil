@@ -202,6 +202,12 @@ type Query {
   """Retrieves the current user's subscribed channels"""
   subscribedChannels: [Channel]
 
+  """Retrieves a user by id"""
+  user(id: String!): User
+
+  """Retrieves all users"""
+  users: [User]
+
   """Retrieves all worlds visible to the current user"""
   worlds: [World]
 }

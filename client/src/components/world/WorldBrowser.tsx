@@ -1,11 +1,20 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
-import { Alert, Box, Grid, IconButton, LinearProgress } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SLOW_POLL_INTERVAL } from "../../constants";
 import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
+import Breadcrumbs from "../util/Breadcrumbs";
 import SearchInput from "../util/SearchInput";
 import WorldCard from "./WorldCard";
 
@@ -91,66 +100,87 @@ const WorldBrowser = () => {
     }
   };
 
-  return (
-    <Box
-      minHeight="0"
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      data-testid="worlds-panel"
-    >
-      {!loading && error && (
-        <ApolloErrorAlert title="Error loading worlds" error={error} />
-      )}
-      {!error && (
-        <Box
-          display="flex"
-          flexDirection="column"
-          height="100%"
-          flexGrow="1"
-          minHeight="0"
-        >
-          <Box display="flex">
-            <SearchInput
-              searchFilter={searchFilter}
-              setSearchFilter={setSearchFilter}
-              dataTestId="worlds-list-search"
-            />
-            <IconButton
-              component={Link}
-              to={"/world/new"}
-              title="Create a world"
-              color="primary"
-            >
-              <Add />
-            </IconButton>
-          </Box>
-          {loading && (
-            <Box>
-              <Alert sx={{ mt: 2, width: "100%" }} severity="info">
-                Loading...
-              </Alert>
-              <LinearProgress />
-            </Box>
-          )}
+  const filterCaption = (): string => {
+    if (filteredWorlds?.length !== data?.worlds?.length) {
+      return `Displaying ${filteredWorlds.length} of ${
+        data?.worlds?.length
+      } world${data?.worlds?.length === 1 ? "" : "s"}`;
+    } else {
+      return `Displaying ${filteredWorlds.length} world${
+        data?.worlds?.length === 1 ? "" : "s"
+      }`;
+    }
+  };
 
-          {!filteredWorlds.length && (
-            <Alert sx={{ mt: 2, width: "100%" }} severity="info">
-              No worlds found
-            </Alert>
-          )}
-          <Box sx={{ overflowY: "auto" }}>
-            <Grid container spacing={1} padding={1}>
-              {filteredWorlds.map((world: World, idx: number) => (
-                <Grid key={idx} item xs={12} md={6} lg={4}>
-                  <WorldCard world={world} onDelete={handleWorldDelete} />
-                </Grid>
-              ))}
-            </Grid>
+  return (
+    <Container sx={{ height: "100%" }}>
+      <Box
+        minHeight="0"
+        display="flex"
+        flexDirection="column"
+        height="100%"
+        data-testid="worlds-panel"
+      >
+        <Breadcrumbs path={[{ label: "Home", link: "/" }]} pageLabel="Worlds" />
+        {!loading && error && (
+          <ApolloErrorAlert title="Error loading worlds" error={error} />
+        )}
+        {!error && (
+          <Box
+            display="flex"
+            flexDirection="column"
+            height="100%"
+            flexGrow="1"
+            minHeight="0"
+          >
+            <Box display="flex">
+              <SearchInput
+                searchFilter={searchFilter}
+                setSearchFilter={setSearchFilter}
+                dataTestId="worlds-list-search"
+              />
+              <IconButton
+                component={Link}
+                to={"/world/new"}
+                title="Create a world"
+                color="primary"
+              >
+                <Add />
+              </IconButton>
+            </Box>
+            {loading && (
+              <Box>
+                <Alert sx={{ mt: 2, width: "100%" }} severity="info">
+                  Loading...
+                </Alert>
+                <LinearProgress />
+              </Box>
+            )}
+
+            {data?.worlds?.length > 0 && (
+              <Box>
+                <Typography variant="caption">{filterCaption()}</Typography>
+              </Box>
+            )}
+
+            {!filteredWorlds.length && (
+              <Alert sx={{ mt: 2, width: "100%" }} severity="info">
+                No worlds found
+              </Alert>
+            )}
+            <Box sx={{ overflowY: "auto" }}>
+              <Grid container spacing={1} padding={1}>
+                {filteredWorlds.map((world: World, idx: number) => (
+                  <Grid key={idx} item xs={12} md={6} lg={4}>
+                    <WorldCard world={world} onDelete={handleWorldDelete} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
           </Box>
-        </Box>
-      )}
-    </Box>
+        )}
+      </Box>
+    </Container>
   );
 };
 

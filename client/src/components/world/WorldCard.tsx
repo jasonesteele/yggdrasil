@@ -2,6 +2,7 @@ import Close from "@mui/icons-material/Close";
 import {
   Alert,
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -10,6 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import theme from "../../theme";
 import ConfirmationDialog from "../util/ConfirmationDialog";
 
@@ -67,12 +69,25 @@ const WorldCard = ({
             : "inherit",
         }}
       >
-        <Box display="flex">
-          <Typography color="primary" variant="h6" sx={{ flexGrow: 1 }}>
+        <Box display="flex" alignItems="middle">
+          <Typography color="primary" variant="h6">
             {world.name}
           </Typography>
+          <Box sx={{ ml: 1, flexGrow: 1 }}>
+            <Button
+              color="secondary"
+              sx={{ textTransform: "inherit" }}
+              component={Link}
+              to={`/user/${world.owner.id}`}
+            >
+              <Typography color="black" variant="subtitle2">
+                {world.owner.name}
+              </Typography>
+            </Button>
+          </Box>
           <Box className="buttonBox">
             <IconButton
+              data-testid="close-world-button"
               size="small"
               onClick={() => {
                 setConfirmOpen(true);
@@ -93,7 +108,10 @@ const WorldCard = ({
       <ConfirmationDialog
         message={
           <Alert severity="warning">
-            Delete {world.name}? This action can not be undone.
+            <Typography variant="subtitle1">Delete {world.name}?</Typography>
+            <Typography variant="body2">
+              This action can not be undone.
+            </Typography>
           </Alert>
         }
         open={confirmOpen}

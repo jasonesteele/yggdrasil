@@ -74,6 +74,41 @@ export const Query = extendType({
       },
     });
 
+    t.field("user", {
+      type: User,
+      description: "Retrieves a user by id",
+      args: {
+        id: nonNull(stringArg()),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: async (_root, args, ctx) => {
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id: args.id,
+          },
+        });
+
+        return { ...user, online: connectedUsers[args.id]?.length > 0 };
+      },
+    });
+
+    t.list.field("users", {
+      type: User,
+      description: "Retrieves all users",
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      resolve: async (_root, _args, ctx) => {
+        const users = await ctx.prisma.user.findMany({
+          include: { account: true },
+        });
+        return users
+          .filter((user) => user.account)
+          .map((user) => ({
+            ...user,
+            online: connectedUsers[user.id]?.length > 0,
+          }));
+      },
+    });
+
     t.list.field("channelUsers", {
       type: User,
       description: "Retrieves users on a channel",

@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
+import { MemoryRouter } from "react-router-dom";
 import { cache } from "../../apollo-client";
 import userFixture from "../../fixtures/userFixture";
 import { setWindowWidth } from "../../util/test-utils";
@@ -59,7 +60,9 @@ describe("components", () => {
       it("renders an empty list of users", async () => {
         render(
           <MockedProvider mocks={[noUsers]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
         await waitFor(() => {
@@ -67,13 +70,15 @@ describe("components", () => {
             screen.queryByTestId("user-list-loading")
           ).not.toBeInTheDocument();
         });
-        expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
+        expect(screen.getByTestId("chat-users")).toBeEmptyDOMElement();
       });
 
       it("renders a list of users", async () => {
         render(
           <MockedProvider mocks={[userList]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -110,7 +115,9 @@ describe("components", () => {
 
         render(
           <MockedProvider mocks={[userList]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -148,7 +155,9 @@ describe("components", () => {
       it("shows an error", async () => {
         render(
           <MockedProvider mocks={[errorResponse]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
 
@@ -163,7 +172,9 @@ describe("components", () => {
       it("adds a user dynamically", async () => {
         render(
           <MockedProvider mocks={[noUsers]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
         await waitFor(() => {
@@ -172,7 +183,7 @@ describe("components", () => {
           ).not.toBeInTheDocument();
         });
 
-        expect(screen.getByTestId("user-list")).toBeEmptyDOMElement();
+        expect(screen.getByTestId("chat-users")).toBeEmptyDOMElement();
 
         await act(async () => {
           if (__useWebSocket_onEvent)
@@ -195,7 +206,9 @@ describe("components", () => {
       it("changes a user's online status dynamically", async () => {
         render(
           <MockedProvider cache={cache} mocks={[userList]}>
-            <ChatUsers channelId="test-channel-id" />
+            <MemoryRouter>
+              <ChatUsers channelId="test-channel-id" />
+            </MemoryRouter>
           </MockedProvider>
         );
 

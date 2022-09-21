@@ -1,5 +1,6 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
+import { GraphQLError } from "graphql";
 import SessionProvider, {
   GET_CURRENT_USER,
   useSessionContext,
@@ -36,6 +37,13 @@ const errorResponse = {
     query: GET_CURRENT_USER,
   },
   error: new Error("An error occurred!"),
+};
+
+const noAuthUser = {
+  request: {
+    query: GET_CURRENT_USER,
+  },
+  error: new GraphQLError("Not authorized"),
 };
 
 const TestComponent = () => {
@@ -84,6 +92,18 @@ describe("providers", () => {
       );
 
       expect(await screen.findByText("error-id")).toBeInTheDocument();
+    });
+
+    it("handles an authentication error", async () => {
+      render(
+        <MockedProvider mocks={[noAuthUser]}>
+          <SessionProvider>
+            <TestComponent />
+          </SessionProvider>
+        </MockedProvider>
+      );
+
+      expect(await screen.findByText("no-user")).toBeInTheDocument();
     });
   });
 });
