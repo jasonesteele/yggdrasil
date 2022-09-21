@@ -16,6 +16,8 @@ export const connectedUsers = global.connectedUsers
   ? global.connectedUsers
   : (global.connectedUsers = {});
 
+// TODO: handle session timeout for websock
+
 const createWebSocket = () => {
   logger.info(`creating websocket server on port ${WEBSOCKET_PORT}`);
 

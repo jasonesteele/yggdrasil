@@ -1,5 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import userFixture from "../fixtures/userFixture";
 import * as sessionProvider from "../providers/SessionProvider";
