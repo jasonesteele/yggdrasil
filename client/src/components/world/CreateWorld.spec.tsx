@@ -101,8 +101,8 @@ describe("components", () => {
             </MemoryRouter>
           </MockedProvider>
         );
-        userEvent.type(screen.getByTestId("world-name"), "test-world");
-        userEvent.click(screen.getByText("Create"));
+        await userEvent.type(screen.getByTestId("world-name"), "test-world");
+        await userEvent.click(screen.getByText("Create"));
         await waitFor(() => expect(mocks[0].newData).toHaveBeenCalled());
       });
 
@@ -116,12 +116,12 @@ describe("components", () => {
             </MemoryRouter>
           </MockedProvider>
         );
-        userEvent.type(screen.getByTestId("world-name"), "test-world");
-        userEvent.type(
+        await userEvent.type(screen.getByTestId("world-name"), "test-world");
+        await userEvent.type(
           screen.getByTestId("world-description"),
           "test-description"
         );
-        userEvent.click(screen.getByText("Create"));
+        await userEvent.click(screen.getByText("Create"));
         await waitFor(() => expect(mocks[1].newData).toHaveBeenCalled());
       });
 
@@ -135,9 +135,9 @@ describe("components", () => {
             </MemoryRouter>
           </MockedProvider>
         );
-        userEvent.type(screen.getByTestId("world-name"), "t");
-        userEvent.type(screen.getByTestId("world-description"), "t");
-        userEvent.click(screen.getByText("Create"));
+        await userEvent.type(screen.getByTestId("world-name"), "t");
+        await userEvent.type(screen.getByTestId("world-description"), "t");
+        await userEvent.click(screen.getByText("Create"));
 
         expect(
           await screen.findByText("name must be at least 5 characters")
@@ -149,13 +149,13 @@ describe("components", () => {
         expect(mocks[1].newData).not.toHaveBeenCalled();
 
         // eslint-disable-next-line testing-library/no-unnecessary-act
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("world-name"),
-          "{selectall}test-world"
+          "{Control>}[KeyA]{/Control}test-world"
         );
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("world-description"),
-          "{selectall}test-description"
+          "{Control>}[KeyA]{/Control}test-description"
         );
 
         await waitFor(() => {
@@ -164,7 +164,7 @@ describe("components", () => {
           ).not.toBeInTheDocument();
         });
 
-        userEvent.click(screen.getByText("Create"));
+        await userEvent.click(screen.getByText("Create"));
 
         await waitFor(() => expect(mocks[1].newData).toHaveBeenCalled());
       });
@@ -179,8 +179,8 @@ describe("components", () => {
             </MemoryRouter>
           </MockedProvider>
         );
-        userEvent.type(screen.getByTestId("world-name"), "test-world");
-        userEvent.click(screen.getByText("Create"));
+        await userEvent.type(screen.getByTestId("world-name"), "test-world");
+        await userEvent.click(screen.getByText("Create"));
         expect(
           await screen.findByText("name-validation-error")
         ).toBeInTheDocument();
@@ -199,11 +199,11 @@ describe("components", () => {
             </MemoryRouter>
           </MockedProvider>
         );
-        userEvent.type(screen.getByTestId("world-name"), "test-world");
-        userEvent.click(screen.getByText("Create"));
-        expect(
-          await screen.findByText("An error occurred!")
-        ).toBeInTheDocument();
+        await userEvent.type(screen.getByTestId("world-name"), "test-world");
+        await userEvent.click(screen.getByText("Create"));
+        await waitFor(() => {
+          expect(screen.getByText("An error occurred!")).toBeInTheDocument();
+        });
       });
     });
   });

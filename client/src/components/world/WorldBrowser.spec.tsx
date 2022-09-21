@@ -92,7 +92,10 @@ describe("components", () => {
         expect(screen.getByText("B-World 1")).toBeInTheDocument();
         expect(screen.getByText("Displaying 3 worlds")).toBeInTheDocument();
 
-        userEvent.type(screen.getByTestId("worlds-list-search"), "A-World");
+        await userEvent.type(
+          screen.getByTestId("worlds-list-search"),
+          "A-World"
+        );
 
         expect(screen.getByText("A-World 1")).toBeInTheDocument();
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
@@ -101,9 +104,9 @@ describe("components", () => {
           screen.getByText("Displaying 2 of 3 worlds")
         ).toBeInTheDocument();
 
-        userEvent.type(
+        await userEvent.type(
           screen.getByTestId("worlds-list-search"),
-          "{selectall}{del}"
+          "{Control>}[KeyA]{/Control}{Backspace}"
         );
 
         expect(screen.getByText("A-World 1")).toBeInTheDocument();

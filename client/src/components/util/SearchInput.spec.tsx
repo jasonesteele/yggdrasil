@@ -15,7 +15,7 @@ describe("components", () => {
           />
         );
 
-        userEvent.type(screen.getByTestId("test-id"), "foo");
+        await userEvent.type(screen.getByTestId("test-id"), "foo");
         expect(setSearchFilter).toHaveBeenCalledWith("f");
         expect(setSearchFilter).toHaveBeenCalledWith("o");
         expect(setSearchFilter).toHaveBeenCalledWith("o");
@@ -34,7 +34,7 @@ describe("components", () => {
         expect(
           screen.getByDisplayValue("some search string")
         ).toBeInTheDocument();
-        userEvent.click(screen.getByTestId("search-filter-close"));
+        await userEvent.click(screen.getByTestId("search-filter-close"));
         expect(setSearchFilter).toHaveBeenCalledWith("");
       });
     });

@@ -24,12 +24,9 @@ describe("components", () => {
         expect(screen.getByText("world-description-0")).toBeInTheDocument();
         expect(screen.getByText("User Name 1")).toBeInTheDocument();
 
-        userEvent.click(screen.getByTestId("close-world-button"));
+        await userEvent.click(screen.getByTestId("close-world-button"));
         expect(screen.getByText("Delete world-name-0?")).toBeInTheDocument();
-        userEvent.click(screen.getByText("Cancel"), {
-          bubbles: true,
-          cancelable: true,
-        });
+        await userEvent.click(screen.getByText("Cancel"));
 
         await waitFor(() => {
           expect(
@@ -38,12 +35,9 @@ describe("components", () => {
         });
         expect(onDelete).not.toHaveBeenCalled();
 
-        userEvent.click(screen.getByTestId("close-world-button"));
+        await userEvent.click(screen.getByTestId("close-world-button"));
         expect(screen.getByText("Delete world-name-0?")).toBeInTheDocument();
-        userEvent.click(screen.getByText("Ok"), {
-          bubbles: true,
-          cancelable: true,
-        });
+        await userEvent.click(screen.getByText("Ok"));
 
         expect(onDelete).toHaveBeenCalled();
       });
