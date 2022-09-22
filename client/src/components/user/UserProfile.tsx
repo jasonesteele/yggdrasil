@@ -94,9 +94,7 @@ const UserProfile = () => {
             <List>
               {response.data.updateCurrentUser.validationErrors.map(
                 (error: any) => (
-                  <ListItem>
-                    {error.field}: {error.message}
-                  </ListItem>
+                  <ListItem>{error.message}</ListItem>
                 )
               )}
             </List>
