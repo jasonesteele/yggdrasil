@@ -50,7 +50,7 @@ const InlineEditField = ({
         if (!error && e.key === "Enter") {
           try {
             setIsUpdating(true);
-            onChange && (await onChange(editValue));
+            onChange && editValue !== value && (await onChange(editValue));
             setIsUpdating(false);
             setIsEditting(false);
           } catch (error) {
