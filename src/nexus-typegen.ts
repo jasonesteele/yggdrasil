@@ -124,6 +124,10 @@ export interface NexusGenObjects {
     timestamp?: NexusGenScalars['DateTime'] | null; // DateTime
     user?: NexusGenRootTypes['User'] | null; // User
   }
+  UserMutateResponse: { // root type
+    user?: NexusGenRootTypes['User'] | null; // User
+    validationErrors?: Array<NexusGenRootTypes['ValidationError'] | null> | null; // [ValidationError]
+  }
   ValidationError: { // root type
     field?: string | null; // String
     message?: string | null; // String
@@ -219,6 +223,7 @@ export interface NexusGenFieldTypes {
     createWorld: NexusGenRootTypes['WorldMutateResponse'] | null; // WorldMutateResponse
     deleteWorld: NexusGenRootTypes['OperationResponse'] | null; // OperationResponse
     postMessage: NexusGenRootTypes['Message'] | null; // Message
+    updateCurrentUser: NexusGenRootTypes['UserMutateResponse'] | null; // UserMutateResponse
   }
   OperationResponse: { // field return type
     success: boolean | null; // Boolean
@@ -248,6 +253,10 @@ export interface NexusGenFieldTypes {
     channel: NexusGenRootTypes['Channel'] | null; // Channel
     timestamp: NexusGenScalars['DateTime'] | null; // DateTime
     user: NexusGenRootTypes['User'] | null; // User
+  }
+  UserMutateResponse: { // field return type
+    user: NexusGenRootTypes['User'] | null; // User
+    validationErrors: Array<NexusGenRootTypes['ValidationError'] | null> | null; // [ValidationError]
   }
   ValidationError: { // field return type
     field: string | null; // String
@@ -334,6 +343,7 @@ export interface NexusGenFieldTypeNames {
     createWorld: 'WorldMutateResponse'
     deleteWorld: 'OperationResponse'
     postMessage: 'Message'
+    updateCurrentUser: 'UserMutateResponse'
   }
   OperationResponse: { // field return type name
     success: 'Boolean'
@@ -363,6 +373,10 @@ export interface NexusGenFieldTypeNames {
     channel: 'Channel'
     timestamp: 'DateTime'
     user: 'User'
+  }
+  UserMutateResponse: { // field return type name
+    user: 'User'
+    validationErrors: 'ValidationError'
   }
   ValidationError: { // field return type name
     field: 'String'
@@ -400,6 +414,9 @@ export interface NexusGenArgTypes {
     postMessage: { // args
       channelId: string; // String!
       text: string; // String!
+    }
+    updateCurrentUser: { // args
+      name: string; // String!
     }
   }
   Query: {

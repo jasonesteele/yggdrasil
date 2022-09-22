@@ -37,7 +37,7 @@ type SessionContextData = {
 };
 
 type Toast = {
-  message: string;
+  message: string | JSX.Element;
   severity: "error" | "warning" | "info" | "success";
 };
 

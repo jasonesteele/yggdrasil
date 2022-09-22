@@ -251,8 +251,6 @@ describe("components", () => {
           within(screen.getByTestId("user-list-2")).getByText("User Name 2")
         ).toBeInTheDocument();
       });
-
-      it.todo("removes a user dynamically");
     });
   });
 });

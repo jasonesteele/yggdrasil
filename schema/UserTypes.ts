@@ -1,4 +1,7 @@
+import moment from "moment";
 import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { object, string } from "yup";
+import { validateObject, ValidationError } from ".";
 import { Context } from "../src/context";
 import { Article } from "./ArticleTypes";
 import { Channel } from "./ChannelTypes";
@@ -58,6 +61,7 @@ export const UserActivity = objectType({
     });
   },
 });
+
 export const Query = extendType({
   type: "Query",
   definition(t) {
@@ -130,6 +134,65 @@ export const Query = extendType({
           ...user,
           online: connectedUsers[user.id]?.length > 0,
         }));
+      },
+    });
+  },
+});
+
+export const UserMutateResponse = objectType({
+  name: "UserMutateResponse",
+  description: "Response to a mutation for updating or creating a user",
+  definition(t) {
+    t.field("user", { type: User });
+    t.list.field("validationErrors", { type: ValidationError });
+  },
+});
+
+const updateUserSchema = object({
+  name: string().strict(true).trim().required().min(3).max(32),
+});
+
+export const Mutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("updateCurrentUser", {
+      type: UserMutateResponse,
+      args: {
+        name: nonNull(stringArg({ description: "Requested user name" })),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      async resolve(_root, args, ctx) {
+        const { name } = validateObject(updateUserSchema, args);
+
+        const existingUser = await ctx.prisma.user.findMany({
+          where: { name: { equals: args.name, mode: "insensitive" } },
+        });
+        if (existingUser?.length > 0) {
+          return {
+            validationErrors: [
+              { field: "name", message: "name is not available" },
+            ],
+          };
+        }
+
+        const user = await ctx.prisma.user.update({
+          where: { id: ctx.user.id },
+          data: {
+            name,
+            updatedAt: moment().toDate(),
+          },
+        });
+
+        ctx.io.emit("user:online", {
+          user: {
+            id: user.id,
+            name: user.name,
+            image: user.image,
+          },
+          online: true,
+        });
+
+        return { user: { ...user, online: true } };
       },
     });
   },

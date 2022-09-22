@@ -47,7 +47,6 @@ const SessionProvider = ({ children }: { children: JSX.Element }) => {
       stopPolling();
     };
   }, [startPolling, stopPolling]);
-
   return (
     <SessionContext.Provider
       value={{

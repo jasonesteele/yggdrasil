@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { handleLogout, useSessionContext } from "../providers/SessionProvider";
 
 const drawerWidth = 250;
@@ -65,7 +66,15 @@ const UserProfileButton = () => {
                 sx={{ width: avatarSize, height: avatarSize }}
                 src={user.image || ""}
               />
-              <Typography variant="h6">{user.name}</Typography>
+              <Button
+                fullWidth
+                color="primary"
+                sx={{ textTransform: "inherit", p: 0, m: 0 }}
+                component={Link}
+                to={`/user/${user.id}`}
+              >
+                <Typography variant="h6">{user.name}</Typography>
+              </Button>
             </Grid>
             <Grid item>
               <Button

@@ -37,12 +37,10 @@ const createOrUpdateUser = async (profile: Profile) => {
   return prisma.user.upsert({
     where: { accountId: profile.id },
     update: {
-      name: `${profile.username}#${profile.discriminator}`,
       image: profile.avatar
         ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         : undefined,
       updatedAt: moment().toDate(),
-      channels: { connect: globalChannels.map(({ id }) => ({ id })) },
     },
     create: {
       name: `${profile.username}#${profile.discriminator}`,

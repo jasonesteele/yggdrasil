@@ -22,6 +22,19 @@ const mocks = [
     request: {
       query: GET_USER,
       variables: {
+        userId: "user-id-0",
+      },
+    },
+    result: {
+      data: {
+        user: userFixture({ online: true }, 0),
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_USER,
+      variables: {
         userId: "user-id-1",
       },
     },

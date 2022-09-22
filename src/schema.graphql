@@ -181,6 +181,10 @@ type Mutation {
     """Message text"""
     text: String!
   ): Message
+  updateCurrentUser(
+    """Requested user name"""
+    name: String!
+  ): UserMutateResponse
 }
 
 """Generic response to an API operation"""
@@ -255,6 +259,12 @@ type UserActivity {
 
   """User who performed activity"""
   user: User
+}
+
+"""Response to a mutation for updating or creating a user"""
+type UserMutateResponse {
+  user: User
+  validationErrors: [ValidationError]
 }
 
 """Validation error for a mutation"""
