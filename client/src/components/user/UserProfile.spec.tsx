@@ -1,5 +1,4 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { iterateObserversSafely } from "@apollo/client/utilities";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userFixture from "../../fixtures/userFixture";

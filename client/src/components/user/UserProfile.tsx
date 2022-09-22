@@ -6,6 +6,8 @@ import {
   Chip,
   Container,
   LinearProgress,
+  List,
+  ListItem,
   Typography,
 } from "@mui/material";
 import moment from "moment";
@@ -58,7 +60,7 @@ const UserProfile = () => {
     variables: { userId: id },
   });
   const { user: currentUser } = useSessionContext();
-  const [updateUser, { loading: updating }] = useMutation(UPDATE_USER);
+  const [updateUser] = useMutation(UPDATE_USER);
   const { showToast } = useToastContext();
 
   const user = data?.user;
@@ -86,9 +88,20 @@ const UserProfile = () => {
       const response = await updateUser({ variables: { name: newValue } });
 
       if (response.data.updateCurrentUser.validationErrors?.length) {
-        throw new Error(
-          response.data.updateCurrentUser.validationErrors[0].message
-        );
+        showToast({
+          severity: "error",
+          message: (
+            <List>
+              {response.data.updateCurrentUser.validationErrors.map(
+                (error: any) => (
+                  <ListItem>
+                    {error.field}: {error.message}
+                  </ListItem>
+                )
+              )}
+            </List>
+          ),
+        });
       }
     } catch (error) {
       showToast({ severity: "error", message: (error as any).message });

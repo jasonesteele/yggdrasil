@@ -55,7 +55,7 @@ const InlineEditField = ({
             setIsEditting(false);
           } catch (error) {
             setIsUpdating(false);
-            setError(error);
+            setError("an error occured");
           }
         }
       }}
@@ -89,6 +89,7 @@ const InlineEditField = ({
       <Typography variant="h6">{value}</Typography>
       {isEdittable && (
         <IconButton
+          data-testid="edit-button"
           size="small"
           sx={{ color: theme.palette.text.secondary }}
           onClick={() => {
