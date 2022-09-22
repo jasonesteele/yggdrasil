@@ -35,7 +35,13 @@ export const notAuthorizedError = (error: ApolloError) =>
   error?.graphQLErrors?.length > 0 &&
   (error.graphQLErrors[0] as any).message === "Not authorized";
 
-const SessionProvider = ({ children }: { children: JSX.Element }) => {
+const SessionProvider = ({
+  children,
+  testUser,
+}: {
+  children: JSX.Element;
+  testUser?: User;
+}) => {
   const { data, loading, error, startPolling, stopPolling } = useQuery(
     GET_CURRENT_USER,
     { fetchPolicy: "network-only" }
@@ -50,7 +56,9 @@ const SessionProvider = ({ children }: { children: JSX.Element }) => {
   return (
     <SessionContext.Provider
       value={{
-        user: (!error || !notAuthorizedError(error)) && data?.currentUser,
+        user:
+          (!error || !notAuthorizedError(error)) &&
+          (data?.currentUser || testUser),
         loading,
         error,
       }}

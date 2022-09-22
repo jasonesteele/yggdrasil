@@ -148,9 +148,9 @@ export const Mutation = extendType({
           throw new Error("World does not exist");
         }
 
-        // if (world.owner.id !== ctx.user.id) {
-        //   throw new Error("User does not own this world");
-        // }
+        if (world.owner.id !== ctx.user.id) {
+          throw new Error("User does not own this world");
+        }
 
         await ctx.prisma.world.delete({
           where: { id: args.worldId },

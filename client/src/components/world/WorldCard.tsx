@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSessionContext } from "../../providers/SessionProvider";
 import theme from "../../theme";
 import ConfirmationDialog from "../util/ConfirmationDialog";
 
@@ -23,6 +24,7 @@ const WorldCard = ({
   onDelete?: (world: World) => void;
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const { user } = useSessionContext();
   const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
 
   if (!world) return null;
@@ -86,15 +88,17 @@ const WorldCard = ({
             </Button>
           </Box>
           <Box className="buttonBox">
-            <IconButton
-              data-testid="close-world-button"
-              size="small"
-              onClick={() => {
-                setConfirmOpen(true);
-              }}
-            >
-              <Close fontSize="small" />
-            </IconButton>
+            {user?.id === world.owner.id && (
+              <IconButton
+                data-testid="close-world-button"
+                size="small"
+                onClick={() => {
+                  setConfirmOpen(true);
+                }}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            )}
           </Box>
         </Box>
         <Typography

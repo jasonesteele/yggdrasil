@@ -1,10 +1,12 @@
-import worldFixture from "../../fixtures/worldFixture";
 import { render, screen, waitFor } from "@testing-library/react";
+import worldFixture from "../../fixtures/worldFixture";
 
-import WorldCard from "./WorldCard";
+import { MockedProvider } from "@apollo/client/testing";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import userFixture from "../../fixtures/userFixture";
-import userEvent from "@testing-library/user-event";
+import SessionProvider from "../../providers/SessionProvider";
+import WorldCard from "./WorldCard";
 
 const world = worldFixture({ owner: userFixture(undefined, 1) }, 0);
 
@@ -16,7 +18,11 @@ describe("components", () => {
 
         render(
           <MemoryRouter>
-            <WorldCard world={world} onDelete={onDelete} />
+            <MockedProvider>
+              <SessionProvider testUser={userFixture(undefined, 1)}>
+                <WorldCard world={world} onDelete={onDelete} />
+              </SessionProvider>
+            </MockedProvider>
           </MemoryRouter>
         );
 
