@@ -22,6 +22,19 @@ const mocks = [
     request: {
       query: GET_USER,
       variables: {
+        userId: "user-id-0",
+      },
+    },
+    result: {
+      data: {
+        user: userFixture({ online: true }, 0),
+      },
+    },
+  },
+  {
+    request: {
+      query: GET_USER,
+      variables: {
         userId: "user-id-1",
       },
     },
@@ -85,16 +98,6 @@ describe("components", () => {
           expect(screen.getAllByText("User Name 2")).toHaveLength(2);
         });
         expect(screen.getByText("Offline")).toBeInTheDocument();
-      });
-
-      describe("updates to user name", () => {
-        it.todo("updates the current user name");
-
-        it.todo("shows a validation error if the user name is already in use");
-
-        it.todo("shows other errors on update");
-
-        it.todo("does not allow updating a different user");
       });
     });
   });

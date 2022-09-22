@@ -82,7 +82,6 @@ describe("components", () => {
           try {
             await schema.validate({ field: value });
           } catch (error: any) {
-            console.error(error);
             return error;
           }
         };
