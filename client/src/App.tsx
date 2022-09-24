@@ -4,15 +4,17 @@ import {
   Box,
   Button,
   Container,
+  Menu,
+  MenuItem,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import {
   BrowserRouter as Router,
   Link,
   Navigate,
   Route,
-  Routes
+  Routes,
 } from "react-router-dom";
 import ApolloErrorAlert from "./components/ApolloErrorAlert";
 import Dashboard from "./components/Dashboard";
@@ -24,7 +26,11 @@ import UserProfile from "./components/user/UserProfile";
 import UserProfileButton from "./components/UserProfileButton";
 import CreateWorld from "./components/world/CreateWorld";
 import WorldBrowser from "./components/world/WorldBrowser";
-import { handleLogin, notAuthorizedError, useSessionContext } from "./providers/SessionProvider";
+import {
+  handleLogin,
+  notAuthorizedError,
+  useSessionContext,
+} from "./providers/SessionProvider";
 
 const App = () => {
   const { user, error } = useSessionContext();
