@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@mui/lab": "^5.0.0-alpha.101",
-    "@prisma/client": "^4.3.1",
+    "@prisma/client": "^4.4.0",
     "apollo-server-core": "^3.10.2",
     "apollo-server-express": "^3.10.2",
     "body-parser": "^1.20.0",
