@@ -11,7 +11,7 @@ const worldFixture = (
     properties?.description || `world-description-${sequence || "0"}`,
   image: properties?.image || `world-image-${sequence || "0"}`,
   owner: properties?.owner || userFixture(undefined, sequence),
-  users: properties?.users || []
+  users: properties?.users || [],
 });
 
 export default worldFixture;

@@ -121,6 +121,7 @@ export const Mutation = extendType({
             description,
             channel: { connect: { id: worldChannel.id } },
             owner: { connect: { id: ctx.user.id } },
+            users: { connect: { id: ctx.user.id } },
           },
           include: {
             owner: true,
@@ -176,15 +177,15 @@ export const Mutation = extendType({
           throw new Error("World does not exist");
         }
 
-        if (world.users.find(user => user.id === ctx.user.id)) {
+        if (world.users.find((user) => user.id === ctx.user.id)) {
           throw new Error("User is already a member of this world");
         }
 
         await ctx.prisma.world.update({
           where: { id: args.worldId },
           data: {
-            users: { connect: { id: ctx.user.id } }
-          }
+            users: { connect: { id: ctx.user.id } },
+          },
         });
 
         const user = await ctx.prisma.user.findUnique({
@@ -226,15 +227,18 @@ export const Mutation = extendType({
           throw new Error("World does not exist");
         }
 
-        if (world.users.find(user => user.id !== ctx.user.id)) {
+        if (!world.users.find((user) => user.id === ctx.user.id)) {
           throw new Error("User is not a member of this world");
+        }
+        if (world.owner.id === ctx.user.id) {
+          throw new Error("Owner can not leave a world");
         }
 
         await ctx.prisma.world.update({
           where: { id: args.worldId },
           data: {
-            users: { disconnect: { id: ctx.user.id } }
-          }
+            users: { disconnect: { id: ctx.user.id } },
+          },
         });
 
         const user = await ctx.prisma.user.findUnique({

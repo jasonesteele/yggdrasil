@@ -12,7 +12,7 @@ import {
   CardMedia,
   IconButton,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -52,12 +52,13 @@ const WorldCard = ({
 
   if (!world) return null;
 
-  const isMember = world.users.find(worldUser => worldUser.id === user?.id);
+  const isMember = world.users.find((worldUser) => worldUser.id === user?.id);
+  const isOwner = world.owner.id === user?.id;
 
   const handleWorldJoin = async (world: World) => {
     try {
       await joinWorld({
-        variables: { worldId: world.id }
+        variables: { worldId: world.id },
       });
 
       showToast({
@@ -72,7 +73,7 @@ const WorldCard = ({
   const handleWorldLeave = async (world: World) => {
     try {
       await leaveWorld({
-        variables: { worldId: world.id }
+        variables: { worldId: world.id },
       });
 
       showToast({
@@ -89,14 +90,16 @@ const WorldCard = ({
       elevation={isMember ? 5 : 1}
       sx={{
         display: "flex",
-        ...(isMember ? { border: '1px solid darkgrey' } : { background: 'ghostwhite' }),
+        ...(isMember
+          ? { border: "1px solid darkgrey" }
+          : { background: "ghostwhite" }),
         height: "100%",
         "&:hover": { background: "rgba(0,0,0,0.05)" },
         "& .buttonBox": { visibility: "hidden" },
         ...(onDelete
           ? {
-            "&:hover .buttonBox": { visibility: "visible" },
-          }
+              "&:hover .buttonBox": { visibility: "visible" },
+            }
           : {}),
       }}
     >
@@ -156,7 +159,7 @@ const WorldCard = ({
                 <Close fontSize="small" />
               </IconButton>
             )}
-            {isMember ? <>
+            {isMember && !isOwner && (
               <IconButton
                 color="warning"
                 data-testid="remove-from-world-button"
@@ -165,6 +168,8 @@ const WorldCard = ({
               >
                 <PersonRemove fontSize="small" />
               </IconButton>
+            )}
+            {isMember ? (
               <IconButton
                 color="primary"
                 data-testid="join-world-button"
@@ -172,7 +177,7 @@ const WorldCard = ({
               >
                 <PlayArrow fontSize="small" />
               </IconButton>
-            </> :
+            ) : (
               <IconButton
                 color="primary"
                 data-testid="add-to-world-button"
@@ -181,7 +186,7 @@ const WorldCard = ({
               >
                 <PersonAdd fontSize="small" />
               </IconButton>
-            }
+            )}
           </Box>
         </Box>
         <Typography

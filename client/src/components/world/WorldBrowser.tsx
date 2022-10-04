@@ -1,19 +1,23 @@
-import { Cache, gql, Reference, useMutation, useQuery } from "@apollo/client";
+import { gql, Reference, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
 import {
   Alert,
   Box,
   Container,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   LinearProgress,
+  Switch,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import client, { cache } from "../../apollo-client";
+import { cache } from "../../apollo-client";
 import { SLOW_POLL_INTERVAL } from "../../constants";
 import useWebSocket from "../../hooks/useWebSocket";
+import { useSessionContext } from "../../providers/SessionProvider";
 import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import Breadcrumbs from "../util/Breadcrumbs";
@@ -59,6 +63,8 @@ const WorldBrowser = () => {
   );
   const { showToast } = useToastContext();
   const [deleteWorld] = useMutation(DELETE_WORLD);
+  const [myWorlds, setMyWorlds] = useState(false);
+  const { user } = useSessionContext();
 
   useWebSocket(`world:membership`, (event: WorldMembershipEvent) => {
     const user = cache.readFragment({
@@ -69,16 +75,21 @@ const WorldBrowser = () => {
           name
           image
         }
-      `
+      `,
     });
     cache.modify({
       id: `World:${event.world.id}`,
       fields: {
         users(existingUserRefs = [], { readField }) {
-          return event.join ? [...existingUserRefs, user] : existingUserRefs.filter((ref: Reference | undefined) => event.user.id !== readField('id', ref));
-        }
-      }
-    })
+          return event.join
+            ? [...existingUserRefs, user]
+            : existingUserRefs.filter(
+                (ref: Reference | undefined) =>
+                  event.user.id !== readField("id", ref)
+              );
+        },
+      },
+    });
   });
 
   useEffect(() => {
@@ -89,17 +100,24 @@ const WorldBrowser = () => {
   }, [startPolling, stopPolling]);
 
   const filteredWorlds = data?.worlds
-    ? data?.worlds.filter(
-      (world: World) =>
-        world.name
-          .trim()
-          .toLowerCase()
-          .includes(searchFilter.trim().toLowerCase()) ||
-        world.description
-          .trim()
-          .toLowerCase()
-          .includes(searchFilter.trim().toLowerCase())
-    )
+    ? data?.worlds
+        .filter(
+          (world: World) =>
+            !myWorlds ||
+            world.owner.id === user?.id ||
+            world.users.find((worldUser) => worldUser.id === user?.id)
+        )
+        .filter(
+          (world: World) =>
+            world.name
+              .trim()
+              .toLowerCase()
+              .includes(searchFilter.trim().toLowerCase()) ||
+            world.description
+              .trim()
+              .toLowerCase()
+              .includes(searchFilter.trim().toLowerCase())
+        )
     : [];
 
   const handleWorldDelete = async (world: World) => {
@@ -130,11 +148,13 @@ const WorldBrowser = () => {
 
   const filterCaption = (): string => {
     if (filteredWorlds?.length !== data?.worlds?.length) {
-      return `Displaying ${filteredWorlds.length} of ${data?.worlds?.length
-        } world${data?.worlds?.length === 1 ? "" : "s"}`;
+      return `Displaying ${filteredWorlds.length} of ${
+        data?.worlds?.length
+      } world${data?.worlds?.length === 1 ? "" : "s"}`;
     } else {
-      return `Displaying ${filteredWorlds.length} world${data?.worlds?.length === 1 ? "" : "s"
-        }`;
+      return `Displaying ${filteredWorlds.length} world${
+        data?.worlds?.length === 1 ? "" : "s"
+      }`;
     }
   };
 
@@ -147,7 +167,29 @@ const WorldBrowser = () => {
         height="100%"
         data-testid="worlds-panel"
       >
-        <Breadcrumbs path={[{ label: "Home", link: "/" }]} pageLabel="Worlds" />
+        <Box display="flex" alignItems="flex-top">
+          <Box flexGrow={1}>
+            <Breadcrumbs
+              path={[{ label: "Home", link: "/" }]}
+              pageLabel="Worlds"
+            />
+          </Box>
+          <Box>
+            <FormGroup>
+              <FormControlLabel
+                labelPlacement="start"
+                control={
+                  <Switch
+                    value={myWorlds}
+                    onChange={(e) => setMyWorlds(e.target.checked)}
+                    size="small"
+                  />
+                }
+                label={myWorlds ? "Mine Only" : "All"}
+              />
+            </FormGroup>
+          </Box>
+        </Box>
         {!loading && error && (
           <ApolloErrorAlert title="Error loading worlds" error={error} />
         )}
