@@ -47,6 +47,11 @@ describe("components", () => {
 
         expect(onDelete).toHaveBeenCalled();
       });
+
+      it.todo('let\'s me join a world');
+      it.todo('let\'s me leave a world');
+      it.todo('does not let me leave a world I own');
+      it.todo('let\'s me play in a world');
     });
   });
 });

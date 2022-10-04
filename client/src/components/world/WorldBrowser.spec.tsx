@@ -115,6 +115,9 @@ describe("components", () => {
         expect(screen.getByText("Displaying 3 worlds")).toBeInTheDocument();
       });
 
+      it.todo("filters my worlds by owner");
+      it.todo("filters my worlds by membership");
+
       it("handles an error", async () => {
         render(
           <MockedProvider mocks={errorResponse}>
