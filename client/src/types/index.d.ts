@@ -20,6 +20,7 @@ type World = {
   description: string;
   image?: string;
   owner: User;
+  users: User[];
 };
 
 type Message = {
@@ -28,6 +29,12 @@ type Message = {
   text: string;
   createdAt: date;
   user: User;
+};
+
+type WorldMembershipEvent = {
+  world: World;
+  user: User;
+  join: boolean;
 };
 
 type SessionContextData = {

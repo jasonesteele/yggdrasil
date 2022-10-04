@@ -68,7 +68,7 @@ export const Query = extendType({
       description: "Retrieves all worlds visible to the current user",
       authorize: (_root, _args, ctx: Context) => !!ctx.user,
       resolve: async (_root, _args, ctx) =>
-        ctx.prisma.world.findMany({ include: { owner: true } }),
+        ctx.prisma.world.findMany({ include: { owner: true, users: true } }),
     });
   },
 });
@@ -154,6 +154,106 @@ export const Mutation = extendType({
 
         await ctx.prisma.world.delete({
           where: { id: args.worldId },
+        });
+
+        return { success: true };
+      },
+    });
+
+    t.field("joinWorld", {
+      type: OperationResponse,
+      args: {
+        worldId: nonNull(stringArg({ description: "Identifier of world" })),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      async resolve(_root, args, ctx) {
+        const world = await ctx.prisma.world.findUnique({
+          where: { id: args.worldId },
+          include: { owner: true, users: true },
+        });
+
+        if (!world) {
+          throw new Error("World does not exist");
+        }
+
+        if (world.users.find(user => user.id === ctx.user.id)) {
+          throw new Error("User is already a member of this world");
+        }
+
+        await ctx.prisma.world.update({
+          where: { id: args.worldId },
+          data: {
+            users: { connect: { id: ctx.user.id } }
+          }
+        });
+
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id: ctx.user.id,
+          },
+        });
+        if (!user) {
+          throw new Error(`Could not find data for user ${ctx.user.id}`);
+        }
+
+        ctx.io.emit("world:membership", {
+          world,
+          user: {
+            id: user.id,
+            name: user.name,
+            image: user.image,
+          },
+          join: true,
+        });
+
+        return { success: true };
+      },
+    });
+
+    t.field("leaveWorld", {
+      type: OperationResponse,
+      args: {
+        worldId: nonNull(stringArg({ description: "Identifier of world" })),
+      },
+      authorize: (_root, _args, ctx: Context) => !!ctx.user,
+      async resolve(_root, args, ctx) {
+        const world = await ctx.prisma.world.findUnique({
+          where: { id: args.worldId },
+          include: { owner: true, users: true },
+        });
+
+        if (!world) {
+          throw new Error("World does not exist");
+        }
+
+        if (world.users.find(user => user.id !== ctx.user.id)) {
+          throw new Error("User is not a member of this world");
+        }
+
+        await ctx.prisma.world.update({
+          where: { id: args.worldId },
+          data: {
+            users: { disconnect: { id: ctx.user.id } }
+          }
+        });
+
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id: ctx.user.id,
+          },
+        });
+        if (!user) {
+          throw new Error(`Could not find data for user ${ctx.user.id}`);
+        }
+
+        ctx.io.emit("world:membership", {
+          world,
+          user: {
+            id: user.id,
+            name: user.name,
+            image: user.image,
+          },
+          join: false,
         });
 
         return { success: true };

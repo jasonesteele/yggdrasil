@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { Cache, gql, Reference, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
 import {
   Alert,
@@ -11,7 +11,9 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import client, { cache } from "../../apollo-client";
 import { SLOW_POLL_INTERVAL } from "../../constants";
+import useWebSocket from "../../hooks/useWebSocket";
 import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import Breadcrumbs from "../util/Breadcrumbs";
@@ -26,6 +28,11 @@ export const GET_WORLDS = gql`
       description
       image
       owner {
+        id
+        name
+        image
+      }
+      users {
         id
         name
         image
@@ -53,6 +60,27 @@ const WorldBrowser = () => {
   const { showToast } = useToastContext();
   const [deleteWorld] = useMutation(DELETE_WORLD);
 
+  useWebSocket(`world:membership`, (event: WorldMembershipEvent) => {
+    const user = cache.readFragment({
+      id: `User:${event.user.id}`,
+      fragment: gql`
+        fragment NewUser on User {
+          id
+          name
+          image
+        }
+      `
+    });
+    cache.modify({
+      id: `World:${event.world.id}`,
+      fields: {
+        users(existingUserRefs = [], { readField }) {
+          return event.join ? [...existingUserRefs, user] : existingUserRefs.filter((ref: Reference | undefined) => event.user.id !== readField('id', ref));
+        }
+      }
+    })
+  });
+
   useEffect(() => {
     startPolling(SLOW_POLL_INTERVAL);
     return () => {
@@ -62,16 +90,16 @@ const WorldBrowser = () => {
 
   const filteredWorlds = data?.worlds
     ? data?.worlds.filter(
-        (world: World) =>
-          world.name
-            .trim()
-            .toLowerCase()
-            .includes(searchFilter.trim().toLowerCase()) ||
-          world.description
-            .trim()
-            .toLowerCase()
-            .includes(searchFilter.trim().toLowerCase())
-      )
+      (world: World) =>
+        world.name
+          .trim()
+          .toLowerCase()
+          .includes(searchFilter.trim().toLowerCase()) ||
+        world.description
+          .trim()
+          .toLowerCase()
+          .includes(searchFilter.trim().toLowerCase())
+    )
     : [];
 
   const handleWorldDelete = async (world: World) => {
@@ -102,13 +130,11 @@ const WorldBrowser = () => {
 
   const filterCaption = (): string => {
     if (filteredWorlds?.length !== data?.worlds?.length) {
-      return `Displaying ${filteredWorlds.length} of ${
-        data?.worlds?.length
-      } world${data?.worlds?.length === 1 ? "" : "s"}`;
+      return `Displaying ${filteredWorlds.length} of ${data?.worlds?.length
+        } world${data?.worlds?.length === 1 ? "" : "s"}`;
     } else {
-      return `Displaying ${filteredWorlds.length} world${
-        data?.worlds?.length === 1 ? "" : "s"
-      }`;
+      return `Displaying ${filteredWorlds.length} world${data?.worlds?.length === 1 ? "" : "s"
+        }`;
     }
   };
 
