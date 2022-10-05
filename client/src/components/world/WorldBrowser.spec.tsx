@@ -5,9 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { cache } from "../../apollo-client";
 import userFixture from "../../fixtures/userFixture";
 import worldFixture from "../../fixtures/worldFixture";
-import SessionProvider, {
-  GET_CURRENT_USER,
-} from "../../providers/SessionProvider";
+import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import WorldBrowser, { GET_WORLDS } from "./WorldBrowser";
 

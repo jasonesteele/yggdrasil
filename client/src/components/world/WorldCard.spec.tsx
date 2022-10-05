@@ -10,7 +10,6 @@ import SessionProvider from "../../providers/SessionProvider";
 import ToastProvider from "../../providers/ToastProvider";
 import { setWindowWidth } from "../../util/test-utils";
 import WorldCard, { JOIN_WORLD, LEAVE_WORLD } from "./WorldCard";
-import { act } from "react-dom/test-utils";
 
 const currentUser = userFixture(undefined, 1);
 const worldToJoin = worldFixture(
