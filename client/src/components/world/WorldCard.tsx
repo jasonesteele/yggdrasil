@@ -1,4 +1,8 @@
+import { gql, useMutation } from "@apollo/client";
 import Close from "@mui/icons-material/Close";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import PersonRemove from "@mui/icons-material/PersonRemove";
+import PlayArrow from "@mui/icons-material/PlayArrow";
 import {
   Alert,
   Box,
@@ -13,8 +17,24 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSessionContext } from "../../providers/SessionProvider";
+import { useToastContext } from "../../providers/ToastProvider";
 import theme from "../../theme";
 import ConfirmationDialog from "../util/ConfirmationDialog";
+
+export const JOIN_WORLD = gql`
+  mutation JoinWorld($worldId: String!) {
+    joinWorld(worldId: $worldId) {
+      success
+    }
+  }
+`;
+export const LEAVE_WORLD = gql`
+  mutation LeaveWorld($worldId: String!) {
+    leaveWorld(worldId: $worldId) {
+      success
+    }
+  }
+`;
 
 const WorldCard = ({
   world,
@@ -25,15 +45,54 @@ const WorldCard = ({
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const { user } = useSessionContext();
+  const { showToast } = useToastContext();
   const breakpoint = useMediaQuery(theme.breakpoints.up("sm"));
+  const [joinWorld] = useMutation(JOIN_WORLD);
+  const [leaveWorld] = useMutation(LEAVE_WORLD);
 
   if (!world) return null;
 
+  const isMember = world.users.find((worldUser) => worldUser.id === user?.id);
+  const isOwner = world.owner.id === user?.id;
+
+  const handleWorldJoin = async (world: World) => {
+    try {
+      await joinWorld({
+        variables: { worldId: world.id },
+      });
+
+      showToast({
+        severity: "success",
+        message: `Joined ${world.name}`,
+      });
+    } catch (error) {
+      showToast({ severity: "error", message: (error as any).message });
+    }
+  };
+
+  const handleWorldLeave = async (world: World) => {
+    try {
+      await leaveWorld({
+        variables: { worldId: world.id },
+      });
+
+      showToast({
+        severity: "success",
+        message: `Left ${world.name}`,
+      });
+    } catch (error) {
+      showToast({ severity: "error", message: (error as any).message });
+    }
+  };
+
   return (
     <Card
-      elevation={5}
+      elevation={isMember ? 5 : 1}
       sx={{
         display: "flex",
+        ...(isMember
+          ? { border: "1px solid darkgrey" }
+          : { background: "ghostwhite" }),
         height: "100%",
         "&:hover": { background: "rgba(0,0,0,0.05)" },
         "& .buttonBox": { visibility: "hidden" },
@@ -90,6 +149,7 @@ const WorldCard = ({
           <Box className="buttonBox">
             {user?.id === world.owner.id && (
               <IconButton
+                color="error"
                 data-testid="close-world-button"
                 size="small"
                 onClick={() => {
@@ -97,6 +157,34 @@ const WorldCard = ({
                 }}
               >
                 <Close fontSize="small" />
+              </IconButton>
+            )}
+            {isMember && !isOwner && (
+              <IconButton
+                color="warning"
+                data-testid="leave-world-button"
+                size="small"
+                onClick={() => handleWorldLeave(world)}
+              >
+                <PersonRemove fontSize="small" />
+              </IconButton>
+            )}
+            {isMember ? (
+              <IconButton
+                color="primary"
+                data-testid="enter-world-button"
+                size="small"
+              >
+                <PlayArrow fontSize="small" />
+              </IconButton>
+            ) : (
+              <IconButton
+                color="primary"
+                data-testid="join-world-button"
+                size="small"
+                onClick={() => handleWorldJoin(world)}
+              >
+                <PersonAdd fontSize="small" />
               </IconButton>
             )}
           </Box>
@@ -111,7 +199,7 @@ const WorldCard = ({
       </CardContent>
       <ConfirmationDialog
         message={
-          <Alert severity="warning">
+          <Alert severity="error">
             <Typography variant="subtitle1">Delete {world.name}?</Typography>
             <Typography variant="body2">
               This action can not be undone.

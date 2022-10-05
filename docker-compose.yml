@@ -10,7 +10,7 @@ services:
       - "3000:80"
     depends_on:
       - "api"
-  api: 
+  api:
     build:
       context: .
       dockerfile: Dockerfile

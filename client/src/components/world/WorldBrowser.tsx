@@ -1,17 +1,23 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, Reference, useMutation, useQuery } from "@apollo/client";
 import Add from "@mui/icons-material/Add";
 import {
   Alert,
   Box,
   Container,
+  FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   LinearProgress,
+  Switch,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { cache } from "../../apollo-client";
 import { SLOW_POLL_INTERVAL } from "../../constants";
+import useWebSocket from "../../hooks/useWebSocket";
+import { useSessionContext } from "../../providers/SessionProvider";
 import { useToastContext } from "../../providers/ToastProvider";
 import ApolloErrorAlert from "../ApolloErrorAlert";
 import Breadcrumbs from "../util/Breadcrumbs";
@@ -26,6 +32,11 @@ export const GET_WORLDS = gql`
       description
       image
       owner {
+        id
+        name
+        image
+      }
+      users {
         id
         name
         image
@@ -52,6 +63,34 @@ const WorldBrowser = () => {
   );
   const { showToast } = useToastContext();
   const [deleteWorld] = useMutation(DELETE_WORLD);
+  const [myWorlds, setMyWorlds] = useState(false);
+  const { user } = useSessionContext();
+
+  useWebSocket(`world:membership`, (event: WorldMembershipEvent) => {
+    const user = cache.readFragment({
+      id: `User:${event.user.id}`,
+      fragment: gql`
+        fragment NewUser on User {
+          id
+          name
+          image
+        }
+      `,
+    });
+    cache.modify({
+      id: `World:${event.world.id}`,
+      fields: {
+        users(existingUserRefs = [], { readField }) {
+          return event.join
+            ? [...existingUserRefs, user]
+            : existingUserRefs.filter(
+                (ref: Reference | undefined) =>
+                  event.user.id !== readField("id", ref)
+              );
+        },
+      },
+    });
+  });
 
   useEffect(() => {
     startPolling(SLOW_POLL_INTERVAL);
@@ -61,17 +100,24 @@ const WorldBrowser = () => {
   }, [startPolling, stopPolling]);
 
   const filteredWorlds = data?.worlds
-    ? data?.worlds.filter(
-        (world: World) =>
-          world.name
-            .trim()
-            .toLowerCase()
-            .includes(searchFilter.trim().toLowerCase()) ||
-          world.description
-            .trim()
-            .toLowerCase()
-            .includes(searchFilter.trim().toLowerCase())
-      )
+    ? data?.worlds
+        .filter(
+          (world: World) =>
+            !myWorlds ||
+            world.owner.id === user?.id ||
+            world.users.find((worldUser) => worldUser.id === user?.id)
+        )
+        .filter(
+          (world: World) =>
+            world.name
+              .trim()
+              .toLowerCase()
+              .includes(searchFilter.trim().toLowerCase()) ||
+            world.description
+              .trim()
+              .toLowerCase()
+              .includes(searchFilter.trim().toLowerCase())
+        )
     : [];
 
   const handleWorldDelete = async (world: World) => {
@@ -121,7 +167,30 @@ const WorldBrowser = () => {
         height="100%"
         data-testid="worlds-panel"
       >
-        <Breadcrumbs path={[{ label: "Home", link: "/" }]} pageLabel="Worlds" />
+        <Box display="flex" alignItems="flex-top">
+          <Box flexGrow={1}>
+            <Breadcrumbs
+              path={[{ label: "Home", link: "/" }]}
+              pageLabel="Worlds"
+            />
+          </Box>
+          <Box>
+            <FormGroup>
+              <FormControlLabel
+                labelPlacement="start"
+                control={
+                  <Switch
+                    data-testid="myworlds-filter"
+                    value={myWorlds}
+                    onChange={(e) => setMyWorlds(e.target.checked)}
+                    size="small"
+                  />
+                }
+                label={myWorlds ? "Mine Only" : "All"}
+              />
+            </FormGroup>
+          </Box>
+        </Box>
         {!loading && error && (
           <ApolloErrorAlert title="Error loading worlds" error={error} />
         )}
