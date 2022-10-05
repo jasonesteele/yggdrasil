@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { cache } from "../../apollo-client";
+import userFixture from "../../fixtures/userFixture";
 import worldFixture from "../../fixtures/worldFixture";
 import SessionProvider from "../../providers/SessionProvider";
 import { setWindowWidth } from "../../util/test-utils";
@@ -29,9 +30,26 @@ const someWorlds: any[] = [
     result: {
       data: {
         worlds: [
-          worldFixture({ name: "A-World 1" }, 0),
-          worldFixture({ name: "A-World 2" }, 1),
-          worldFixture({ name: "B-World 1" }, 2),
+          worldFixture(
+            {
+              name: "A-World 1",
+              owner: userFixture(undefined, 10),
+              users: [userFixture(undefined, 20)],
+            },
+            0
+          ),
+          worldFixture(
+            { name: "A-World 2", owner: userFixture(undefined, 11) },
+            1
+          ),
+          worldFixture(
+            {
+              name: "B-World 1",
+              owner: userFixture(undefined, 11),
+              users: [userFixture(undefined, 10)],
+            },
+            2
+          ),
         ],
       },
     },
@@ -72,10 +90,10 @@ describe("components", () => {
         expect(screen.getByText("No worlds found")).toBeInTheDocument();
       });
 
-      it("shows worlds in the list and allows filtering", async () => {
+      it("shows worlds in the list and allows filtering by string, owner and membership", async () => {
         render(
           <MockedProvider mocks={someWorlds}>
-            <SessionProvider>
+            <SessionProvider testUser={userFixture(undefined, 10)}>
               <MemoryRouter>
                 <WorldBrowser />
               </MemoryRouter>
@@ -87,6 +105,7 @@ describe("components", () => {
           expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
         });
 
+        expect(screen.getByText("All")).toBeInTheDocument();
         expect(screen.getByText("A-World 1")).toBeInTheDocument();
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
         expect(screen.getByText("B-World 1")).toBeInTheDocument();
@@ -113,6 +132,16 @@ describe("components", () => {
         expect(screen.getByText("A-World 2")).toBeInTheDocument();
         expect(screen.getByText("B-World 1")).toBeInTheDocument();
         expect(screen.getByText("Displaying 3 worlds")).toBeInTheDocument();
+
+        await userEvent.click(screen.getByTestId("myworlds-filter"));
+
+        expect(screen.getByText("Mine Only")).toBeInTheDocument();
+        expect(screen.getByText("A-World 1")).toBeInTheDocument();
+        expect(screen.queryByText("A-World 2")).not.toBeInTheDocument();
+        expect(screen.getByText("B-World 1")).toBeInTheDocument();
+        expect(
+          screen.getByText("Displaying 2 of 3 worlds")
+        ).toBeInTheDocument();
       });
 
       it("handles an error", async () => {
