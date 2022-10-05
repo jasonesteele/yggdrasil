@@ -162,7 +162,7 @@ const WorldCard = ({
             {isMember && !isOwner && (
               <IconButton
                 color="warning"
-                data-testid="remove-from-world-button"
+                data-testid="leave-world-button"
                 size="small"
                 onClick={() => handleWorldLeave(world)}
               >
@@ -172,7 +172,7 @@ const WorldCard = ({
             {isMember ? (
               <IconButton
                 color="primary"
-                data-testid="join-world-button"
+                data-testid="enter-world-button"
                 size="small"
               >
                 <PlayArrow fontSize="small" />
@@ -180,7 +180,7 @@ const WorldCard = ({
             ) : (
               <IconButton
                 color="primary"
-                data-testid="add-to-world-button"
+                data-testid="join-world-button"
                 size="small"
                 onClick={() => handleWorldJoin(world)}
               >

@@ -180,6 +180,7 @@ const WorldBrowser = () => {
                 labelPlacement="start"
                 control={
                   <Switch
+                    data-testid="myworlds-filter"
                     value={myWorlds}
                     onChange={(e) => setMyWorlds(e.target.checked)}
                     size="small"
