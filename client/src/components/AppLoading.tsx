@@ -1,8 +1,9 @@
 import {
-    Alert, Box,
-    Container,
-    LinearProgress,
-    Typography
+  Alert,
+  Box,
+  Container,
+  LinearProgress,
+  Typography,
 } from "@mui/material";
 
 const AppLoading = () => {
